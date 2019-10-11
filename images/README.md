@@ -1,2 +1,1 @@
-IMAGES ONLY WORK IF THEY ARE IN PNG FORMAT 
-(OR NON LOSSY I THINK)
+For Images Use Only Non-Lossy Photos
