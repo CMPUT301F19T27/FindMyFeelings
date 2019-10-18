@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "792520716701",
+    "firebase_url": "https://findmyfeelings.firebaseio.com",
+    "project_id": "findmyfeelings",
+    "storage_bucket": "findmyfeelings.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:792520716701:android:e343e4111342af8666bf74",
+        "android_client_info": {
+          "package_name": "com.example.findmyfeelings"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "792520716701-k4ddgntupqu2g6ub8qefdg8lo4aq2oua.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBLEMMbPQFY0kwYHp9-i3p8lxYCHIeZOKE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "792520716701-k4ddgntupqu2g6ub8qefdg8lo4aq2oua.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
