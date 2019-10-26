@@ -63,7 +63,10 @@
 
         </RelativeLayout>
 
-
+        <ListView
+            android:id="@+id/my_mood_list"
+            android:layout_width="match_parent"
+            android:layout_height="690dp" />
 
         <RelativeLayout
             android:id="@+id/bottom_bar"

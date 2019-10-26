@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/mood_emoticon"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:padding="10dp"
+        android:src="@drawable/angry_face" />
+
+    <TextView
+        android:id="@+id/mood_name_text"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:padding="10dp"
+        android:text="Angry"
+        android:textSize="24sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/username_text"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:padding="10dp"
+        android:text="childebr"
+        android:textSize="24sp" />
+
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="10dp"
+        android:gravity="center">
+
+        <TextView
+            android:id="@+id/time_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="16:20"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/date_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="25/10/19"
+            android:textSize="20sp" />
+
+    </LinearLayout>
+
+</LinearLayout>
