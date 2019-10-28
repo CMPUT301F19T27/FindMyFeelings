@@ -15,7 +15,7 @@ public class Mood {
 //    private Location location;
 //    private Photo photo;
 
-    Mood(int dateDay, int dateMonth, int dateYear, int timeMinute, int timeHour, String mood, String reason) {
+    Mood(int dateDay, int dateMonth, int dateYear, int timeHour, int timeMinute, String mood, String reason) {
         this.dateDay = dateDay;
         this.dateMonth = dateMonth;
         this.dateYear = dateYear;

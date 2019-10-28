@@ -68,6 +68,8 @@ public class HomePageActivity extends AppCompatActivity {
         moodAdapter = new MoodCustomList(this, moodDataList);
         moodList.setAdapter(moodAdapter);
 
+        moodDataList.add(new Mood(22,10,19, 16,20, "Angry", ""));
+
     }
 }
 
