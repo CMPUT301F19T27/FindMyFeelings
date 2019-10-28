@@ -9,29 +9,28 @@
         android:layout_width="80dp"
         android:layout_height="80dp"
         android:padding="10dp"
-        android:src="@drawable/angry_face" />
+        android:src="@drawable/null_face" />
 
     <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical"
         android:orientation="vertical"
         android:padding="8dp">
 
         <TextView
             android:id="@+id/mood_name_text"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:text="Angry"
+            android:layout_height="wrap_content"
+            android:text="Unknown"
             android:textSize="24sp"
             android:textStyle="bold" />
 
         <TextView
             android:id="@+id/username_text"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:text="childebr"
+            android:layout_height="wrap_content"
+            android:text="null"
             android:textSize="20sp" />
 
     </LinearLayout>
@@ -40,24 +39,24 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
+        android:gravity="center_vertical"
         android:orientation="vertical"
-        android:padding="10dp"
-        android:gravity="center">
+        android:padding="8dp">
 
         <TextView
             android:id="@+id/time_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="16:20"
+            android:gravity="center_horizontal"
+            android:text="hh:mm"
             android:textSize="20sp" />
 
         <TextView
             android:id="@+id/date_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="25/10/19"
+            android:gravity="center_horizontal"
+            android:text="dd/mm/yy"
             android:textSize="20sp" />
 
     </LinearLayout>

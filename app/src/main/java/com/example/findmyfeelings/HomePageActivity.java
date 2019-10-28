@@ -68,7 +68,14 @@ public class HomePageActivity extends AppCompatActivity {
         moodAdapter = new MoodCustomList(this, moodDataList);
         moodList.setAdapter(moodAdapter);
 
+        // Test data
         moodDataList.add(new Mood(22,10,19, 16,20, "Angry", ""));
+        moodDataList.add(new Mood(23,10,19, 16,20, "Happy", ""));
+        moodDataList.add(new Mood(24,10,19, 16,20, "Sad", ""));
+        moodDataList.add(new Mood(25,10,19, 16,20, "Surprised", ""));
+        moodDataList.add(new Mood(26,10,19, 16,20, "Scared", ""));
+        moodDataList.add(new Mood(27,10,19, 16,20, "Disgusted", ""));
+
 
     }
 }
