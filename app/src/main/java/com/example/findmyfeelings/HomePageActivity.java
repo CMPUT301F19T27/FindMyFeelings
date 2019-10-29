@@ -10,22 +10,28 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
-public class HomePageActivity extends AppCompatActivity {
+public class HomePageActivity extends AppCompatActivity implements EventFragment.OnFragmentInteractionListener{
 
     private ListView moodList;
     private ArrayAdapter<Mood> moodAdapter;
     private List<Mood> moodDataList;
+    private FloatingActionButton addButton;
+
+
+
 
     BottomNavigationView bottomNavigationView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_page);
+
 
         bottomNavigationView = findViewById(R.id.bottom_nav_bar);
 
@@ -62,11 +68,21 @@ public class HomePageActivity extends AppCompatActivity {
 
         /* Custom List Implementation */
         moodList = findViewById(R.id.my_mood_list);
-
         moodDataList = new ArrayList<>();
 
         moodAdapter = new MoodCustomList(this, moodDataList);
         moodList.setAdapter(moodAdapter);
+
+        addButton = findViewById(R.id.add_event_button);
+        final FloatingActionButton addButton = findViewById(R.id.add_event_button);
+        addButton.setOnClickListener(
+            new EventFragment().show(getSupportFragmentManager(), "ADD_EVENT");
+        );
+        moodList.setOnItemClickListener(
+                Mood selectedMood = moodDataList.get(i);
+                EventFragment.newInstance(selectedMood, i).show(getSupportFragmentManager(), "EDIT_EVENT");
+        );
+
 
         // Test data
         moodDataList.add(new Mood(22,10,19, 16,20, "Angry", ""));
@@ -76,6 +92,22 @@ public class HomePageActivity extends AppCompatActivity {
         moodDataList.add(new Mood(26,10,19, 16,20, "Scared", ""));
         moodDataList.add(new Mood(27,10,19, 16,20, "Disgusted", ""));
 
+
+    }
+
+    @Override
+    public void onEventAdded(Mood newMood) {
+
+
+    }
+
+    @Override
+    public void onEventEdited(Mood editedMood, int index) {
+
+    }
+
+    @Override
+    public void onEventDeleted(Mood deletedMood) {
 
     }
 }
