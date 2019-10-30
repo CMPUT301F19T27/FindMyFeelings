@@ -33,6 +33,7 @@ public class MoodCustomList extends ArrayAdapter<Mood> {
         }
 
         Mood mood = moods.get(position);
+//        User user = ???;
 
         moodImage = view.findViewById(R.id.mood_emoticon);
         TextView dateValue = view.findViewById(R.id.date_text);
@@ -67,7 +68,14 @@ public class MoodCustomList extends ArrayAdapter<Mood> {
         dateValue.setText(mood.getDateString());
         timeValue.setText(mood.getTimeString());
         moodString.setText(mood.getMood());
-        usernameString.setText("childebr"); // TODO find a way to snatch the username
+
+        String str = "childebrandt12345678"; //change to user.getName()
+
+        if(str.length() > 10) {
+            usernameString.setText(str.substring(0,10) + "..."); //user.getName()
+        } else {
+            usernameString.setText(str); // TODO find a way to snatch the username
+        }
 
         return view;
 
