@@ -33,11 +33,18 @@ public class MapActivity extends AppCompatActivity {
                 switch (menuItem.getItemId()) {
                     case R.id.ic_profile:
                         Intent intent1 = new Intent(MapActivity.this, ProfileActivity.class);
+                        //intent1.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
+                        intent1.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                       // intent1.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(intent1);
                         break;
 
                     case R.id.ic_feed:
                         Intent intent2 = new Intent(MapActivity.this, HomePageActivity.class);
+                        //intent2.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        intent2.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        //intent2.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(intent2);
                         break;
                 }
