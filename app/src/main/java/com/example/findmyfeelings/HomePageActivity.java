@@ -6,10 +6,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.math.RoundingMode;
 import java.util.ArrayList;
@@ -20,6 +22,7 @@ public class HomePageActivity extends AppCompatActivity {
     private ListView moodList;
     private ArrayAdapter<Mood> moodAdapter;
     private List<Mood> moodDataList;
+    private FloatingActionButton addMoodButton;
 
     BottomNavigationView bottomNavigationView;
     @Override
@@ -28,6 +31,8 @@ public class HomePageActivity extends AppCompatActivity {
         setContentView(R.layout.activity_home_page);
 
         bottomNavigationView = findViewById(R.id.bottom_nav_bar);
+
+        addMoodButton = findViewById(R.id.add_mood_button);
 
         // from stackoverflow : https://stackoverflow.com/questions/41649494/how-to-remove-icon-animation-for-bottom-navigation-view-in-android
         // disable default navigation bar animation
@@ -77,6 +82,11 @@ public class HomePageActivity extends AppCompatActivity {
         moodDataList.add(new Mood(27,10,19, 16,20, "Disgusted", ""));
 
 
+        addMoodButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+//                new AddMoodFragment().show(getSupportFragmentManager(), "ADD_MOOD");
+            }
+        });
     }
 }
 
