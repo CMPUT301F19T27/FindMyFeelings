@@ -8,28 +8,26 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
         <RelativeLayout
             android:id="@+id/top_bar"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_alignParentTop="true">
 
             <TextView
                 android:id="@+id/fmf_textView"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:text="Map"
+                android:layout_height="wrap_content"
                 android:fontFamily="@font/light"
-                android:textSize="38dp"
-                android:textColor="@color/black"
+                android:paddingLeft="15dp"
                 android:paddingTop="5dp"
-                android:paddingLeft="15dp"/>
+                android:text="Map"
+                android:textColor="@color/black"
+                android:textSize="38dp" />
 
         </RelativeLayout>
-
-
 
         <RelativeLayout
             android:id="@+id/bottom_bar"
@@ -54,12 +52,20 @@
                 app:labelVisibilityMode="unlabeled"/>
         </RelativeLayout>
 
-        <RelativeLayout
-            android:id="@+id/middle_bar"
+        <fragment
+            xmlns:map="http://schemas.android.com/apk/res-auto"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:id="@+id/map"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@+id/top_bar"
-            android:layout_above="@+id/bottom_bar"/>
+            android:layout_above="@+id/bottom_bar"
+            tools:context=".MapActivity" />
+
+
+
+
 
     </RelativeLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
