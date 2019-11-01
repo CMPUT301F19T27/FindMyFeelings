@@ -6,6 +6,15 @@
     android:layout_height="match_parent"
     tools:context=".HomePageActivity">
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/add_event_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:focusable="true"
+        app:srcCompat="@android:drawable/ic_input_add" />
+
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">

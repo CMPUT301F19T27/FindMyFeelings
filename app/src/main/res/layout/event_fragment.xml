@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <EditText
+        android:id="@+id/mood_date_editText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="Mood Date: yyyy-mm-dd"
+        android:inputType="date"/>
+
+    <EditText
+        android:id="@+id/mood_time_editText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="Mood Time"
+        android:inputType="time"/>
+
+    <EditText
+        android:id="@+id/mood_type_editText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="Mood Type:"
+        android:inputType="text" />
+
+    <EditText
+        android:id="@+id/mood_reason_editText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="Reason(optional):"
+        android:inputType="text"
+        android:maxLength="20"/>
+
+
+
+
+
+
+</LinearLayout>

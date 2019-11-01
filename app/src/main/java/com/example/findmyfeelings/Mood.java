@@ -1,6 +1,8 @@
 package com.example.findmyfeelings;
 
-public class Mood {
+import java.io.Serializable;
+
+public class Mood implements Serializable {
     private int dateDay;
     private int dateMonth;
     private int dateYear;
