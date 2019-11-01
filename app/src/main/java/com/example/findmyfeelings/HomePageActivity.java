@@ -6,6 +6,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -81,13 +83,22 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
 
         addButton = findViewById(R.id.add_event_button);
         final FloatingActionButton addButton = findViewById(R.id.add_event_button);
-        addButton.setOnClickListener(
-            new EventFragment().show(getSupportFragmentManager(), "ADD_EVENT");
-        );
-        moodList.setOnItemClickListener(
+        addButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new EventFragment().show(getSupportFragmentManager(), "ADD_EVENT");
+            }
+        });
+
+        moodList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Mood selectedMood = moodDataList.get(i);
                 EventFragment.newInstance(selectedMood, i).show(getSupportFragmentManager(), "EDIT_EVENT");
-        );
+            }
+        });
+
+
 
 
         // Test data
