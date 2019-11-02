@@ -42,7 +42,7 @@ public class ProfileActivity extends AppCompatActivity {
                 switch (menuItem.getItemId()) {
                     case R.id.ic_map:
                         Intent intent1 = new Intent(ProfileActivity.this, MapActivity.class);
-                        intent1.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        //intent1.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
                        // intent1.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         //intent1.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -51,7 +51,7 @@ public class ProfileActivity extends AppCompatActivity {
 
                     case R.id.ic_feed:
                         Intent intent2 = new Intent(ProfileActivity.this, HomePageActivity.class);
-                        intent2.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        //intent2.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         //intent2.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         //intent2.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(intent2);

@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
@@ -20,7 +21,8 @@ import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
-public class HomePageActivity extends AppCompatActivity {
+public class HomePageActivity extends AppCompatActivity implements EventFragment.OnFragmentInteractionListener{
+
 
 //    private ListView moodList;
     private RecyclerView moodList;
@@ -96,6 +98,22 @@ public class HomePageActivity extends AppCompatActivity {
         moodAdapter = new MoodCustomList(moodDataList);
         moodList.setAdapter(moodAdapter);
 
+        addButton = findViewById(R.id.add_event_button);
+        final FloatingActionButton addButton = findViewById(R.id.add_event_button);
+        addButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new EventFragment().show(getSupportFragmentManager(), "ADD_EVENT");
+            }
+        });
+        moodList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Mood selectedMood = moodDataList.get(i);
+                EventFragment.newInstance(selectedMood, i).show(getSupportFragmentManager(), "EDIT_EVENT");
+            }
+        });
+
 
         // Test data
         moodDataList.add(new Mood(22,10,19, 16,20, "Angry", ""));
@@ -117,6 +135,22 @@ public class HomePageActivity extends AppCompatActivity {
 //                new AddMoodFragment().show(getSupportFragmentManager(), "ADD_MOOD");
             }
         });
+    }
+
+    @Override
+    public void onEventAdded(Mood newMood) {
+
+
+    }
+
+    @Override
+    public void onEventEdited(Mood editedMood, int index) {
+
+    }
+
+    @Override
+    public void onEventDeleted(Mood deletedMood) {
+
     }
 }
 

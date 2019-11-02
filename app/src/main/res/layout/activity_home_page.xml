@@ -7,6 +7,9 @@
     android:layout_height="match_parent"
     tools:context=".HomePageActivity">
 
+
+
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -127,6 +130,18 @@
                     android:focusable="true"
                     app:srcCompat="@android:drawable/ic_input_add" />
             </FrameLayout>
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/add_event_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:focusable="true"
+                app:srcCompat="@android:drawable/ic_input_add"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginRight="8dp"
+                android:layout_marginBottom="8dp"/>
 
         </RelativeLayout>
 
