@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -13,16 +14,24 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
 
 public class SignUpActivity extends AppCompatActivity {
 
-    EditText emailEditText, passwordEditText;
-    TextView loginTextView;
-    Button signUpButton;
-    FirebaseAuth firebaseAuth;
+    private String TAG = "Display";
+    private EditText firstNameEditText, lastNameEditText, usernameEditText, emailEditText, passwordEditText;
+    private TextView loginTextView;
+    private Button signUpButton;
+    private FirebaseAuth firebaseAuth;
+    private FirebaseFirestore db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,9 +39,15 @@ public class SignUpActivity extends AppCompatActivity {
         setContentView(R.layout.activity_sign_up);
 
         loginTextView = findViewById(R.id.login_textView);
-        emailEditText = findViewById(R.id.sign_up_username_editText);
+        firstNameEditText = findViewById(R.id.sign_up_firstname_editText);
+        lastNameEditText  = findViewById(R.id.sign_up_lastname_editText);
+        emailEditText = findViewById(R.id.sign_up_email_editText);
         passwordEditText = findViewById(R.id.sign_up_password_editText);
         signUpButton = findViewById(R.id.sign_up_button);
+
+        db = FirebaseFirestore.getInstance();
+        final CollectionReference collectionreference = db.collection("Users");
+
 
         firebaseAuth = FirebaseAuth.getInstance();
 
@@ -41,6 +56,8 @@ public class SignUpActivity extends AppCompatActivity {
             public void onClick(View view) {
                 String email = emailEditText.getText().toString();
                 String password = passwordEditText.getText().toString();
+                String firstName = firstNameEditText.getText().toString();
+                String lastName = lastNameEditText.getText().toString();
 
                 if (email.isEmpty()) {
                     emailEditText.setError("Enter an email id");
@@ -54,18 +71,48 @@ public class SignUpActivity extends AppCompatActivity {
                     Toast.makeText(SignUpActivity.this, "Empty fields!", Toast.LENGTH_SHORT).show();
                 }
                 else if (!(email.isEmpty() && password.isEmpty())) {
-                    firebaseAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(SignUpActivity.this, new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-                            if (!task.isSuccessful()) {
-                                Toast.makeText(SignUpActivity.this, "Sign Up failed. Please try again", Toast.LENGTH_SHORT).show();
+
+                    int iend = email.indexOf("@");
+                    String username = email.substring(0 , iend);
+
+                    if (firstName.length() != 0 && lastName.length() != 0 && username.length() != 0) {
+                        User newUser = new User(email, username, firstName, lastName);
+
+                        HashMap<String, Object> newUserData;
+
+                        newUserData = newUser.userToMap();
+
+                        collectionreference
+                                .document(email)
+                                .set(newUserData)
+                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        Log.d(TAG,"Data addition to firestore successful");
+                                    }
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Log.d(TAG, "Data addition to firestore failed");
+                                    }
+                                });
+
+                        firebaseAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(SignUpActivity.this, new OnCompleteListener<AuthResult>() {
+                            @Override
+                            public void onComplete(@NonNull Task<AuthResult> task) {
+                                if (!task.isSuccessful()) {
+                                    Toast.makeText(SignUpActivity.this, "Sign Up failed. Please try again", Toast.LENGTH_SHORT).show();
+                                }
+                                else {
+                                    FirebaseAuth.getInstance().signOut();
+                                    Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
+                                    startActivity(intent);
+                                }
                             }
-                            else {
-                                Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
-                                startActivity(intent);
-                            }
-                        }
-                    });
+                        });
+                    }
+
                 }
                 else {
                     Toast.makeText(SignUpActivity.this, "Error Occurred", Toast.LENGTH_SHORT).show();

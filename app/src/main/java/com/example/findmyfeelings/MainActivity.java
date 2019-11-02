@@ -93,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
         if (firebaseUser != null) {
-            Toast.makeText(MainActivity.this, "Logged in", Toast.LENGTH_SHORT).show();
+            Toast.makeText(MainActivity.this, "Logged in "+ firebaseUser.getEmail(), Toast.LENGTH_SHORT).show();
             Intent loginIntent = new Intent(MainActivity.this, HomePageActivity.class);
             //loginIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             //loginIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);

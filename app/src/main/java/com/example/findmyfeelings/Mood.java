@@ -17,7 +17,11 @@ public class Mood implements Serializable {
 //    private Location location;
 //    private Photo photo;
 
-    Mood(int dateDay, int dateMonth, int dateYear, int timeHour, int timeMinute, String mood, String reason) {
+    public Mood() {
+
+    }
+
+    public Mood(int dateDay, int dateMonth, int dateYear, int timeHour, int timeMinute, String mood, String reason) {
         this.dateDay = dateDay;
         this.dateMonth = dateMonth;
         this.dateYear = dateYear;

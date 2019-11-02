@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -14,27 +15,42 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+
+import org.w3c.dom.Document;
 
 import java.math.RoundingMode;
+import java.net.DatagramPacket;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class HomePageActivity extends AppCompatActivity implements EventFragment.OnFragmentInteractionListener{
-
-
-//    private ListView moodList;
+  
+    private String currentUserEmail;
+    private ArrayList<Mood> moodDataList;
+    private ArrayList<Follower> followersDataList;
+    private ArrayList<Following> followingDataList;
+    private FirebaseFirestore db;
+    private FirebaseAuth firebaseAuth;
     private RecyclerView moodList;
     private RecyclerView.Adapter moodAdapter;
     private RecyclerView.LayoutManager moodLayoutManager;
-    private List<Mood> moodDataList = new ArrayList<>();
-
     private FloatingActionButton addMoodButton;
     private Button myMoodListButton;
     private Button followingMoodListButton;
-
     BottomNavigationView bottomNavigationView;
+  
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,13 +66,13 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
 
         /* ** Bottom Navigation Bar ** */
         // from stackoverflow : https://stackoverflow.com/questions/41649494/how-to-remove-icon-animation-for-bottom-navigation-view-in-android
-        // disable default navigation bar animation
-        BottomNavigationViewHelper.disableShiftMode(bottomNavigationView);
 
-        // sets default selected item on opening
-        bottomNavigationView.setSelectedItemId(R.id.ic_feed);
-        // disables icon tint
-        bottomNavigationView.setItemIconTintList(null);
+        BottomNavigationViewHelper.disableShiftMode(bottomNavigationView);      // disable default navigation bar animation
+        bottomNavigationView.setSelectedItemId(R.id.ic_feed);   // sets default selected item on opening
+        bottomNavigationView.setItemIconTintList(null);         // disables icon tint
+
+        firebaseAuth = FirebaseAuth.getInstance();
+        currentUserEmail = firebaseAuth.getCurrentUser().getEmail().toString();
 
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -81,13 +97,32 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
                 return false;
             }
         });
+      
+        /* Custom List Implementation */
+        moodList = findViewById(R.id.my_mood_list);
+        moodDataList = new ArrayList<>();
+        followersDataList = new ArrayList<>();
+        followingDataList = new ArrayList<>();
 
+        db = FirebaseFirestore.getInstance();
+        final DocumentReference docRef = db.collection("Users").document(currentUserEmail);
 
-//        bottom_nav_bar.setItemIconTintList(null);
+        /*docRef
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful()){
+                            HashMap<String, Object> map = task.getData();
+                            for (HashMap.Entry<String, Object> entry : map.entrySet()) {
+                                if (entry.getKey().equals("dungeon_group")) {
+                                    Log.d("TAG", entry.getValue().toString());
+                                }
+                            }
+                        }
 
-        /* ** Mood List Switcher Implementation ** */
-
-
+                    }
+                })*/
 
         /* ** Custom List Implementation ** */
         // use a linear layout manager
@@ -139,6 +174,11 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
 
     @Override
     public void onEventAdded(Mood newMood) {
+        db = FirebaseFirestore.getInstance();
+        final DocumentReference docRef = db.collection("Users").document(currentUserEmail);
+
+
+
 
 
     }
