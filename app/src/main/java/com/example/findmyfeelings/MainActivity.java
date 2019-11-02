@@ -22,8 +22,8 @@ public class MainActivity extends AppCompatActivity {
     Button loginButton;
     TextView signUpTextView;
     EditText emailEditText, passwordEditText;
-    private FirebaseAuth firebaseAuth;
-    private FirebaseAuth.AuthStateListener authStateListener;
+    FirebaseAuth firebaseAuth;
+    FirebaseUser firebaseUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,22 +34,6 @@ public class MainActivity extends AppCompatActivity {
         signUpTextView = findViewById(R.id.sign_up_textView);
         emailEditText = findViewById(R.id.username_editText);
         passwordEditText = findViewById(R.id.password_editText);
-
-        authStateListener = new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
-                if (firebaseUser != null) {
-                    Toast.makeText(MainActivity.this, "Logged in", Toast.LENGTH_SHORT).show();
-                    Intent loginIntent = new Intent(MainActivity.this, HomePageActivity.class);
-                    startActivity(loginIntent);
-                }
-                else {
-                    Toast.makeText(MainActivity.this, "Please Login", Toast.LENGTH_SHORT).show();
-
-                }
-            }
-        };
 
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -77,6 +61,8 @@ public class MainActivity extends AppCompatActivity {
                             }
                             else {
                                 Intent intent = new Intent(MainActivity.this, HomePageActivity.class);
+                                //intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                //intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                 startActivity(intent);
                             }
                         }
@@ -93,6 +79,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent signUpIntent = new Intent(MainActivity.this, SignUpActivity.class);
+                //signUpIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                //signUpIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                //signUpIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(signUpIntent);
             }
         });
@@ -102,10 +91,15 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         firebaseAuth = FirebaseAuth.getInstance();
-
-
-        //firebaseAuth.addAuthStateListener(authStateListener);
+        firebaseUser = firebaseAuth.getCurrentUser();
+        if (firebaseUser != null) {
+            Toast.makeText(MainActivity.this, "Logged in", Toast.LENGTH_SHORT).show();
+            Intent loginIntent = new Intent(MainActivity.this, HomePageActivity.class);
+            //loginIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            //loginIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(loginIntent);
+        } else {
+            Toast.makeText(MainActivity.this, "Please Login", Toast.LENGTH_SHORT).show();
+        }
     }
-
-
 }

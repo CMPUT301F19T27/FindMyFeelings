@@ -42,11 +42,18 @@ public class ProfileActivity extends AppCompatActivity {
                 switch (menuItem.getItemId()) {
                     case R.id.ic_map:
                         Intent intent1 = new Intent(ProfileActivity.this, MapActivity.class);
+                        //intent1.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
+                       // intent1.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        //intent1.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(intent1);
                         break;
 
                     case R.id.ic_feed:
                         Intent intent2 = new Intent(ProfileActivity.this, HomePageActivity.class);
+                        //intent2.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        //intent2.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        //intent2.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(intent2);
                         break;
                 }
@@ -59,6 +66,9 @@ public class ProfileActivity extends AppCompatActivity {
             public void onClick(View view) {
                 FirebaseAuth.getInstance().signOut();
                 Intent loginIntent = new Intent(ProfileActivity.this, MainActivity.class);
+                loginIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                loginIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+ //               loginIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(loginIntent);
             }
         });
