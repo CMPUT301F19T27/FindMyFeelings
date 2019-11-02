@@ -2,6 +2,8 @@ package com.example.findmyfeelings;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,6 +11,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -20,13 +23,16 @@ import java.util.List;
 
 public class HomePageActivity extends AppCompatActivity implements EventFragment.OnFragmentInteractionListener{
 
-    private ListView moodList;
-    private ArrayAdapter<Mood> moodAdapter;
-    private List<Mood> moodDataList;
-    private FloatingActionButton addButton;
 
+//    private ListView moodList;
+    private RecyclerView moodList;
+    private RecyclerView.Adapter moodAdapter;
+    private RecyclerView.LayoutManager moodLayoutManager;
+    private List<Mood> moodDataList = new ArrayList<>();
 
-
+    private FloatingActionButton addMoodButton;
+    private Button myMoodListButton;
+    private Button followingMoodListButton;
 
     BottomNavigationView bottomNavigationView;
     @Override
@@ -34,9 +40,15 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_page);
 
+        moodList = findViewById(R.id.my_mood_list);
 
         bottomNavigationView = findViewById(R.id.bottom_nav_bar);
+        addMoodButton = findViewById(R.id.add_mood_button);
+        myMoodListButton = findViewById(R.id.my_mood_button);
+        followingMoodListButton = findViewById(R.id.following_mood_button);
 
+
+        /* ** Bottom Navigation Bar ** */
         // from stackoverflow : https://stackoverflow.com/questions/41649494/how-to-remove-icon-animation-for-bottom-navigation-view-in-android
         // disable default navigation bar animation
         BottomNavigationViewHelper.disableShiftMode(bottomNavigationView);
@@ -73,12 +85,17 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
 
 //        bottom_nav_bar.setItemIconTintList(null);
 
+        /* ** Mood List Switcher Implementation ** */
 
-        /* Custom List Implementation */
-        moodList = findViewById(R.id.my_mood_list);
-        moodDataList = new ArrayList<>();
 
-        moodAdapter = new MoodCustomList(this, moodDataList);
+
+        /* ** Custom List Implementation ** */
+        // use a linear layout manager
+        moodLayoutManager = new LinearLayoutManager(this);
+        moodList.setLayoutManager(moodLayoutManager);
+
+        // Specify an adapter
+        moodAdapter = new MoodCustomList(moodDataList);
         moodList.setAdapter(moodAdapter);
 
         addButton = findViewById(R.id.add_event_button);
@@ -97,6 +114,7 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
             }
         });
 
+
         // Test data
         moodDataList.add(new Mood(22,10,19, 16,20, "Angry", ""));
         moodDataList.add(new Mood(23,10,19, 16,20, "Happy", ""));
@@ -104,8 +122,19 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
         moodDataList.add(new Mood(25,10,19, 16,20, "Surprised", ""));
         moodDataList.add(new Mood(26,10,19, 16,20, "Scared", ""));
         moodDataList.add(new Mood(27,10,19, 16,20, "Disgusted", ""));
+        moodDataList.add(new Mood(28,10,19, 16,20, "Happy", ""));
+        moodDataList.add(new Mood(29,10,19, 16,20, "Happy", ""));
+        moodDataList.add(new Mood(30,10,19, 16,20, "Sad", ""));
+        moodDataList.add(new Mood(31,10,19, 16,20, "Surprised", ""));
+        moodDataList.add(new Mood(1,11,19, 16,20, "Surprised", ""));
+        moodDataList.add(new Mood(2,11,19, 16,20, "Disgusted", ""));
 
 
+        addMoodButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+//                new AddMoodFragment().show(getSupportFragmentManager(), "ADD_MOOD");
+            }
+        });
     }
 
     @Override
