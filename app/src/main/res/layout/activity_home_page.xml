@@ -50,14 +50,14 @@
 
 
                 <Button
+                    android:id="@+id/following_mood_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@drawable/unselected_bar"
-                    android:text="Following Moods"
-                    android:textSize="18dp"
-                    android:textAllCaps="false"
                     android:fontFamily="@font/regular"
-                    />
+                    android:text="Following Moods"
+                    android:textAllCaps="false"
+                    android:textSize="18dp" />
 
             </LinearLayout>
 
@@ -94,15 +94,26 @@
             android:layout_below="@+id/top_bar"
             android:layout_above="@+id/bottom_bar">
 
-            <ListView
+<!--            <ListView-->
+<!--                android:id="@+id/my_mood_list"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="690dp"-->
+<!--                android:paddingTop="5dp" />-->
+
+            <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/my_mood_list"
                 android:layout_width="match_parent"
-                android:layout_height="690dp"
-                android:paddingTop="5dp" />
+                android:layout_height="match_parent"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true" />
 
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginEnd="0dp"
+                android:layout_marginBottom="0dp"
                 android:orientation="vertical"
                 tools:context=".MainActivity">
 

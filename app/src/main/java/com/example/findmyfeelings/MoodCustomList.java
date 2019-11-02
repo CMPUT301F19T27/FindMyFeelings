@@ -4,42 +4,55 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.annotation.*;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class MoodCustomList extends ArrayAdapter<Mood> {
+public class MoodCustomList extends RecyclerView.Adapter<MoodCustomList.MoodViewHolder> {
     private List<Mood> moods;
-    private Context context;
-    private ImageView moodImage;
 
-    public MoodCustomList(Context context, List<Mood> moods){
-        super(context,0, moods);
-        this.moods = moods;
-        this.context = context;
+
+    public static class MoodViewHolder extends RecyclerView.ViewHolder {
+        private View view;
+        private MoodViewHolder(@NonNull View v) {
+            super(v);
+            view = v;
+        }
     }
 
-    @NonNull
+    // Provide a suitable constructor (depends on the kind of dataset)
+    public MoodCustomList(List<Mood> inputMoodDataset) {
+        moods = inputMoodDataset;
+    }
+
+
+    // Create new views (invoked by the layout manager)
     @Override
-    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-        View view = convertView;
+    @NonNull
+    public MoodCustomList.MoodViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        // create a new view
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.mood_list_content, parent, false);
 
-        if(view == null){
-            view = LayoutInflater.from(context).inflate(R.layout.mood_list_content, parent,false);
-        }
+        MoodViewHolder moodViewHolder = new MoodViewHolder(view);
+        return moodViewHolder;
+    }
 
+
+    // Replace the contents of a view (invoked by the layout manager)
+    @Override
+    public void onBindViewHolder(MoodViewHolder holder, int position) {
         Mood mood = moods.get(position);
-//        User user = ???;
 
-        moodImage = view.findViewById(R.id.mood_emoticon);
-        TextView dateValue = view.findViewById(R.id.date_text);
-        TextView timeValue = view.findViewById(R.id.time_text);
-        TextView moodString = view.findViewById(R.id.mood_name_text);
-        TextView usernameString = view.findViewById(R.id.username_text);
+        ImageView moodImage = holder.view.findViewById(R.id.mood_emoticon);
+        TextView dateValue = holder.view.findViewById(R.id.date_text);
+        TextView timeValue = holder.view.findViewById(R.id.time_text);
+        TextView moodString = holder.view.findViewById(R.id.mood_name_text);
+        TextView usernameString = holder.view.findViewById(R.id.username_text);
 
         switch(mood.getMood()) {
             case "Happy":
@@ -64,20 +77,28 @@ public class MoodCustomList extends ArrayAdapter<Mood> {
                 moodImage.setImageResource(R.drawable.null_face);
         }
 
-
         dateValue.setText(mood.getDateString());
         timeValue.setText(mood.getTimeString());
         moodString.setText(mood.getMood());
 
-        String str = "childebrandt12345678"; //change to user.getName()
+        String username = "childebrandt12345678"; // TODO change to user.getName()
 
-        if(str.length() > 10) {
-            usernameString.setText(str.substring(0,10) + "..."); //user.getName()
+        if(username.length() > 10) {
+            usernameString.setText(username.substring(0,10) + "...");
         } else {
-            usernameString.setText(str); // TODO find a way to snatch the username
+            usernameString.setText(username);
         }
 
-        return view;
-
     }
+
+
+    @Override
+    public int getItemCount() {
+        if(moods != null) {
+            return moods.size();
+        } else {
+            return 0;
+        }
+    }
+
 }
