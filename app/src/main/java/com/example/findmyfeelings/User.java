@@ -10,8 +10,8 @@ public class User {
     private String username;
     private String firstName;
     private String lastName;
-    private ArrayList<String> followersList;
-    private ArrayList<String> followingList;
+    private ArrayList<Follower> followersList;
+    private ArrayList<Following> followingList;
     private ArrayList<Mood> myMoods;
     private ArrayList<String> requestList;
     private Mood recentMood;
@@ -21,8 +21,8 @@ public class User {
         this.username = username;
         this.firstName = firstName;
         this.lastName = lastName;
-        this.followersList = new ArrayList<String>();
-        this.followingList = new ArrayList<String>();
+        this.followersList = new ArrayList<Follower>();
+        this.followingList = new ArrayList<Following>();
         this.myMoods = new ArrayList<Mood>();
         this.requestList = new ArrayList<String>();
         this.recentMood = new Mood();
@@ -44,11 +44,11 @@ public class User {
         return lastName;
     }
 
-    public ArrayList<String> getFollowersList() {
+    public ArrayList<Follower> getFollowersList() {
         return followersList;
     }
 
-    public ArrayList<String> getFollowingList() {
+    public ArrayList<Following> getFollowingList() {
         return followingList;
     }
 
@@ -68,7 +68,7 @@ public class User {
      * adds a user to followersList
      * @param fUser
      */
-    public void addFollower(String fUser) {
+    public void addFollower(Follower fUser) {
         followersList.add(fUser);
     }
 
@@ -76,7 +76,7 @@ public class User {
      * adds a user to followingList
      * @param fUser
      */
-    public void addFollowing(String fUser) {
+    public void addFollowing(Following fUser) {
         followingList.add(fUser);
     }
 
@@ -84,7 +84,7 @@ public class User {
      * removes a user from followerList
      * @param fUser
      */
-    public void removeFollower(String fUser) {
+    public void removeFollower(Follower fUser) {
         followersList.remove(fUser);
     }
 
@@ -92,7 +92,7 @@ public class User {
      * removes a user from followingList
      * @param fUser
      */
-    public void removeFollowing(String fUser) {
+    public void removeFollowing(Following fUser) {
         followingList.remove(fUser);
     }
 
@@ -110,6 +110,12 @@ public class User {
      */
     public void removeRequest(String rEmail) {
         requestList.remove(rEmail);
+    }
+
+    public void addMood(Mood newMood) {
+        recentMood = newMood;
+        myMoods.add(newMood);
+
     }
 
     public HashMap<String, Object> userToMap() {
