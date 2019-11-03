@@ -72,7 +72,7 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
         bottomNavigationView.setItemIconTintList(null);         // disables icon tint
 
         firebaseAuth = FirebaseAuth.getInstance();
-        currentUserEmail = firebaseAuth.getCurrentUser().getEmail().toString();
+        currentUserEmail = firebaseAuth.getCurrentUser().getEmail();
 
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -141,7 +141,15 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
             }
         });
 
+        // MOOD VIEW/EDIT FRAGMENT (NOT IMPLEMENTED)
 
+       /* moodList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Mood selectedMood = moodDataList.get(i);
+                EventFragment.newInstance(selectedMood, i).show(getSupportFragmentManager(), "EDIT_EVENT");
+            }
+        });*/
 
         // Test data
         moodDataList.add(new Mood(22,10,19, 16,20, "Angry", ""));
@@ -156,13 +164,6 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
         moodDataList.add(new Mood(31,10,19, 16,20, "Surprised", ""));
         moodDataList.add(new Mood(1,11,19, 16,20, "Surprised", ""));
         moodDataList.add(new Mood(2,11,19, 16,20, "Disgusted", ""));
-
-
-        addMoodButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-//                new AddMoodFragment().show(getSupportFragmentManager(), "ADD_MOOD");
-            }
-        });
     }
 
     @Override

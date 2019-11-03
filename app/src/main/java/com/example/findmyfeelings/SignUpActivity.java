@@ -27,7 +27,7 @@ import java.util.HashMap;
 public class SignUpActivity extends AppCompatActivity {
 
     private String TAG = "Display";
-    private EditText firstNameEditText, lastNameEditText, usernameEditText, emailEditText, passwordEditText;
+    private EditText firstNameEditText, lastNameEditText, emailEditText, passwordEditText;
     private TextView loginTextView;
     private Button signUpButton;
     private FirebaseAuth firebaseAuth;
@@ -48,76 +48,77 @@ public class SignUpActivity extends AppCompatActivity {
         db = FirebaseFirestore.getInstance();
         final CollectionReference collectionreference = db.collection("Users");
 
-
         firebaseAuth = FirebaseAuth.getInstance();
 
         signUpButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String email = emailEditText.getText().toString();
+                final String email = emailEditText.getText().toString();
                 String password = passwordEditText.getText().toString();
-                String firstName = firstNameEditText.getText().toString();
-                String lastName = lastNameEditText.getText().toString();
+                final String firstName = firstNameEditText.getText().toString();
+                final String lastName = lastNameEditText.getText().toString();
 
                 if (email.isEmpty()) {
                     emailEditText.setError("Enter an email id");
                     emailEditText.requestFocus();
                 }
-                else if (password.isEmpty()) {
+                if (password.isEmpty()) {
                     passwordEditText.setError("Enter a password");
                     passwordEditText.requestFocus();
                 }
-                else if (email.isEmpty() && password.isEmpty()) {
+                /*if (email.isEmpty() && password.isEmpty() && firstName.isEmpty() && lastName.isEmpty()) {
+                    Toast.makeText(SignUpActivity.this, "Empty fields!", Toast.LENGTH_SHORT).show();
+                }*/
+                if (firstName.isEmpty()) {
+                    firstNameEditText.setError("Enter your first name");
+                    firstNameEditText.requestFocus();
+                }
+                if (lastName.isEmpty()) {
+                    lastNameEditText.setError("Enter your last name");
+                    lastNameEditText.requestFocus();
+                }
+                if (email.isEmpty() || password.isEmpty() || firstName.isEmpty() || lastName.isEmpty()) {
                     Toast.makeText(SignUpActivity.this, "Empty fields!", Toast.LENGTH_SHORT).show();
                 }
-                else if (!(email.isEmpty() && password.isEmpty())) {
-
-                    int iend = email.indexOf("@");
-                    String username = email.substring(0 , iend);
-
-                    if (firstName.length() != 0 && lastName.length() != 0 && username.length() != 0) {
-                        User newUser = new User(email, username, firstName, lastName);
-
-                        HashMap<String, Object> newUserData;
-
-                        newUserData = newUser.userToMap();
-
-                        collectionreference
-                                .document(email)
-                                .set(newUserData)
-                                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                    @Override
-                                    public void onSuccess(Void aVoid) {
-                                        Log.d(TAG,"Data addition to firestore successful");
-                                    }
-                                })
-                                .addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
-                                        Log.d(TAG, "Data addition to firestore failed");
-                                    }
-                                });
-
-                        firebaseAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(SignUpActivity.this, new OnCompleteListener<AuthResult>() {
-                            @Override
-                            public void onComplete(@NonNull Task<AuthResult> task) {
-                                if (!task.isSuccessful()) {
-                                    Toast.makeText(SignUpActivity.this, "Sign Up failed. Please try again", Toast.LENGTH_SHORT).show();
-                                }
-                                else {
-                                    FirebaseAuth.getInstance().signOut();
-                                    Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
-                                    startActivity(intent);
-                                }
-                            }
-                        });
-                    }
-
-                }
                 else {
-                    Toast.makeText(SignUpActivity.this, "Error Occurred", Toast.LENGTH_SHORT).show();
-                }
+                    firebaseAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(SignUpActivity.this, new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (!task.isSuccessful()) {
+                                Toast.makeText(SignUpActivity.this, "Sign Up failed. Please try again", Toast.LENGTH_SHORT).show();
+                            }
+                            else {
+                                int indexEnd = email.indexOf("@");
+                                String username = email.substring(0 , indexEnd);
 
+                                User newUser = new User(email, username, firstName, lastName);
+
+                                HashMap<String, Object> newUserData;
+
+                                newUserData = newUser.userToMap();
+
+                                collectionreference
+                                        .document(email)
+                                        .set(newUserData)
+                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void aVoid) {
+                                                Log.d(TAG,"Data addition to firestore successful");
+                                            }
+                                        })
+                                        .addOnFailureListener(new OnFailureListener() {
+                                            @Override
+                                            public void onFailure(@NonNull Exception e) {
+                                                Log.d(TAG, "Data addition to firestore failed");
+                                            }
+                                        });
+                                FirebaseAuth.getInstance().signOut();
+                                Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
+                                startActivity(intent);
+                            }
+                        }
+                    });
+                }
             }
         });
 
@@ -128,9 +129,5 @@ public class SignUpActivity extends AppCompatActivity {
                 startActivity(loginIntent);
             }
         });
-
-
-
-
     }
 }
