@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -38,7 +39,8 @@ import java.util.List;
 public class HomePageActivity extends AppCompatActivity implements EventFragment.OnFragmentInteractionListener{
   
     private String currentUserEmail;
-    private ArrayList<Mood> moodDataList;
+    private ArrayList<Mood> myMoodDataList;
+    private ArrayList<Mood> followingMoodDataList;
     private ArrayList<Follower> followersDataList;
     private ArrayList<Following> followingDataList;
     private FirebaseFirestore db;
@@ -100,7 +102,8 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
       
         /* Custom List Implementation */
         moodList = findViewById(R.id.my_mood_list);
-        moodDataList = new ArrayList<>();
+        myMoodDataList = new ArrayList<>();
+        followingMoodDataList = new ArrayList<>();
         followersDataList = new ArrayList<>();
         followingDataList = new ArrayList<>();
 
@@ -124,13 +127,41 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
                     }
                 })*/
 
+
+        myMoodListButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                moodAdapter = new MoodCustomList(myMoodDataList);
+                moodList.setAdapter(moodAdapter);
+
+                myMoodListButton.setBackgroundResource(R.drawable.selected_bar_left);
+                myMoodListButton.setTextColor(Color.parseColor("#FFFFFF"));
+                followingMoodListButton.setBackgroundResource(R.drawable.unselected_bar_right);
+                followingMoodListButton.setTextColor(Color.parseColor("#000000"));
+            }
+        });
+
+        followingMoodListButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                moodAdapter = new MoodCustomList(followingMoodDataList);
+                moodList.setAdapter(moodAdapter);
+
+                myMoodListButton.setBackgroundResource(R.drawable.unselected_bar_left);
+                myMoodListButton.setTextColor(Color.parseColor("#000000"));
+                followingMoodListButton.setBackgroundResource(R.drawable.selected_bar_right);
+                followingMoodListButton.setTextColor(Color.parseColor("#FFFFFF"));
+            }
+        });
+
+
         /* ** Custom List Implementation ** */
         // use a linear layout manager
         moodLayoutManager = new LinearLayoutManager(this);
         moodList.setLayoutManager(moodLayoutManager);
 
         // Specify an adapter
-        moodAdapter = new MoodCustomList(moodDataList);
+        moodAdapter = new MoodCustomList(myMoodDataList); // Set to default list
         moodList.setAdapter(moodAdapter);
 
 
@@ -143,37 +174,38 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
 
         // MOOD VIEW/EDIT FRAGMENT (NOT IMPLEMENTED)
 
-       /* moodList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Mood selectedMood = moodDataList.get(i);
-                EventFragment.newInstance(selectedMood, i).show(getSupportFragmentManager(), "EDIT_EVENT");
-            }
-        });*/
-
         // Test data
-        moodDataList.add(new Mood(22,10,19, 16,20, "Angry", ""));
-        moodDataList.add(new Mood(23,10,19, 16,20, "Happy", ""));
-        moodDataList.add(new Mood(24,10,19, 16,20, "Sad", ""));
-        moodDataList.add(new Mood(25,10,19, 16,20, "Surprised", ""));
-        moodDataList.add(new Mood(26,10,19, 16,20, "Scared", ""));
-        moodDataList.add(new Mood(27,10,19, 16,20, "Disgusted", ""));
-        moodDataList.add(new Mood(28,10,19, 16,20, "Happy", ""));
-        moodDataList.add(new Mood(29,10,19, 16,20, "Happy", ""));
-        moodDataList.add(new Mood(30,10,19, 16,20, "Sad", ""));
-        moodDataList.add(new Mood(31,10,19, 16,20, "Surprised", ""));
-        moodDataList.add(new Mood(1,11,19, 16,20, "Surprised", ""));
-        moodDataList.add(new Mood(2,11,19, 16,20, "Disgusted", ""));
+        myMoodDataList.add(new Mood(22,10,19, 16,20, "Angry", "Null pointer exception happened"));
+        myMoodDataList.add(new Mood(23,10,19, 16,20, "Happy", "The code is working"));
+        myMoodDataList.add(new Mood(24,10,19, 16,20, "Sad", "I don't know why this error is happening"));
+        myMoodDataList.add(new Mood(25,10,19, 16,20, "Surprised", "Only 2 errors!"));
+        myMoodDataList.add(new Mood(26,10,19, 16,20, "Scared", ""));
+        myMoodDataList.add(new Mood(27,10,19, 16,20, "Disgusted", ""));
+        myMoodDataList.add(new Mood(28,10,19, 16,20, "Happy", ""));
+        myMoodDataList.add(new Mood(29,10,19, 16,20, "Happy", ""));
+        myMoodDataList.add(new Mood(30,10,19, 16,20, "Sad", ""));
+        myMoodDataList.add(new Mood(31,10,19, 16,20, "Surprised", "It compiled"));
+        myMoodDataList.add(new Mood(1,11,19, 16,20, "Surprised", ""));
+        myMoodDataList.add(new Mood(2,11,19, 16,20, "Disgusted", ""));
+
+        followingMoodDataList.add(new Mood(12,10,19, 16,20, "Sad", ""));
+        followingMoodDataList.add(new Mood(12,10,19, 16,20, "Angry", ""));
+        followingMoodDataList.add(new Mood(13,10,19, 16,20, "Disgusted", ""));
+        followingMoodDataList.add(new Mood(13,10,19, 16,20, "Happy", ""));
+        followingMoodDataList.add(new Mood(13,10,19, 16,20, "Surprised", ""));
+        followingMoodDataList.add(new Mood(14,11,19, 16,20, "Disgusted", ""));
+
+        addMoodButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+//                new AddMoodFragment().show(getSupportFragmentManager(), "ADD_MOOD");
+            }
+        });
     }
 
     @Override
     public void onEventAdded(Mood newMood) {
         db = FirebaseFirestore.getInstance();
         final DocumentReference docRef = db.collection("Users").document(currentUserEmail);
-
-
-
-
 
     }
 

@@ -43,7 +43,7 @@
 
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/selected_bar"
+                    android:background="@drawable/selected_bar_left"
                     android:text="My Moods"
                     android:textSize="18dp"
                     android:textColor="@color/white"
@@ -56,9 +56,9 @@
                     android:id="@+id/following_mood_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/unselected_bar"
+                    android:background="@drawable/unselected_bar_right"
                     android:fontFamily="@font/regular"
-                    android:text="Following Moods"
+                    android:text="Other's Moods"
                     android:textAllCaps="false"
                     android:textSize="18dp" />
 
