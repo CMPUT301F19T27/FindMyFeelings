@@ -55,20 +55,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/sign_up_firstname_editText" />
 
-    <EditText
-        android:id="@+id/sign_up_username_editText"
-        android:layout_width="317dp"
-        android:layout_height="42dp"
-        android:layout_marginTop="12dp"
-        android:background="@drawable/input_field"
-        android:ems="10"
-        android:fontFamily="@font/regular"
-        android:hint="username"
-        android:inputType="textEmailAddress"
-        android:textSize="23dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/sign_up_lastname_editText" />
 
     <EditText
         android:id="@+id/sign_up_email_editText"
@@ -83,7 +69,7 @@
         android:textSize="23dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/sign_up_username_editText" />
+        app:layout_constraintTop_toBottomOf="@+id/sign_up_lastname_editText" />
 
     <EditText
         android:id="@+id/sign_up_password_editText"

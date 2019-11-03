@@ -122,6 +122,8 @@ public class User {
         uMap.put("followers", followersList);
         uMap.put("following", followingList);
         uMap.put("requests", requestList);
+        uMap.put("recent_mood", recentMood);
+        uMap.put("my_moods", myMoods);
 
         return uMap;
     }
