@@ -187,12 +187,12 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
         myMoodDataList.add(new Mood(1,11,19, 16,20, "Surprised", ""));
         myMoodDataList.add(new Mood(2,11,19, 16,20, "Disgusted", ""));
 
-        followingMoodDataList.add(new Mood(22,10,19, 16,20, "Angry", "Null pointer exception happened"));
-        followingMoodDataList.add(new Mood(23,10,19, 16,20, "Happy", "The code is working"));
-        followingMoodDataList.add(new Mood(24,10,19, 16,20, "Sad", "I don't know why this error is happening"));
-        followingMoodDataList.add(new Mood(25,10,19, 16,20, "Surprised", "Only 2 errors!"));
-        followingMoodDataList.add(new Mood(31,10,19, 16,20, "Surprised", "It compiled"));
-        followingMoodDataList.add(new Mood(2,11,19, 16,20, "Disgusted", ""));
+        followingMoodDataList.add(new Mood(12,10,19, 16,20, "Sad", ""));
+        followingMoodDataList.add(new Mood(12,10,19, 16,20, "Angry", ""));
+        followingMoodDataList.add(new Mood(13,10,19, 16,20, "Disgusted", ""));
+        followingMoodDataList.add(new Mood(13,10,19, 16,20, "Happy", ""));
+        followingMoodDataList.add(new Mood(13,10,19, 16,20, "Surprised", ""));
+        followingMoodDataList.add(new Mood(14,11,19, 16,20, "Disgusted", ""));
 
         addMoodButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
