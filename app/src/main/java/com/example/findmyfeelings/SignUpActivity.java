@@ -16,13 +16,16 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class SignUpActivity extends AppCompatActivity {
 
-    EditText emailEditText, passwordEditText;
-    TextView loginTextView;
-    Button signUpButton;
-    FirebaseAuth firebaseAuth;
+    private EditText emailEditText, passwordEditText;
+    private TextView loginTextView;
+    private Button signUpButton;
+    private FirebaseAuth firebaseAuth;
+    private FirebaseFirestore db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +36,10 @@ public class SignUpActivity extends AppCompatActivity {
         emailEditText = findViewById(R.id.sign_up_username_editText);
         passwordEditText = findViewById(R.id.sign_up_password_editText);
         signUpButton = findViewById(R.id.sign_up_button);
+
+        db = FirebaseFirestore.getInstance();
+        final CollectionReference collectionreference = db.collection("Users");
+
 
         firebaseAuth = FirebaseAuth.getInstance();
 

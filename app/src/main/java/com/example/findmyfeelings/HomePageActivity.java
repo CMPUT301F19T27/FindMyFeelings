@@ -13,6 +13,8 @@ import android.widget.ListView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.math.RoundingMode;
 import java.util.ArrayList;
@@ -24,7 +26,7 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
     private ArrayAdapter<Mood> moodAdapter;
     private List<Mood> moodDataList;
     private FloatingActionButton addButton;
-
+    private FirebaseFirestore db;
 
 
 
@@ -114,7 +116,8 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
 
     @Override
     public void onEventAdded(Mood newMood) {
-
+        db = FirebaseFirestore.getInstance();
+        final CollectionReference collectionreference = db.collection("Users");
 
     }
 

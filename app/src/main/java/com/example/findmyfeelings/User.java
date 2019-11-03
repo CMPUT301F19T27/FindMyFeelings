@@ -1,5 +1,7 @@
 package com.example.findmyfeelings;
 
+import java.io.ObjectStreamException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -95,16 +97,32 @@ public class User {
     }
 
     /**
-     * adds a new request to requestList
+     * adds a new user request to requestList
      * @param rEmail
      */
     public void addRequest(String rEmail) {
         requestList.add(rEmail);
     }
 
+    /**
+     * removes a user request from requestList
+     * @param rEmail
+     */
     public void removeRequest(String rEmail) {
         requestList.remove(rEmail);
     }
 
+    public HashMap<String, Object> userToMap() {
 
+        HashMap<String, Object> uMap = new HashMap<String, Object>();
+
+        uMap.put("first_name", firstName);
+        uMap.put("last_name", lastName);
+        uMap.put("username", username);
+        uMap.put("followers", followersList);
+        uMap.put("following", followingList);
+        uMap.put("requests", requestList);
+
+        return uMap;
+    }
 }
