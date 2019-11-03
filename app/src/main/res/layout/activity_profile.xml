@@ -109,6 +109,8 @@
                     android:paddingStart="15dp">
 
                     <LinearLayout
+                        android:clickable="true"
+                        android:focusable="true"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
@@ -121,16 +123,27 @@
                             android:text="Followers:"
                             android:textSize="20sp" />
 
-                        <TextView
+<!--                        <TextView-->
+<!--                            android:id="@+id/follower_tab_button"-->
+<!--                            android:layout_width="wrap_content"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:layout_gravity="center"-->
+<!--                            android:text="64"-->
+<!--                            android:textSize="26sp" />-->
+
+                        <Button
+                            android:id="@+id/follower_tab_button"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
                             android:text="64"
-                            android:textSize="26sp" />
+                            android:textSize="20sp" />
 
                     </LinearLayout>
 
                     <LinearLayout
+                        android:clickable="true"
+                        android:focusable="true"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
@@ -143,12 +156,21 @@
                             android:text="Following:"
                             android:textSize="20sp" />
 
-                        <TextView
+<!--                        <TextView-->
+<!--                            android:id="@+id/following_tab_button"-->
+<!--                            android:layout_width="wrap_content"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:layout_gravity="center"-->
+<!--                            android:text="32"-->
+<!--                            android:textSize="26sp" />-->
+
+                        <Button
+                            android:id="@+id/following_tab_button"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
                             android:text="32"
-                            android:textSize="26sp" />
+                            android:textSize="20sp" />
 
                     </LinearLayout>
 
@@ -178,8 +200,8 @@
                     android:id="@+id/list_hint_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:paddingStart="15dp"
                     android:paddingTop="15dp"
+                    android:paddingStart="5dp"
                     android:text="Users you are following:"
                     android:textSize="20sp"
                     android:textStyle="bold" />
@@ -188,7 +210,6 @@
                     android:id="@+id/follow_list"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:padding="15dp"
                     android:layout_alignParentTop="true"
                     android:layout_alignParentEnd="true" />
 

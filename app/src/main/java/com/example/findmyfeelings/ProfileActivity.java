@@ -10,6 +10,8 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -20,7 +22,10 @@ import java.util.ArrayList;
 public class ProfileActivity extends AppCompatActivity {
 
     BottomNavigationView bottomNavigationView;
+    TextView listHintText;
     Button logoutButton;
+    Button followerButton;
+    Button followingButton;
     FirebaseAuth firebaseAuth;
     private FirebaseAuth.AuthStateListener authStateListener;
 
@@ -37,6 +42,10 @@ public class ProfileActivity extends AppCompatActivity {
 
         bottomNavigationView = findViewById(R.id.bottom_nav_bar);
         logoutButton = findViewById(R.id.logout_button);
+        followerButton = findViewById(R.id.follower_tab_button); //TODO make this not just a button, but a clickable listview
+        followingButton = findViewById(R.id.following_tab_button);
+        listHintText = findViewById(R.id.list_hint_text);
+
 
         bottomNavigationView.setSelectedItemId(R.id.ic_profile);
 
@@ -83,6 +92,24 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
 
+        followerButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                followAdapter = new FollowCustomList(followerDataList);
+                followList.setAdapter(followAdapter);
+                listHintText.setText("Users who are following you:");
+            }
+        });
+
+        followingButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                followAdapter = new FollowCustomList(followingDataList);
+                followList.setAdapter(followAdapter);
+                listHintText.setText("Users you are following:");
+            }
+        });
+
 
         /* ** Custom List Implementation ** */
         followList = findViewById(R.id.follow_list);
@@ -106,5 +133,11 @@ public class ProfileActivity extends AppCompatActivity {
         followingDataList.add(new User("myemail4@gmail.com", "sandy6", "Sandy", "Huang"));
         followingDataList.add(new User("myemail5@gmail.com", "wentao3", "Travis", "Zhao"));
 
+        followerDataList.add(new User("myemail1@gmail.com", "jwwhite", "Josh", "White"));
+        followerDataList.add(new User("myemail2@gmail.com", "ramy", "Ramy", "Issa"));
+        followerDataList.add(new User("myemail3@gmail.com", "kandathi", "Nevil", "Kandathil"));
+
     }
+
+
 }
