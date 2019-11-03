@@ -133,23 +133,15 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
         moodAdapter = new MoodCustomList(moodDataList);
         moodList.setAdapter(moodAdapter);
 
-        addButton = findViewById(R.id.add_event_button);
-        final FloatingActionButton addButton = findViewById(R.id.add_event_button);
-        addButton.setOnClickListener(new View.OnClickListener() {
+
+        addMoodButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 new EventFragment().show(getSupportFragmentManager(), "ADD_EVENT");
             }
         });
 
-        moodList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Mood selectedMood = moodDataList.get(i);
-                EventFragment.newInstance(selectedMood, i).show(getSupportFragmentManager(), "EDIT_EVENT");
-            }
-        });
-**/
+
 
         // Test data
         moodDataList.add(new Mood(22,10,19, 16,20, "Angry", ""));
