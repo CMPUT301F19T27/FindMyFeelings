@@ -35,7 +35,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class HomePageActivity extends AppCompatActivity implements EventFragment.OnFragmentInteractionListener{
+public class HomePageActivity extends AppCompatActivity implements EventFragment.OnFragmentInteractionListener, MoodCustomList.RecyclerViewListener {
   
     private String currentUserEmail;
     private ArrayList<Mood> moodDataList;
@@ -130,7 +130,7 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
         moodList.setLayoutManager(moodLayoutManager);
 
         // Specify an adapter
-        moodAdapter = new MoodCustomList(moodDataList);
+        moodAdapter = new MoodCustomList(moodDataList, this);
         moodList.setAdapter(moodAdapter);
 
 
@@ -140,16 +140,6 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
                 new EventFragment().show(getSupportFragmentManager(), "ADD_EVENT");
             }
         });
-
-        // MOOD VIEW/EDIT FRAGMENT (NOT IMPLEMENTED)
-
-       /* moodList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Mood selectedMood = moodDataList.get(i);
-                EventFragment.newInstance(selectedMood, i).show(getSupportFragmentManager(), "EDIT_EVENT");
-            }
-        });*/
 
         // Test data
         moodDataList.add(new Mood(22,10,19, 16,20, "Angry", ""));
@@ -171,10 +161,6 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
         db = FirebaseFirestore.getInstance();
         final DocumentReference docRef = db.collection("Users").document(currentUserEmail);
 
-
-
-
-
     }
 
     @Override
@@ -185,6 +171,12 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
     @Override
     public void onEventDeleted(Mood deletedMood) {
 
+    }
+
+    @Override
+    public void onRecyclerViewClickListener(int position) {
+        Mood selectedMood = moodDataList.get(position);
+        EventFragment.newInstance(selectedMood, position).show(getSupportFragmentManager(), "EDIT_EVENT");
     }
 }
 
