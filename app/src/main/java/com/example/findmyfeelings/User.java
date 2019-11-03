@@ -106,5 +106,5 @@ public class User {
         requestList.remove(rEmail);
     }
 
-    public Map<String,>
+
 }
