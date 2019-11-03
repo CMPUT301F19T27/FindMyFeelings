@@ -2,6 +2,8 @@ package com.example.findmyfeelings;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,6 +14,8 @@ import android.widget.Button;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 
+import java.util.ArrayList;
+
 
 public class ProfileActivity extends AppCompatActivity {
 
@@ -19,6 +23,12 @@ public class ProfileActivity extends AppCompatActivity {
     Button logoutButton;
     FirebaseAuth firebaseAuth;
     private FirebaseAuth.AuthStateListener authStateListener;
+
+    private ArrayList<User> followingDataList;
+    private ArrayList<User> followerDataList;
+    private RecyclerView followList;
+    private RecyclerView.Adapter followAdapter;
+    private RecyclerView.LayoutManager followLayoutManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +83,28 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
 
+
+        /* ** Custom List Implementation ** */
+        followList = findViewById(R.id.follow_list);
+
+        followingDataList = new ArrayList<>();
+        followerDataList = new ArrayList<>();
+
+        // use a linear layout manager
+        followLayoutManager = new LinearLayoutManager(this);
+        followList.setLayoutManager(followLayoutManager);
+
+        // Specify an adapter
+        followAdapter = new FollowCustomList(followingDataList); // Set to the default
+        followList.setAdapter(followAdapter);
+
+        // Test data
+        followingDataList.add(new User("myemail0@gmail.com", "childebr", "Cameron", "Hildebrandt"));
+        followingDataList.add(new User("myemail1@gmail.com", "jwwhite", "Josh", "White"));
+        followingDataList.add(new User("myemail2@gmail.com", "ramy", "Ramy", "Issa"));
+        followingDataList.add(new User("myemail3@gmail.com", "kandathi", "Nevil", "Kandathil"));
+        followingDataList.add(new User("myemail4@gmail.com", "sandy6", "Sandy", "Huang"));
+        followingDataList.add(new User("myemail5@gmail.com", "wentao3", "Travis", "Zhao"));
 
     }
 }

@@ -142,18 +142,17 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
         });
 
 
-
         // Test data
-        moodDataList.add(new Mood(22,10,19, 16,20, "Angry", ""));
-        moodDataList.add(new Mood(23,10,19, 16,20, "Happy", ""));
-        moodDataList.add(new Mood(24,10,19, 16,20, "Sad", ""));
-        moodDataList.add(new Mood(25,10,19, 16,20, "Surprised", ""));
+        moodDataList.add(new Mood(22,10,19, 16,20, "Angry", "Null pointer exception happened"));
+        moodDataList.add(new Mood(23,10,19, 16,20, "Happy", "The code is working"));
+        moodDataList.add(new Mood(24,10,19, 16,20, "Sad", "I don't know why this error is happening"));
+        moodDataList.add(new Mood(25,10,19, 16,20, "Surprised", "Only 2 errors!"));
         moodDataList.add(new Mood(26,10,19, 16,20, "Scared", ""));
         moodDataList.add(new Mood(27,10,19, 16,20, "Disgusted", ""));
         moodDataList.add(new Mood(28,10,19, 16,20, "Happy", ""));
         moodDataList.add(new Mood(29,10,19, 16,20, "Happy", ""));
         moodDataList.add(new Mood(30,10,19, 16,20, "Sad", ""));
-        moodDataList.add(new Mood(31,10,19, 16,20, "Surprised", ""));
+        moodDataList.add(new Mood(31,10,19, 16,20, "Surprised", "It compiled"));
         moodDataList.add(new Mood(1,11,19, 16,20, "Surprised", ""));
         moodDataList.add(new Mood(2,11,19, 16,20, "Disgusted", ""));
 
@@ -169,10 +168,6 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
     public void onEventAdded(Mood newMood) {
         db = FirebaseFirestore.getInstance();
         final DocumentReference docRef = db.collection("Users").document(currentUserEmail);
-
-
-
-
 
     }
 
