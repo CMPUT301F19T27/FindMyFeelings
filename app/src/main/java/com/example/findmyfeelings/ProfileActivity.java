@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
 
@@ -22,11 +23,14 @@ import java.util.ArrayList;
 public class ProfileActivity extends AppCompatActivity {
 
     BottomNavigationView bottomNavigationView;
+    TextView usernameText;
     TextView listHintText;
     Button logoutButton;
     Button followerButton;
     Button followingButton;
+    FirebaseUser firebaseUser;
     FirebaseAuth firebaseAuth;
+
     private FirebaseAuth.AuthStateListener authStateListener;
 
     private ArrayList<User> followingDataList;
@@ -45,6 +49,7 @@ public class ProfileActivity extends AppCompatActivity {
         followerButton = findViewById(R.id.follower_tab_button); //TODO make this not just a button, but a clickable listview
         followingButton = findViewById(R.id.following_tab_button);
         listHintText = findViewById(R.id.list_hint_text);
+        usernameText = findViewById(R.id.username_text);
 
 
         bottomNavigationView.setSelectedItemId(R.id.ic_profile);
@@ -139,5 +144,13 @@ public class ProfileActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        firebaseAuth = FirebaseAuth.getInstance();
+        firebaseUser = firebaseAuth.getCurrentUser();
+//        usernameText.setText(firebaseUser.getEmail()); //TODO make this the current user's username
+
+    }
 
 }
