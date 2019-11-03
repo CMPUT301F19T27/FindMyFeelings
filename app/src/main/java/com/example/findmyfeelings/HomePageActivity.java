@@ -141,15 +141,6 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
             }
         });
 
-        // MOOD VIEW/EDIT FRAGMENT (NOT IMPLEMENTED)
-
-       /* moodList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Mood selectedMood = moodDataList.get(i);
-                EventFragment.newInstance(selectedMood, i).show(getSupportFragmentManager(), "EDIT_EVENT");
-            }
-        });*/
 
 
         // Test data
