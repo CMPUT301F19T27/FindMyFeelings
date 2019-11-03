@@ -74,7 +74,7 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
         bottomNavigationView.setItemIconTintList(null);         // disables icon tint
 
         firebaseAuth = FirebaseAuth.getInstance();
-        currentUserEmail = firebaseAuth.getCurrentUser().getEmail().toString();
+        currentUserEmail = firebaseAuth.getCurrentUser().getEmail();
 
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -172,6 +172,7 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
             }
         });
 
+        // MOOD VIEW/EDIT FRAGMENT (NOT IMPLEMENTED)
 
         // Test data
         myMoodDataList.add(new Mood(22,10,19, 16,20, "Angry", "Null pointer exception happened"));
