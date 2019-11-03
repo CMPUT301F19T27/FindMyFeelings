@@ -141,6 +141,7 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
                 new EventFragment().show(getSupportFragmentManager(), "ADD_EVENT");
             }
         });
+
         moodList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -148,7 +149,7 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
                 EventFragment.newInstance(selectedMood, i).show(getSupportFragmentManager(), "EDIT_EVENT");
             }
         });
-
+**/
 
         // Test data
         moodDataList.add(new Mood(22,10,19, 16,20, "Angry", ""));
