@@ -48,8 +48,7 @@
                     android:textSize="18dp"
                     android:textColor="@color/white"
                     android:textAllCaps="false"
-                    android:fontFamily="@font/regular"
-                    />
+                    android:fontFamily="@font/regular"/>
 
 
                 <Button
@@ -61,6 +60,13 @@
                     android:text="Other's Moods"
                     android:textAllCaps="false"
                     android:textSize="18dp" />
+
+
+                <Button
+                    android:id="@+id/logout_button"
+                    android:layout_width="50dp"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/back_icon" />
 
             </LinearLayout>
 

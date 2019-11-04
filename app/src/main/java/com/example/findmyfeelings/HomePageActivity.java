@@ -8,35 +8,19 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ListView;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 
-import org.w3c.dom.Document;
-
-import java.math.RoundingMode;
-import java.net.DatagramPacket;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
-public class HomePageActivity extends AppCompatActivity implements EventFragment.OnFragmentInteractionListener{
+public class HomePageActivity extends AppCompatActivity implements AddMoodFragment.OnFragmentInteractionListener{
   
     private String currentUserEmail;
     private ArrayList<Mood> myMoodDataList;
@@ -168,7 +152,7 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
         addMoodButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new EventFragment().show(getSupportFragmentManager(), "ADD_EVENT");
+                new AddMoodFragment().show(getSupportFragmentManager(), "ADD_EVENT");
             }
         });
 
