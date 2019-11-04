@@ -16,7 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
-public class AddMoodFragment extends DialogFragment {
+public class EventFragment extends DialogFragment {
     private static final String ARG_MOOD = "ride";
     private static final String ARG_INDEX = "index";
 
@@ -36,12 +36,12 @@ public class AddMoodFragment extends DialogFragment {
         void onEventDeleted(Mood deletedMood);
     }
 
-    static AddMoodFragment newInstance(Mood mood, int index){
+    static EventFragment newInstance(Mood mood, int index){
         Bundle args = new Bundle();
         args.putSerializable(ARG_MOOD, mood);
         args.putSerializable(ARG_INDEX, index);
 
-        AddMoodFragment fragment = new AddMoodFragment();
+        EventFragment fragment = new EventFragment();
         fragment.setArguments(args);
         return fragment;
     }
@@ -59,7 +59,7 @@ public class AddMoodFragment extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState){
-        View view= LayoutInflater.from(getActivity()).inflate(R.layout.add_mood_fragment, null);
+        View view= LayoutInflater.from(getActivity()).inflate(R.layout.event_fragment, null);
         moodType=view.findViewById(R.id.mood_type_editText);
         moodDate=view.findViewById(R.id.mood_date_editText);
         moodTime=view.findViewById(R.id.mood_time_editText);
