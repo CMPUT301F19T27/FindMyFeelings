@@ -1,6 +1,7 @@
 package com.example.findmyfeelings;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -17,6 +18,7 @@ import android.widget.Button;
 import android.widget.ListView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -25,7 +27,10 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import org.w3c.dom.Document;
@@ -41,8 +46,6 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
     private String currentUserEmail;
     private ArrayList<Mood> myMoodDataList;
     private ArrayList<Mood> followingMoodDataList;
-    private ArrayList<Follower> followersDataList;
-    private ArrayList<Following> followingDataList;
     private FirebaseFirestore db;
     private FirebaseAuth firebaseAuth;
     private RecyclerView moodList;
@@ -104,11 +107,9 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
         moodList = findViewById(R.id.my_mood_list);
         myMoodDataList = new ArrayList<>();
         followingMoodDataList = new ArrayList<>();
-        followersDataList = new ArrayList<>();
-        followingDataList = new ArrayList<>();
 
         db = FirebaseFirestore.getInstance();
-        final DocumentReference docRef = db.collection("Users").document(currentUserEmail);
+        final CollectionReference collectionRef = db.collection("Users");
 
         /* ** Custom List Implementation ** */
         // use a linear layout manager
@@ -120,22 +121,29 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
         moodAdapter = new MoodCustomList(myMoodDataList, this); // Set to default list
         moodList.setAdapter(moodAdapter);
 
-        /*docRef
+        //User cUser = new User();
+
+       /* collectionRef
+                .document(currentUserEmail)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                         if (task.isSuccessful()){
-                            HashMap<String, Object> map = task.getData();
-                            for (HashMap.Entry<String, Object> entry : map.entrySet()) {
-                                if (entry.getKey().equals("dungeon_group")) {
-                                    Log.d("TAG", entry.getValue().toString());
-                                }
-                            }
-                        }
+                            DocumentSnapshot document = task.getResult();
 
+                            Mood m = (Mood)document.get("my_moods");
+                            moodAdapter.notifyDataSetChanged();
+                        }
                     }
-                })*/
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d("Sample", "Data read failed" + e.toString());
+                    }
+                });*/
+
 
 
         myMoodListButton.setOnClickListener(new View.OnClickListener() {
@@ -165,10 +173,6 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
             }
         });
 
-
-
-
-
         addMoodButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -177,7 +181,7 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
         });
 
         // Test data
-        myMoodDataList.add(new Mood(22,10,19, 16,20, "Angry", "Null pointer exception happened"));
+ /*       myMoodDataList.add(new Mood(22,10,19, 16,20, "Angry", "Null pointer exception happened"));
         myMoodDataList.add(new Mood(23,10,19, 16,20, "Happy", "The code is working"));
         myMoodDataList.add(new Mood(24,10,19, 16,20, "Sad", "I don't know why this error is happening"));
         myMoodDataList.add(new Mood(25,10,19, 16,20, "Surprised", "Only 2 errors!"));
@@ -189,7 +193,7 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
         myMoodDataList.add(new Mood(31,10,19, 16,20, "Surprised", "It compiled"));
         myMoodDataList.add(new Mood(1,11,19, 16,20, "Surprised", ""));
         myMoodDataList.add(new Mood(2,11,19, 16,20, "Disgusted", ""));
-
+*/
         followingMoodDataList.add(new Mood(12,10,19, 16,20, "Sad", ""));
         followingMoodDataList.add(new Mood(12,10,19, 16,20, "Angry", ""));
         followingMoodDataList.add(new Mood(13,10,19, 16,20, "Disgusted", ""));
@@ -197,11 +201,6 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
         followingMoodDataList.add(new Mood(13,10,19, 16,20, "Surprised", ""));
         followingMoodDataList.add(new Mood(14,11,19, 16,20, "Disgusted", ""));
 
-        addMoodButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-//                new AddMoodFragment().show(getSupportFragmentManager(), "ADD_MOOD");
-            }
-        });
     }
 
     @Override
@@ -209,16 +208,39 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
         db = FirebaseFirestore.getInstance();
         final DocumentReference docRef = db.collection("Users").document(currentUserEmail);
 
+        docRef.update("my_moods", FieldValue.arrayUnion(newMood));
+
+        myMoodDataList.add(newMood);
+        moodAdapter.notifyDataSetChanged();
+
+
     }
 
+    // NOT WORKING
     @Override
     public void onEventEdited(Mood editedMood, int index) {
+        db = FirebaseFirestore.getInstance();
+        final DocumentReference docRef = db.collection("Users").document(currentUserEmail);
+
+        Mood currentMood = myMoodDataList.get(index);
+
+        docRef.update("my_moods", FieldValue.arrayRemove(currentMood));
+        docRef.update("my_moods", FieldValue.arrayUnion(editedMood));
+
+        myMoodDataList.set(index, editedMood);
+        moodAdapter.notifyDataSetChanged();
 
     }
 
     @Override
     public void onEventDeleted(Mood deletedMood) {
+        db = FirebaseFirestore.getInstance();
+        final DocumentReference docRef = db.collection("Users").document(currentUserEmail);
 
+        docRef.update("my_moods", FieldValue.arrayRemove(deletedMood));
+
+        myMoodDataList.remove(deletedMood);
+        moodAdapter.notifyDataSetChanged();
     }
 
     @Override

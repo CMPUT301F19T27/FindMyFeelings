@@ -10,19 +10,22 @@ public class User {
     private String username;
     private String firstName;
     private String lastName;
-    private ArrayList<Follower> followersList;
-    private ArrayList<Following> followingList;
+    private ArrayList<String> followersList;
+    private ArrayList<String> followingList;
     private ArrayList<Mood> myMoods;
     private ArrayList<String> requestList;
     private Mood recentMood;
 
+    public User() {
+
+    }
     public User(String email, String username, String firstName, String lastName) {
         this.email = email;
         this.username = username;
         this.firstName = firstName;
         this.lastName = lastName;
-        this.followersList = new ArrayList<Follower>();
-        this.followingList = new ArrayList<Following>();
+        this.followersList = new ArrayList<String>();
+        this.followingList = new ArrayList<String >();
         this.myMoods = new ArrayList<Mood>();
         this.requestList = new ArrayList<String>();
         this.recentMood = new Mood();
@@ -44,11 +47,11 @@ public class User {
         return lastName;
     }
 
-    public ArrayList<Follower> getFollowersList() {
+    public ArrayList<String > getFollowersList() {
         return followersList;
     }
 
-    public ArrayList<Following> getFollowingList() {
+    public ArrayList<String > getFollowingList() {
         return followingList;
     }
 
@@ -64,11 +67,31 @@ public class User {
         return recentMood;
     }
 
+    public void setFollowersList(ArrayList<String> followersList) {
+        this.followersList = followersList;
+    }
+
+    public void setFollowingList(ArrayList<String> followingList) {
+        this.followingList = followingList;
+    }
+
+    public void setMyMoods(ArrayList<Mood> myMoods) {
+        this.myMoods = myMoods;
+    }
+
+    public void setRequestList(ArrayList<String> requestList) {
+        this.requestList = requestList;
+    }
+
+    public void setRecentMood(Mood recentMood) {
+        this.recentMood = recentMood;
+    }
+
     /**
      * adds a user to followersList
      * @param fUser
      */
-    public void addFollower(Follower fUser) {
+    public void addFollower(String  fUser) {
         followersList.add(fUser);
     }
 
@@ -76,7 +99,7 @@ public class User {
      * adds a user to followingList
      * @param fUser
      */
-    public void addFollowing(Following fUser) {
+    public void addFollowing(String  fUser) {
         followingList.add(fUser);
     }
 
@@ -84,7 +107,7 @@ public class User {
      * removes a user from followerList
      * @param fUser
      */
-    public void removeFollower(Follower fUser) {
+    public void removeFollower(String fUser) {
         followersList.remove(fUser);
     }
 
@@ -92,7 +115,7 @@ public class User {
      * removes a user from followingList
      * @param fUser
      */
-    public void removeFollowing(Following fUser) {
+    public void removeFollowing(String fUser) {
         followingList.remove(fUser);
     }
 

@@ -94,7 +94,7 @@ public class EventFragment extends DialogFragment {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         String newMood = moodType.getText().toString();
-                        String[] date = moodDate.getText().toString().split(":");
+                        String[] date = moodDate.getText().toString().split("-");
                         int day = Integer.parseInt(date[0].trim());
                         int month = Integer.parseInt(date[1].trim());
                         int year = Integer.parseInt(date[2].trim());
