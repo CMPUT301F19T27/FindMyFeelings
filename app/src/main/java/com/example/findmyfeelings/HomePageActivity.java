@@ -37,7 +37,10 @@ import org.w3c.dom.Document;
 
 import java.math.RoundingMode;
 import java.net.DatagramPacket;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -194,12 +197,25 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
         myMoodDataList.add(new Mood(1,11,19, 16,20, "Surprised", ""));
         myMoodDataList.add(new Mood(2,11,19, 16,20, "Disgusted", ""));
 */
-        followingMoodDataList.add(new Mood(12,10,19, 16,20, "Sad", ""));
-        followingMoodDataList.add(new Mood(12,10,19, 16,20, "Angry", ""));
-        followingMoodDataList.add(new Mood(13,10,19, 16,20, "Disgusted", ""));
-        followingMoodDataList.add(new Mood(13,10,19, 16,20, "Happy", ""));
-        followingMoodDataList.add(new Mood(13,10,19, 16,20, "Surprised", ""));
-        followingMoodDataList.add(new Mood(14,11,19, 16,20, "Disgusted", ""));
+
+        Date date1 = null;
+
+        SimpleDateFormat tFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        try {
+            date1 = tFormat.parse("2019-12-12 13:02");
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+
+        followingMoodDataList.add(new Mood(date1, "Sad", ""));
+
+        /* followingMoodDataList.add(new Mood("2019/11/12", "12:17", "Angry", ""));
+        followingMoodDataList.add(new Mood("2019/10/13", "14:02", "Disgusted", ""));
+        followingMoodDataList.add(new Mood("2019/09/21", "15:32", "Happy", ""));
+        followingMoodDataList.add(new Mood("2019/07/01", "18:12", "Surprised", ""));
+        followingMoodDataList.add(new Mood(new Date(),, "Disgusted", ""));
+       */
 
     }
 
@@ -223,6 +239,7 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
         final DocumentReference docRef = db.collection("Users").document(currentUserEmail);
 
         Mood currentMood = myMoodDataList.get(index);
+        Log.d("Sample", currentMood.getMood());
 
         docRef.update("my_moods", FieldValue.arrayRemove(currentMood));
         docRef.update("my_moods", FieldValue.arrayUnion(editedMood));

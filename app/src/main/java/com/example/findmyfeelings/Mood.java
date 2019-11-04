@@ -1,17 +1,11 @@
 package com.example.findmyfeelings;
 
 import java.io.Serializable;
+import java.util.Date;
 
 public class Mood implements Serializable {
-    private int dateDay;
-    private int dateMonth;
-    private int dateYear;
-
-    private int timeMinute;
-    private int timeHour;
-
+    private Date dateTime;
     private String mood;
-
     private String reason;
 
 //    private Location location;
@@ -21,65 +15,18 @@ public class Mood implements Serializable {
 
     }
 
-    public Mood(int dateDay, int dateMonth, int dateYear, int timeHour, int timeMinute, String mood, String reason) {
-        this.dateDay = dateDay;
-        this.dateMonth = dateMonth;
-        this.dateYear = dateYear;
-
-        this.timeMinute = timeMinute;
-        this.timeHour = timeHour;
-
+    public Mood(Date dateTime, String mood, String reason) {
+        this.dateTime = dateTime;
         this.mood = mood;
-
         this.reason = reason;
     }
 
-    public int getDateDay() {
-        return dateDay;
+    public Date getDateTime() {
+        return dateTime;
     }
 
-    public void setDateDay(int dateDay) {
-        this.dateDay = dateDay;
-    }
-
-    public int getDateMonth() {
-        return dateMonth;
-    }
-
-    public void setDateMonth(int dateMonth) {
-        this.dateMonth = dateMonth;
-    }
-
-    public int getDateYear() {
-        return dateYear;
-    }
-
-    public void setDateYear(int dateYear) {
-        this.dateYear = dateYear;
-    }
-    
-    public String getDateString() {
-        return this.dateDay + "/" + this.dateMonth + "/" + this.dateYear;
-    }
-
-    public int getTimeMinute() {
-        return timeMinute;
-    }
-
-    public void setTimeMinute(int timeMinute) {
-        this.timeMinute = timeMinute;
-    }
-
-    public String getTimeString() {
-        return this.timeHour + ":" + this.timeMinute;
-    }
-
-    public int getTimeHour() {
-        return timeHour;
-    }
-
-    public void setTimeHour(int timeHour) {
-        this.timeHour = timeHour;
+    public void setDateTime(Date dateTime) {
+        this.dateTime = dateTime;
     }
 
     public String getMood() {
