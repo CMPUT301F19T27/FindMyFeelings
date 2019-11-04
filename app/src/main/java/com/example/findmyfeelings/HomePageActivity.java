@@ -219,6 +219,8 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
             }
         });
 
+        /**
+
         // Test data
  /*       myMoodDataList.add(new Mood(22,10,19, 16,20, "Angry", "Null pointer exception happened"));
         myMoodDataList.add(new Mood(23,10,19, 16,20, "Happy", "The code is working"));
@@ -251,8 +253,16 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
         followingMoodDataList.add(new Mood("2019/09/21", "15:32", "Happy", ""));
         followingMoodDataList.add(new Mood("2019/07/01", "18:12", "Surprised", ""));
         followingMoodDataList.add(new Mood(new Date(),, "Disgusted", ""));
-       */
+       
 
+        
+        followingMoodDataList.add(new Mood(12,10,19, 16,20, "Sad", ""));
+        followingMoodDataList.add(new Mood(12,10,19, 16,20, "Angry", ""));
+        followingMoodDataList.add(new Mood(13,10,19, 16,20, "Disgusted", ""));
+        followingMoodDataList.add(new Mood(13,10,19, 16,20, "Happy", ""));
+        followingMoodDataList.add(new Mood(13,10,19, 16,20, "Surprised", ""));
+        followingMoodDataList.add(new Mood(14,11,19, 16,20, "Disgusted", ""));
+*/
 
     }
 
