@@ -12,18 +12,16 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ListView;
+
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
+
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -44,8 +42,11 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
-public class HomePageActivity extends AppCompatActivity implements EventFragment.OnFragmentInteractionListener, MoodCustomList.RecyclerViewListener {
-  
+
+import java.util.ArrayList;
+
+
+public class HomePageActivity extends AppCompatActivity implements EventFragment.OnFragmentInteractionListener, MoodCustomList.RecyclerViewListener, FilterFragment.OnFragmentInteractionListener {
     private String currentUserEmail;
     private ArrayList<Mood> myMoodDataList;
     private ArrayList<Mood> followingMoodDataList;
@@ -57,6 +58,12 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
     private FloatingActionButton addMoodButton;
     private Button myMoodListButton;
     private Button followingMoodListButton;
+    private Button filterButton;
+    private String filter = "";
+    private ArrayList<Mood> filteredMyMoodDataList;
+    private ArrayList<Mood> filteredFollowingMoodDataList;
+    private boolean onMyMoodList;
+
     BottomNavigationView bottomNavigationView;
   
     @Override
@@ -70,6 +77,7 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
         addMoodButton = findViewById(R.id.add_mood_button);
         myMoodListButton = findViewById(R.id.my_mood_button);
         followingMoodListButton = findViewById(R.id.following_mood_button);
+        filterButton = findViewById(R.id.filter_button);
 
 
         /* ** Bottom Navigation Bar ** */
@@ -105,11 +113,23 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
                 return false;
             }
         });
+
+        filterButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+//                new FilterFragment().show(getSupportFragmentManager(), "ADD_EVENT");
+                FilterFragment.newInstance(filter).show(getSupportFragmentManager(), "EDIT_EVENT");
+            }
+        });
       
         /* Custom List Implementation */
         moodList = findViewById(R.id.my_mood_list);
         myMoodDataList = new ArrayList<>();
         followingMoodDataList = new ArrayList<>();
+
+        filteredMyMoodDataList = new ArrayList<>();
+        filteredFollowingMoodDataList = new ArrayList<>();
+
 
         db = FirebaseFirestore.getInstance();
         final CollectionReference collectionRef = db.collection("Users");
@@ -120,7 +140,7 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
         moodList.setLayoutManager(moodLayoutManager);
 
         // Specify an adapter
-
+        onMyMoodList = true;
         moodAdapter = new MoodCustomList(myMoodDataList, this); // Set to default list
         moodList.setAdapter(moodAdapter);
 
@@ -152,9 +172,17 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
         myMoodListButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                moodAdapter = new MoodCustomList(myMoodDataList, HomePageActivity.this);
+                onMyMoodList = true;
+
+                // Apply filters
+                if(filter == "" ) {
+                    moodAdapter = new MoodCustomList(myMoodDataList, HomePageActivity.this);
+                } else {
+                    moodAdapter = new MoodCustomList(filteredMyMoodDataList, HomePageActivity.this);
+                }
                 moodList.setAdapter(moodAdapter);
 
+                // Change GUI to reflect that we are on a different tab
                 myMoodListButton.setBackgroundResource(R.drawable.selected_bar_left);
                 myMoodListButton.setTextColor(Color.parseColor("#FFFFFF"));
                 followingMoodListButton.setBackgroundResource(R.drawable.unselected_bar_right);
@@ -166,9 +194,17 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
         followingMoodListButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                moodAdapter = new MoodCustomList(followingMoodDataList, HomePageActivity.this);
+                onMyMoodList = false;
+
+                // Apply filters
+                if(filter == "" ) {
+                    moodAdapter = new MoodCustomList(followingMoodDataList, HomePageActivity.this);
+                } else {
+                    moodAdapter = new MoodCustomList(filteredFollowingMoodDataList, HomePageActivity.this);
+                }
                 moodList.setAdapter(moodAdapter);
 
+                // Change GUI to reflect that we are on a different tab
                 myMoodListButton.setBackgroundResource(R.drawable.unselected_bar_left);
                 myMoodListButton.setTextColor(Color.parseColor("#000000"));
                 followingMoodListButton.setBackgroundResource(R.drawable.selected_bar_right);
@@ -217,6 +253,7 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
         followingMoodDataList.add(new Mood(new Date(),, "Disgusted", ""));
        */
 
+
     }
 
     @Override
@@ -228,7 +265,6 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
 
         myMoodDataList.add(newMood);
         moodAdapter.notifyDataSetChanged();
-
 
     }
 
@@ -258,6 +294,41 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
 
         myMoodDataList.remove(deletedMood);
         moodAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onFilterAdded(String newFilter) {
+        filter = newFilter;
+
+        filteredMyMoodDataList.clear();
+        filteredFollowingMoodDataList.clear();
+
+        for(Mood mood : myMoodDataList) {
+            if(mood.getMood() == filter) {
+                filteredMyMoodDataList.add(mood);
+            }
+        }
+
+        for(Mood mood : followingMoodDataList) {
+            if(mood.getMood() == filter) {
+                filteredFollowingMoodDataList.add(mood);
+            }
+        }
+
+        if(filter == "" ) {
+            if(onMyMoodList) {
+                moodAdapter = new MoodCustomList(myMoodDataList, HomePageActivity.this);
+            } else {
+                moodAdapter = new MoodCustomList(followingMoodDataList, HomePageActivity.this);
+            }
+        } else {
+            if(onMyMoodList) {
+                moodAdapter = new MoodCustomList(filteredMyMoodDataList, HomePageActivity.this);
+            } else {
+                moodAdapter = new MoodCustomList(filteredFollowingMoodDataList, HomePageActivity.this);
+            }
+        }
+        moodList.setAdapter(moodAdapter);
     }
 
     @Override
