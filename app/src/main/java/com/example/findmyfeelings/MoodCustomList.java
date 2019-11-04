@@ -9,23 +9,36 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MoodCustomList extends RecyclerView.Adapter<MoodCustomList.MoodViewHolder> {
-    private List<Mood> moods;
 
+    private ArrayList<Mood> moods;
+    private RecyclerViewListener mRecyclerViewListener;
 
-    public static class MoodViewHolder extends RecyclerView.ViewHolder {
-        private View view;
-        private MoodViewHolder(@NonNull View v) {
-            super(v);
-            view = v;
-        }
-    }
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public MoodCustomList(List<Mood> inputMoodDataset) {
-        moods = inputMoodDataset;
+    public MoodCustomList(ArrayList<Mood> inputMoodDataset, RecyclerViewListener recyclerViewListener) {
+        this.moods = inputMoodDataset;
+        this.mRecyclerViewListener = recyclerViewListener;
+    }
+
+    public static class MoodViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+        private View view;
+        RecyclerViewListener recyclerViewListener;
+        private MoodViewHolder(@NonNull View v, RecyclerViewListener recyclerViewListener) {
+            super(v);
+            this.view = v;
+            this.recyclerViewListener = recyclerViewListener;
+
+            v.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View view) {
+            recyclerViewListener.onRecyclerViewClickListener(getAdapterPosition());
+        }
     }
 
 
@@ -36,7 +49,7 @@ public class MoodCustomList extends RecyclerView.Adapter<MoodCustomList.MoodView
         // create a new view
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.mood_list_content, parent, false);
 
-        MoodViewHolder moodViewHolder = new MoodViewHolder(view);
+        MoodViewHolder moodViewHolder = new MoodViewHolder(view, mRecyclerViewListener);
         return moodViewHolder;
     }
 
@@ -89,6 +102,9 @@ public class MoodCustomList extends RecyclerView.Adapter<MoodCustomList.MoodView
 
     }
 
+    public interface RecyclerViewListener {
+        void onRecyclerViewClickListener(int position);
+    }
 
     @Override
     public int getItemCount() {

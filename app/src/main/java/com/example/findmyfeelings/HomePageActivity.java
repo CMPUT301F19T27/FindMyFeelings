@@ -36,7 +36,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class HomePageActivity extends AppCompatActivity implements EventFragment.OnFragmentInteractionListener{
+public class HomePageActivity extends AppCompatActivity implements EventFragment.OnFragmentInteractionListener, MoodCustomList.RecyclerViewListener {
   
     private String currentUserEmail;
     private ArrayList<Mood> myMoodDataList;
@@ -110,6 +110,16 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
         db = FirebaseFirestore.getInstance();
         final DocumentReference docRef = db.collection("Users").document(currentUserEmail);
 
+        /* ** Custom List Implementation ** */
+        // use a linear layout manager
+        moodLayoutManager = new LinearLayoutManager(this);
+        moodList.setLayoutManager(moodLayoutManager);
+
+        // Specify an adapter
+
+        moodAdapter = new MoodCustomList(myMoodDataList, this); // Set to default list
+        moodList.setAdapter(moodAdapter);
+
         /*docRef
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -131,7 +141,7 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
         myMoodListButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                moodAdapter = new MoodCustomList(myMoodDataList);
+                moodAdapter = new MoodCustomList(myMoodDataList, HomePageActivity.this);
                 moodList.setAdapter(moodAdapter);
 
                 myMoodListButton.setBackgroundResource(R.drawable.selected_bar_left);
@@ -141,10 +151,11 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
             }
         });
 
+
         followingMoodListButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                moodAdapter = new MoodCustomList(followingMoodDataList);
+                moodAdapter = new MoodCustomList(followingMoodDataList, HomePageActivity.this);
                 moodList.setAdapter(moodAdapter);
 
                 myMoodListButton.setBackgroundResource(R.drawable.unselected_bar_left);
@@ -155,14 +166,7 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
         });
 
 
-        /* ** Custom List Implementation ** */
-        // use a linear layout manager
-        moodLayoutManager = new LinearLayoutManager(this);
-        moodList.setLayoutManager(moodLayoutManager);
 
-        // Specify an adapter
-        moodAdapter = new MoodCustomList(myMoodDataList); // Set to default list
-        moodList.setAdapter(moodAdapter);
 
 
         addMoodButton.setOnClickListener(new View.OnClickListener() {
@@ -171,8 +175,6 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
                 new EventFragment().show(getSupportFragmentManager(), "ADD_EVENT");
             }
         });
-
-        // MOOD VIEW/EDIT FRAGMENT (NOT IMPLEMENTED)
 
         // Test data
         myMoodDataList.add(new Mood(22,10,19, 16,20, "Angry", "Null pointer exception happened"));
@@ -217,6 +219,12 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
     @Override
     public void onEventDeleted(Mood deletedMood) {
 
+    }
+
+    @Override
+    public void onRecyclerViewClickListener(int position) {
+        Mood selectedMood = myMoodDataList.get(position);
+        EventFragment.newInstance(selectedMood, position).show(getSupportFragmentManager(), "EDIT_EVENT");
     }
 }
 
