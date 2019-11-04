@@ -176,6 +176,8 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
             }
         });
 
+        /**
+
         // Test data
         myMoodDataList.add(new Mood(22,10,19, 16,20, "Angry", "Null pointer exception happened"));
         myMoodDataList.add(new Mood(23,10,19, 16,20, "Happy", "The code is working"));
@@ -197,11 +199,9 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
         followingMoodDataList.add(new Mood(13,10,19, 16,20, "Surprised", ""));
         followingMoodDataList.add(new Mood(14,11,19, 16,20, "Disgusted", ""));
 
-        addMoodButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-//                new AddMoodFragment().show(getSupportFragmentManager(), "ADD_MOOD");
-            }
-        });
+
+        **/
+        
     }
 
     @Override
