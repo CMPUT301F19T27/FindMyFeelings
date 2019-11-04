@@ -20,12 +20,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 
-<<<<<<< HEAD
-public class HomePageActivity extends AppCompatActivity implements EventFragment.OnFragmentInteractionListener{
-=======
-public class HomePageActivity extends AppCompatActivity implements EventFragment.OnFragmentInteractionListener, MoodCustomList.RecyclerViewListener {
->>>>>>> ea9d8777a1988141961d45d91ba0589c6c7de41e
-  
+
+public class HomePageActivity extends AppCompatActivity implements EventFragment.OnFragmentInteractionListener, MoodCustomList.RecyclerViewListener, FilterFragment.OnFragmentInteractionListener {
     private String currentUserEmail;
     private ArrayList<Mood> myMoodDataList;
     private ArrayList<Mood> followingMoodDataList;
@@ -39,6 +35,7 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
     private FloatingActionButton addMoodButton;
     private Button myMoodListButton;
     private Button followingMoodListButton;
+    private Button filterButton;
     BottomNavigationView bottomNavigationView;
   
     @Override
@@ -52,6 +49,7 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
         addMoodButton = findViewById(R.id.add_mood_button);
         myMoodListButton = findViewById(R.id.my_mood_button);
         followingMoodListButton = findViewById(R.id.following_mood_button);
+        filterButton = findViewById(R.id.filter_button);
 
 
         /* ** Bottom Navigation Bar ** */
@@ -85,6 +83,13 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
                         break;
                 }
                 return false;
+            }
+        });
+
+        filterButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new FilterFragment().show(getSupportFragmentManager(), "ADD_EVENT");
             }
         });
       
@@ -206,6 +211,11 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
 
     @Override
     public void onEventDeleted(Mood deletedMood) {
+
+    }
+
+    @Override
+    public void onFilterAdded(String filter) {
 
     }
 

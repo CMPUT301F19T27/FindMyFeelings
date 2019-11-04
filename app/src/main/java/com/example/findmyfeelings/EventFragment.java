@@ -1,6 +1,3 @@
-
-
-
 package com.example.findmyfeelings;
 
 import android.app.AlertDialog;
