@@ -3,6 +3,7 @@ package com.example.findmyfeelings;
 public class Follower {
 
     private String email;
+    private Mood recentMood;
 
     public Follower() {
 

@@ -275,6 +275,7 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
         final DocumentReference docRef = db.collection("Users").document(currentUserEmail);
 
         docRef.update("my_moods", FieldValue.arrayUnion(newMood));
+        docRef.update("recent_mood", newMood);
 
         myMoodDataList.add(newMood);
         moodAdapter.notifyDataSetChanged();
