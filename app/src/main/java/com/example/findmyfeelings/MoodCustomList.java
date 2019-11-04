@@ -1,6 +1,5 @@
 package com.example.findmyfeelings;
 
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,8 +40,6 @@ public class MoodCustomList extends RecyclerView.Adapter<MoodCustomList.MoodView
             recyclerViewListener.onRecyclerViewClickListener(getAdapterPosition());
         }
     }
-
-
 
 
     // Create new views (invoked by the layout manager)
@@ -95,7 +92,7 @@ public class MoodCustomList extends RecyclerView.Adapter<MoodCustomList.MoodView
         timeValue.setText(mood.getTimeString());
         moodString.setText(mood.getMood());
 
-        String username = "childebrandt12345678"; // TODO change to user.getName()
+        String username = "LongGenericUsernameThatWillBeTruncated"; // TODO change to user.getName()
 
         if(username.length() > 10) {
             usernameString.setText(username.substring(0,10) + "...");
