@@ -24,21 +24,21 @@
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:padding="10dp"
-                android:src="@drawable/happy_face" />
+                android:src="@drawable/happy_face_bw" />
 
             <ImageView
                 android:id="@+id/sad_emoticon"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:padding="10dp"
-                android:src="@drawable/sad_face" />
+                android:src="@drawable/sad_face_bw" />
 
             <ImageView
                 android:id="@+id/angry_emoticon"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:padding="10dp"
-                android:src="@drawable/angry_face" />
+                android:src="@drawable/angry_face_bw" />
 
         </LinearLayout>
 
@@ -52,21 +52,21 @@
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:padding="10dp"
-                android:src="@drawable/disgust_face" />
+                android:src="@drawable/disgust_face_bw" />
 
             <ImageView
                 android:id="@+id/surprised_emoticon"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:padding="10dp"
-                android:src="@drawable/surprised_face" />
+                android:src="@drawable/surprised_face_bw" />
 
             <ImageView
                 android:id="@+id/scared_emoticon"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:padding="10dp"
-                android:src="@drawable/fear_face" />
+                android:src="@drawable/fear_face_bw" />
 
         </LinearLayout>
 
