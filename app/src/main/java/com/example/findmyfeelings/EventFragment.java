@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.Button;
 import android.widget.EditText;
 
@@ -31,6 +32,7 @@ public class EventFragment extends DialogFragment {
     private EditText moodDate;
     private EditText moodTime;
     private EditText moodReason;
+    private CheckBox checkLocation;
 
     private OnFragmentInteractionListener listener;
     private Mood currentMood;
@@ -66,12 +68,14 @@ public class EventFragment extends DialogFragment {
 
     @NonNull
     @Override
-    public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-        View view = LayoutInflater.from(getActivity()).inflate(R.layout.event_fragment, null);
-        moodType = view.findViewById(R.id.mood_type_editText);
-        moodDate = view.findViewById(R.id.mood_date_editText);
-        moodTime = view.findViewById(R.id.mood_time_editText);
-        moodReason = view.findViewById(R.id.mood_reason_editText);
+    public Dialog onCreateDialog(@Nullable Bundle savedInstanceState){
+        View view= LayoutInflater.from(getActivity()).inflate(R.layout.event_fragment, null);
+        moodType=view.findViewById(R.id.mood_type_editText);
+        moodDate=view.findViewById(R.id.mood_date_editText);
+        moodTime=view.findViewById(R.id.mood_time_editText);
+        moodReason=view.findViewById(R.id.mood_reason_editText);
+        checkLocation=view.findViewById(R.id.location_check);
+
 
         Bundle args = getArguments();
 
