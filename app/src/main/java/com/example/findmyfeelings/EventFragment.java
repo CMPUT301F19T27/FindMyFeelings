@@ -84,7 +84,7 @@ public class EventFragment extends DialogFragment {
             index = args.getInt(ARG_INDEX);
 
             @SuppressLint("SimpleDateFormat")
-            DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
             String date = dateFormat.format(currentMood.getDateTime());
 
             @SuppressLint("SimpleDateFormat")
@@ -137,9 +137,9 @@ public class EventFragment extends DialogFragment {
                             flag = true;
                             moodDate.setError("Enter a date!");
                         }
-                        if (!isValidFormat("yyyy/MM/dd", moodDate.getText().toString())) {
+                        if (!isValidFormat("yyyy-MM-dd", moodDate.getText().toString())) {
                             flag = true;
-                            moodDate.setError("Enter a valid date (yyyy/MM/dd)!");
+                            moodDate.setError("Enter a valid date (yyyy-MM-dd)!");
                         }
                         if (moodTime.getText().toString().length() == 0) {
                             flag = true;
@@ -154,16 +154,18 @@ public class EventFragment extends DialogFragment {
 
                             Date dateTime = null;
                             try {
-                                dateTime = new SimpleDateFormat("yyyy/MM/dd HH:mm").parse(moodDate.getText().toString() + " " + moodTime.getText().toString());
+                                dateTime = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse(moodDate.getText().toString() + " " + moodTime.getText().toString());
                             } catch (ParseException e) {
                                 e.printStackTrace();
                             }
 
+
                             String newMood = moodType.getText().toString();
 
                             String reason = moodReason.getText().toString();
+                            String moodId = newMood + dateTime.toString();
 
-                            Mood mood = new Mood(dateTime, newMood, reason);
+                            Mood mood = new Mood(moodId, dateTime, newMood, reason);
 
                             if (currentMood != null) {
                                 listener.onEventEdited(mood, index);
