@@ -238,17 +238,20 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
 
         Date date1 = null;
 
-        SimpleDateFormat tFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        SimpleDateFormat tFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm");
         try {
-            date1 = tFormat.parse("2019-12-12 13:02");
+            date1 = tFormat.parse("2019/12/12 13:02");
         } catch (ParseException e) {
             e.printStackTrace();
         }
 
+        Date date = new Date();
+        //System.out.println(date1.toString());
 
         followingMoodDataList.add(new Mood(date1, "Sad", ""));
+        myMoodDataList.add(new Mood(date1, "Happy", "asdf"));
 
-        /* followingMoodDataList.add(new Mood("2019/11/12", "12:17", "Angry", ""));
+        /*followingMoodDataList.add(new Mood("2019/11/12", "12:17", "Angry", ""));
         followingMoodDataList.add(new Mood("2019/10/13", "14:02", "Disgusted", ""));
         followingMoodDataList.add(new Mood("2019/09/21", "15:32", "Happy", ""));
         followingMoodDataList.add(new Mood("2019/07/01", "18:12", "Surprised", ""));
@@ -272,6 +275,7 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
         final DocumentReference docRef = db.collection("Users").document(currentUserEmail);
 
         docRef.update("my_moods", FieldValue.arrayUnion(newMood));
+        docRef.update("recent_mood", newMood);
 
         myMoodDataList.add(newMood);
         moodAdapter.notifyDataSetChanged();

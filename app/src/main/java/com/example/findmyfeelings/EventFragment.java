@@ -39,9 +39,7 @@ public class EventFragment extends DialogFragment {
 
     public interface OnFragmentInteractionListener {
         void onEventAdded(Mood newMood);
-
         void onEventEdited(Mood editedMood, int index);
-
         void onEventDeleted(Mood deletedMood);
     }
 
@@ -64,7 +62,6 @@ public class EventFragment extends DialogFragment {
             throw new RuntimeException(context.toString() +
                     "must implement OnFragmentInteractionListener");
         }
-
     }
 
     @NonNull
@@ -83,12 +80,12 @@ public class EventFragment extends DialogFragment {
             index = args.getInt(ARG_INDEX);
 
             @SuppressLint("SimpleDateFormat")
-            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-            String date = dateFormat.format(currentMood.getDateTime().toString());
+            DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
+            String date = dateFormat.format(currentMood.getDateTime());
 
             @SuppressLint("SimpleDateFormat")
             DateFormat timeFormat = new SimpleDateFormat("HH:mm");
-            String time = timeFormat.format(currentMood.getDateTime().toString());
+            String time = timeFormat.format(currentMood.getDateTime());
 
             moodType.setText(currentMood.getMood());
             moodDate.setText(date);
@@ -111,7 +108,6 @@ public class EventFragment extends DialogFragment {
                 .setPositiveButton("OK", null)
                 .create();
 
-
         builder.setOnShowListener(new DialogInterface.OnShowListener() {
             @Override
             public void onShow(DialogInterface dialogInterface) {
@@ -132,16 +128,14 @@ public class EventFragment extends DialogFragment {
                             flag = true;
                             moodType.setError("Please enter a valid mood");
                         }
-                        if (moodReason.getText().toString().length() == 0) {
-                            moodReason.setError("Enter a reason");
-                        }
+
                         if (moodDate.getText().toString().length() == 0) {
                             flag = true;
                             moodDate.setError("Enter a date!");
                         }
-                        if (!isValidFormat("yyyy-MM-dd", moodDate.getText().toString())) {
+                        if (!isValidFormat("yyyy/MM/dd", moodDate.getText().toString())) {
                             flag = true;
-                            moodDate.setError("Enter a valid date (yyyy-MM-dd)!");
+                            moodDate.setError("Enter a valid date (yyyy/MM/dd)!");
                         }
                         if (moodTime.getText().toString().length() == 0) {
                             flag = true;
@@ -152,25 +146,11 @@ public class EventFragment extends DialogFragment {
                             moodTime.setError("Enter a valid time (HH:mm)!");
                         }
                         if (flag == false) {
-                            // converts date input to Date type and saves it into a variable
-                            Date date = null;
-                            try {
-                                date = new SimpleDateFormat("yyyy-MM-dd").parse(moodDate.getText().toString());
-                            } catch (ParseException e) {
-                                e.printStackTrace();
-                            }
-                            // converts time input to Date type and saves it into a variable
-                            Date time = null;
-                            try {
-                                time = new SimpleDateFormat("HH:mm").parse(moodTime.getText().toString());
-                            } catch (ParseException e) {
-                                e.printStackTrace();
-                            }
+                            System.out.println(moodDate+" "+ moodTime);
 
                             Date dateTime = null;
-
                             try {
-                                dateTime = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse(date + " " + time);
+                                dateTime = new SimpleDateFormat("yyyy/MM/dd HH:mm").parse(moodDate.getText().toString() + " " + moodTime.getText().toString());
                             } catch (ParseException e) {
                                 e.printStackTrace();
                             }
@@ -186,6 +166,7 @@ public class EventFragment extends DialogFragment {
                             } else {
                                 listener.onEventAdded(mood);
                             }
+                            builder.hide();
                         }
 
                     }
