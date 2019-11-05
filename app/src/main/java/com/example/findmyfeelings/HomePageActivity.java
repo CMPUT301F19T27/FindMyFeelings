@@ -17,10 +17,12 @@ import android.widget.Button;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
@@ -30,6 +32,7 @@ import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import org.w3c.dom.Document;
 
@@ -83,7 +86,7 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
         /* ** Bottom Navigation Bar ** */
         // from stackoverflow : https://stackoverflow.com/questions/41649494/how-to-remove-icon-animation-for-bottom-navigation-view-in-android
 
-        BottomNavigationViewHelper.disableShiftMode(bottomNavigationView);      // disable default navigation bar animation
+//        BottomNavigationViewHelper.disableShiftMode(bottomNavigationView);      // disable default navigation bar animation
         bottomNavigationView.setSelectedItemId(R.id.ic_feed);   // sets default selected item on opening
         bottomNavigationView.setItemIconTintList(null);         // disables icon tint
 
@@ -144,28 +147,27 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
         moodAdapter = new MoodCustomList(myMoodDataList, this); // Set to default list
         moodList.setAdapter(moodAdapter);
 
-        //User cUser = new User();
-
-       /* collectionRef
+        collectionRef
                 .document(currentUserEmail)
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                .collection("My Moods")
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        if (task.isSuccessful()){
-                            DocumentSnapshot document = task.getResult();
+                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                        myMoodDataList.clear();
+                        for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
+                            Timestamp timestamp = (Timestamp) doc.getData().get("dateTime");
+                            Date dateTime = timestamp.toDate();
 
-                            Mood m = (Mood)document.get("my_moods");
-                            moodAdapter.notifyDataSetChanged();
+                            String moodId = doc.getId();
+                            String mood = doc.getData().get("mood").toString();
+                            String reason = doc.getData().get("reason").toString();
+                            Mood rMood = new Mood(moodId, dateTime, mood, reason);
+
+                            myMoodDataList.add(rMood);
                         }
+                        moodAdapter.notifyDataSetChanged();
                     }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.d("Sample", "Data read failed" + e.toString());
-                    }
-                });*/
+                });
 
 
 
@@ -236,11 +238,11 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
         myMoodDataList.add(new Mood(2,11,19, 16,20, "Disgusted", ""));
 */
 
-        Date date1 = null;
+        /*Date date1 = null;
 
-        SimpleDateFormat tFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm");
+        SimpleDateFormat tFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
         try {
-            date1 = tFormat.parse("2019/12/12 13:02");
+            date1 = tFormat.parse("2019-12-12 13:02");
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -249,7 +251,7 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
         //System.out.println(date1.toString());
 
         followingMoodDataList.add(new Mood(date1, "Sad", ""));
-        myMoodDataList.add(new Mood(date1, "Happy", "asdf"));
+        myMoodDataList.add(new Mood(date1, "Happy", "asdf"));*/
 
         /*followingMoodDataList.add(new Mood("2019/11/12", "12:17", "Angry", ""));
         followingMoodDataList.add(new Mood("2019/10/13", "14:02", "Disgusted", ""));
@@ -274,8 +276,24 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
         db = FirebaseFirestore.getInstance();
         final DocumentReference docRef = db.collection("Users").document(currentUserEmail);
 
-        docRef.update("my_moods", FieldValue.arrayUnion(newMood));
-        docRef.update("recent_mood", newMood);
+        HashMap<String, Object> moodData = moodToMap(newMood);
+
+        docRef
+                .collection("My Moods")
+                .document(newMood.getMoodId())
+                .set(moodData)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d("Sample", "Data addition successfull");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d("Sample", "Data addition failed");
+                    }
+                });
 
         myMoodDataList.add(newMood);
         moodAdapter.notifyDataSetChanged();
@@ -288,11 +306,24 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
         db = FirebaseFirestore.getInstance();
         final DocumentReference docRef = db.collection("Users").document(currentUserEmail);
 
-        Mood currentMood = myMoodDataList.get(index);
-        Log.d("Sample", currentMood.getMood());
+        HashMap<String, Object> moodData = moodToMap(editedMood);
 
-        docRef.update("my_moods", FieldValue.arrayRemove(currentMood));
-        docRef.update("my_moods", FieldValue.arrayUnion(editedMood));
+        docRef
+                .collection("My Moods")
+                .document(editedMood.getMoodId())
+                .set(moodData)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d("Sample", "Data edited successfully");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d("Sample", "Data editing failed");
+                    }
+                });
 
         myMoodDataList.set(index, editedMood);
         moodAdapter.notifyDataSetChanged();
@@ -304,10 +335,36 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
         db = FirebaseFirestore.getInstance();
         final DocumentReference docRef = db.collection("Users").document(currentUserEmail);
 
-        docRef.update("my_moods", FieldValue.arrayRemove(deletedMood));
+        docRef
+                .collection("My Moods")
+                .document(deletedMood.getMoodId())
+                .delete()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d("Sample", "Data deletion successful");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d("Sample", "Data deletion failed");
+                    }
+                });
 
         myMoodDataList.remove(deletedMood);
         moodAdapter.notifyDataSetChanged();
+    }
+
+    public HashMap<String, Object> moodToMap(Mood mood) {
+        HashMap<String, Object> moodMap = new HashMap<>();
+
+        moodMap.put("moodId", mood.getMoodId());
+        moodMap.put("dateTime", mood.getDateTime());
+        moodMap.put("mood", mood.getMood());
+        moodMap.put("reason", mood.getReason());
+
+        return moodMap;
     }
 
     @Override
