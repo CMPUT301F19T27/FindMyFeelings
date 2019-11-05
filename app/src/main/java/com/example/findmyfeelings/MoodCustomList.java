@@ -1,5 +1,7 @@
 package com.example.findmyfeelings;
 
+import android.annotation.SuppressLint;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,7 +11,10 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class MoodCustomList extends RecyclerView.Adapter<MoodCustomList.MoodViewHolder> {
@@ -88,8 +93,16 @@ public class MoodCustomList extends RecyclerView.Adapter<MoodCustomList.MoodView
                 moodImage.setImageResource(R.drawable.null_face);
         }
 
-        dateValue.setText(mood.getDateString());
-        timeValue.setText(mood.getTimeString());
+        @SuppressLint("SimpleDateFormat")
+        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
+        String date = dateFormat.format(mood.getDateTime());
+        Log.d("Sample", date);
+        @SuppressLint("SimpleDateFormat")
+        DateFormat timeFormat = new SimpleDateFormat("HH:mm");
+        String time = timeFormat.format(mood.getDateTime());
+
+        dateValue.setText(date);
+        timeValue.setText(time);
         moodString.setText(mood.getMood());
 
         String username = "LongGenericUsernameThatWillBeTruncated"; // TODO change to user.getName()
