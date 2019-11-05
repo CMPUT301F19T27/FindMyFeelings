@@ -210,12 +210,6 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
         followingMoodDataList.add(new Mood(13,10,19, 16,20, "Happy", ""));
         followingMoodDataList.add(new Mood(13,10,19, 16,20, "Surprised", ""));
         followingMoodDataList.add(new Mood(14,11,19, 16,20, "Disgusted", ""));
-
-        addMoodButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-//                new EventFragment().show(getSupportFragmentManager(), "ADD_MOOD");
-            }
-        });
     }
 
     @Override
