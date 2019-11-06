@@ -1,3 +1,3 @@
 # FindMyFeelings
 
-An app to find my feelings.
+An app to track you and friends' emotional state.

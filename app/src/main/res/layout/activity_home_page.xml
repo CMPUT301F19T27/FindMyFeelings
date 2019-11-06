@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".HomePageActivity">
+
+
+
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -27,6 +31,16 @@
                 android:paddingTop="5dp"
                 android:paddingLeft="15dp"/>
 
+            <Button
+                android:id="@+id/filter_button"
+                android:layout_width="52dp"
+                android:layout_height="45dp"
+                android:layout_alignParentRight="true"
+                android:layout_marginTop="5dp"
+                android:layout_marginRight="10dp"
+                android:background="@drawable/filter_icon"/>
+
+
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="35dp"
@@ -39,31 +53,28 @@
 
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/selected_bar"
+                    android:background="@drawable/selected_bar_left"
                     android:text="My Moods"
                     android:textSize="18dp"
                     android:textColor="@color/white"
                     android:textAllCaps="false"
-                    android:fontFamily="@font/regular"
-                    />
+                    android:fontFamily="@font/regular"/>
 
 
                 <Button
+                    android:id="@+id/following_mood_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/unselected_bar"
-                    android:text="Following Moods"
-                    android:textSize="18dp"
-                    android:textAllCaps="false"
+                    android:background="@drawable/unselected_bar_right"
                     android:fontFamily="@font/regular"
-                    />
+                    android:text="Other's Moods"
+                    android:textAllCaps="false"
+                    android:textSize="18dp" />
 
             </LinearLayout>
 
 
         </RelativeLayout>
-
-
 
         <RelativeLayout
             android:id="@+id/bottom_bar"
@@ -94,6 +105,41 @@
             android:layout_height="match_parent"
             android:layout_below="@+id/top_bar"
             android:layout_above="@+id/bottom_bar">
+
+<!--            <ListView-->
+<!--                android:id="@+id/my_mood_list"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="690dp"-->
+<!--                android:paddingTop="5dp" />-->
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/my_mood_list"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true" />
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginEnd="0dp"
+                android:layout_marginBottom="0dp"
+                android:orientation="vertical"
+                tools:context=".MainActivity">
+
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/add_mood_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom|end"
+                    android:layout_margin="15dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    app:srcCompat="@android:drawable/ic_input_add" />
+            </FrameLayout>
+
         </RelativeLayout>
 
 
