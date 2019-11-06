@@ -7,12 +7,15 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListPopupWindow;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -23,6 +26,7 @@ import androidx.fragment.app.DialogFragment;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.firebase.firestore.GeoPoint;
 
 import java.lang.reflect.Array;
 import java.text.DateFormat;
@@ -42,10 +46,12 @@ public class EventFragment extends DialogFragment  {
     private EditText moodReason;
     private CheckBox checkLocation;
 
+
     private OnFragmentInteractionListener listener;
     private Mood currentMood;
     private int index;
 
+    private LocationManager locationManager;
 
     public interface OnFragmentInteractionListener {
         void onEventAdded(Mood newMood);
@@ -159,7 +165,7 @@ public class EventFragment extends DialogFragment  {
                         }
 
                         // Add Marker if Location is checked
-                        itemClicked(checkLocation);
+                        //itemClicked(checkLocation);
 
 
 
@@ -181,7 +187,13 @@ public class EventFragment extends DialogFragment  {
                             String reason = moodReason.getText().toString();
                             String moodId = newMood + dateTime.toString();
 
-                            Mood mood = new Mood(moodId, dateTime, newMood, reason);
+                            GeoPoint location = null;
+
+                            if (checkLocation.isChecked()) {
+                                location = new GeoPoint(0,0);
+                            }
+
+                            Mood mood = new Mood(moodId,"" ,dateTime, newMood, reason, location);
 
                             if (currentMood != null) {
                                 listener.onEventEdited(mood, index);
@@ -197,9 +209,6 @@ public class EventFragment extends DialogFragment  {
         });
         return builder;
     }
-
-
-
 
 
     // Check if location is checked

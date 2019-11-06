@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (!task.isSuccessful()) {
-                                Toast.makeText(MainActivity.this, "Sign Up failed. Please try again", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(MainActivity.this, "Sign In failed. Please try again", Toast.LENGTH_SHORT).show();
                             }
                             else {
                                 Intent intent = new Intent(MainActivity.this, HomePageActivity.class);
@@ -93,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
         if (firebaseUser != null) {
-            Toast.makeText(MainActivity.this, "Logged in "+ firebaseUser.getEmail(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(MainActivity.this, "Logged in as "+ firebaseUser.getEmail(), Toast.LENGTH_SHORT).show();
             Intent loginIntent = new Intent(MainActivity.this, HomePageActivity.class);
             //loginIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             //loginIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
