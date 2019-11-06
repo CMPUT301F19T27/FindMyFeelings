@@ -1,13 +1,17 @@
 package com.example.findmyfeelings;
 
+import android.location.Location;
+
 import java.io.Serializable;
 import java.util.Date;
 
 public class Mood implements Serializable {
     private String moodId;
+    private String username;
     private Date dateTime;
     private String mood;
     private String reason;
+    //private Location location;
 
 //    private Location location;
 //    private Photo photo;
@@ -16,15 +20,25 @@ public class Mood implements Serializable {
 
     }
 
-    public Mood(String moodId, Date dateTime, String mood, String reason) {
+    public Mood(String moodId, String username, Date dateTime, String mood, String reason) {
         this.moodId = moodId;
+        this.username = username;
         this.dateTime = dateTime;
         this.mood = mood;
         this.reason = reason;
+        //this.location = location;
     }
 
     public String getMoodId() {
         return moodId;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public Date getDateTime() {
@@ -50,4 +64,12 @@ public class Mood implements Serializable {
     public void setReason(String reason) {
         this.reason = reason;
     }
+
+   /* public Location getLocation() {
+        return location;
+    }
+
+    public void setLocation(Location location) {
+        this.location = location;
+    }*/
 }

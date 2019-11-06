@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListPopupWindow;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -37,7 +38,6 @@ public class EventFragment extends DialogFragment {
     private OnFragmentInteractionListener listener;
     private Mood currentMood;
     private int index;
-
 
     public interface OnFragmentInteractionListener {
         void onEventAdded(Mood newMood);
@@ -165,7 +165,7 @@ public class EventFragment extends DialogFragment {
                             String reason = moodReason.getText().toString();
                             String moodId = newMood + dateTime.toString();
 
-                            Mood mood = new Mood(moodId, dateTime, newMood, reason);
+                            Mood mood = new Mood(moodId,"" ,dateTime, newMood, reason, null);
 
                             if (currentMood != null) {
                                 listener.onEventEdited(mood, index);
