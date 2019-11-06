@@ -85,8 +85,8 @@ public class MoodCustomList extends RecyclerView.Adapter<MoodCustomList.MoodView
 
         String username = "LongGenericUsernameThatWillBeTruncated"; // TODO change to user.getName()
 
-        if(username.length() > 10) {
-            usernameString.setText(username.substring(0,10) + "...");
+        if(username.length() > 16) {
+            usernameString.setText(username.substring(0,16) + "...");
         } else {
             usernameString.setText(username);
         }

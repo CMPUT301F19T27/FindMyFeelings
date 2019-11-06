@@ -22,20 +22,20 @@
         android:layout_alignParentRight="true"
         android:text="@android:string/search_go" />
 
-<!--    <androidx.recyclerview.widget.RecyclerView-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:paddingTop="5dp"-->
-<!--        android:layout_below="@+id/search_editText"-->
-<!--        android:id="@+id/user_search_list"/>-->
-
-    <TextView
-        android:layout_width="wrap_content"
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="5dp"
         android:layout_below="@+id/search_editText"
-        android:gravity="center"
-        android:text="Type in a username above to search for new users to follow!"/>
+        android:id="@+id/user_search_list"/>
+
+<!--    <TextView-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:paddingTop="5dp"-->
+<!--        android:layout_below="@+id/search_editText"-->
+<!--        android:gravity="center"-->
+<!--        android:text="Type in a username above to search for users!"/>-->
 
 
 </RelativeLayout>

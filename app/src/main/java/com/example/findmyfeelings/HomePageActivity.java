@@ -135,7 +135,7 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
         final CollectionReference collectionRef = db.collection("Users");
 
         /* ** Custom List Implementation ** */
-        // use a linear layout manager
+        // Use a linear layout manager
         moodLayoutManager = new LinearLayoutManager(this);
         moodList.setLayoutManager(moodLayoutManager);
 

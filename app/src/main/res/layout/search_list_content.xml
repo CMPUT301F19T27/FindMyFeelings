@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     tools:context=".SearchCustomList"
     android:orientation="horizontal">
 
@@ -58,19 +58,21 @@
 
         </LinearLayout>
 
-        <Button
-            android:id="@+id/deny_follow_request_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:text="Deny" />
+<!--        <Button-->
+<!--            android:id="@+id/deny_follow_request_button"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_gravity="center_vertical"-->
+<!--            android:text="Deny"-->
+<!--            android:visibility="visible" />-->
 
-        <Button
-            android:id="@+id/accept_follow_request_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:text="Accept" />
+<!--        <Button-->
+<!--            android:id="@+id/accept_follow_request_button"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_gravity="center_vertical"-->
+<!--            android:text="Accept"-->
+<!--            android:visibility="visible" />-->
 
     </LinearLayout>
 
