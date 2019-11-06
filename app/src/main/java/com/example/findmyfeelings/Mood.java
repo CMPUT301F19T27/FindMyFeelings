@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class Mood implements Serializable {
+    private String moodId;
     private Date dateTime;
     private String mood;
     private String reason;
@@ -15,10 +16,15 @@ public class Mood implements Serializable {
 
     }
 
-    public Mood(Date dateTime, String mood, String reason) {
+    public Mood(String moodId, Date dateTime, String mood, String reason) {
+        this.moodId = moodId;
         this.dateTime = dateTime;
         this.mood = mood;
         this.reason = reason;
+    }
+
+    public String getMoodId() {
+        return moodId;
     }
 
     public Date getDateTime() {

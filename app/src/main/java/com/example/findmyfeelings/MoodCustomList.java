@@ -94,7 +94,7 @@ public class MoodCustomList extends RecyclerView.Adapter<MoodCustomList.MoodView
         }
 
         @SuppressLint("SimpleDateFormat")
-        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         String date = dateFormat.format(mood.getDateTime());
         Log.d("Sample", date);
         @SuppressLint("SimpleDateFormat")

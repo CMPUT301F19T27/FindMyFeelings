@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.Button;
 import android.widget.EditText;
 
@@ -31,6 +32,7 @@ public class EventFragment extends DialogFragment {
     private EditText moodDate;
     private EditText moodTime;
     private EditText moodReason;
+    private CheckBox checkLocation;
 
     private OnFragmentInteractionListener listener;
     private Mood currentMood;
@@ -66,12 +68,14 @@ public class EventFragment extends DialogFragment {
 
     @NonNull
     @Override
-    public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-        View view = LayoutInflater.from(getActivity()).inflate(R.layout.event_fragment, null);
-        moodType = view.findViewById(R.id.mood_type_editText);
-        moodDate = view.findViewById(R.id.mood_date_editText);
-        moodTime = view.findViewById(R.id.mood_time_editText);
-        moodReason = view.findViewById(R.id.mood_reason_editText);
+    public Dialog onCreateDialog(@Nullable Bundle savedInstanceState){
+        View view= LayoutInflater.from(getActivity()).inflate(R.layout.event_fragment, null);
+        moodType=view.findViewById(R.id.mood_type_editText);
+        moodDate=view.findViewById(R.id.mood_date_editText);
+        moodTime=view.findViewById(R.id.mood_time_editText);
+        moodReason=view.findViewById(R.id.mood_reason_editText);
+        checkLocation=view.findViewById(R.id.location_check);
+
 
         Bundle args = getArguments();
 
@@ -80,7 +84,7 @@ public class EventFragment extends DialogFragment {
             index = args.getInt(ARG_INDEX);
 
             @SuppressLint("SimpleDateFormat")
-            DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
             String date = dateFormat.format(currentMood.getDateTime());
 
             @SuppressLint("SimpleDateFormat")
@@ -133,9 +137,9 @@ public class EventFragment extends DialogFragment {
                             flag = true;
                             moodDate.setError("Enter a date!");
                         }
-                        if (!isValidFormat("yyyy/MM/dd", moodDate.getText().toString())) {
+                        if (!isValidFormat("yyyy-MM-dd", moodDate.getText().toString())) {
                             flag = true;
-                            moodDate.setError("Enter a valid date (yyyy/MM/dd)!");
+                            moodDate.setError("Enter a valid date (yyyy-MM-dd)!");
                         }
                         if (moodTime.getText().toString().length() == 0) {
                             flag = true;
@@ -150,16 +154,18 @@ public class EventFragment extends DialogFragment {
 
                             Date dateTime = null;
                             try {
-                                dateTime = new SimpleDateFormat("yyyy/MM/dd HH:mm").parse(moodDate.getText().toString() + " " + moodTime.getText().toString());
+                                dateTime = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse(moodDate.getText().toString() + " " + moodTime.getText().toString());
                             } catch (ParseException e) {
                                 e.printStackTrace();
                             }
 
+
                             String newMood = moodType.getText().toString();
 
                             String reason = moodReason.getText().toString();
+                            String moodId = newMood + dateTime.toString();
 
-                            Mood mood = new Mood(dateTime, newMood, reason);
+                            Mood mood = new Mood(moodId, dateTime, newMood, reason);
 
                             if (currentMood != null) {
                                 listener.onEventEdited(mood, index);
