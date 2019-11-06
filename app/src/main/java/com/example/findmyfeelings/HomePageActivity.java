@@ -143,6 +143,8 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
         moodAdapter = new MoodCustomList(myMoodDataList, this); // Set to default list
         moodList.setAdapter(moodAdapter);
 
+
+        // READS MY MOODS FROM DATABASE
         collectionRef
                 .document(currentUserEmail)
                 .collection("My Moods")

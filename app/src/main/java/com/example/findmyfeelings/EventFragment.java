@@ -164,8 +164,7 @@ public class EventFragment extends DialogFragment  {
                             moodTime.setError("Enter a valid time (HH:mm)!");
                         }
 
-                        // Add Marker if Location is checked
-                        //itemClicked(checkLocation);
+
 
 
 
@@ -201,6 +200,8 @@ public class EventFragment extends DialogFragment  {
                                 listener.onEventAdded(mood);
                             }
                             builder.hide();
+                            // Add Marker if Location is checked
+                            itemClicked(checkLocation);
                         }
 
                     }
@@ -222,10 +223,10 @@ public class EventFragment extends DialogFragment  {
             LatLng fromPosition = new LatLng(newLat, newLong);
             Bundle args = new Bundle();
 
-            args.putParcelable("LatLng_data", fromPosition);
+            //args.putParcelable("LatLng_data", fromPosition);
 
             Intent i = new Intent(getActivity(), MapActivity.class);
-            i.putExtras(args);
+            //i.putExtras(args);
             startActivity(i);
 
         }
