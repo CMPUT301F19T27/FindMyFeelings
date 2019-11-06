@@ -2,6 +2,8 @@ package com.example.findmyfeelings;
 
 import android.location.Location;
 
+import com.google.firebase.firestore.GeoPoint;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -11,7 +13,7 @@ public class Mood implements Serializable {
     private Date dateTime;
     private String mood;
     private String reason;
-    //private Location location;
+    private GeoPoint location;
 
 //    private Location location;
 //    private Photo photo;
@@ -20,13 +22,13 @@ public class Mood implements Serializable {
 
     }
 
-    public Mood(String moodId, String username, Date dateTime, String mood, String reason) {
+    public Mood(String moodId, String username, Date dateTime, String mood, String reason, GeoPoint location) {
         this.moodId = moodId;
         this.username = username;
         this.dateTime = dateTime;
         this.mood = mood;
         this.reason = reason;
-        //this.location = location;
+        this.location = location;
     }
 
     public String getMoodId() {
@@ -65,11 +67,11 @@ public class Mood implements Serializable {
         this.reason = reason;
     }
 
-   /* public Location getLocation() {
+    public GeoPoint getLocation() {
         return location;
     }
 
-    public void setLocation(Location location) {
+    public void setLocation(GeoPoint location) {
         this.location = location;
-    }*/
+    }
 }

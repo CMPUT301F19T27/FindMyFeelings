@@ -10,6 +10,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -31,6 +33,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -56,8 +59,8 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
     private ArrayList<Mood> filteredFollowingMoodDataList;
     private boolean onMyMoodList;
     private String username;
-
     BottomNavigationView bottomNavigationView;
+    private GPSTracker mGPS = new GPSTracker(this);
   
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -154,7 +157,10 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
                             String moodId = doc.getId();
                             String mood = doc.getData().get("mood").toString();
                             String reason = doc.getData().get("reason").toString();
-                            Mood rMood = new Mood(moodId, username,dateTime, mood, reason);
+
+                            GeoPoint location = (GeoPoint) doc.getData().get("location");
+
+                            Mood rMood = new Mood(moodId, username,dateTime, mood, reason, location);
 
                             myMoodDataList.add(rMood);
                         }
@@ -221,6 +227,12 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
         db = FirebaseFirestore.getInstance();
         final DocumentReference docRef = db.collection("Users").document(currentUserEmail);
 
+        if (newMood.getLocation() != null) {
+            mGPS.getLocation();
+            GeoPoint currentLoc = new GeoPoint(mGPS.getLatitude(), mGPS.getLongitude());
+            newMood.setLocation(currentLoc);
+        }
+
         HashMap<String, Object> moodData = moodToMap(newMood);
 
         docRef
@@ -249,6 +261,13 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
     public void onEventEdited(Mood editedMood, int index) {
         db = FirebaseFirestore.getInstance();
         final DocumentReference docRef = db.collection("Users").document(currentUserEmail);
+
+
+        if (editedMood.getLocation() != null) {
+            mGPS.getLocation();
+            GeoPoint currentLoc = new GeoPoint(mGPS.getLatitude(), mGPS.getLongitude());
+            editedMood.setLocation(currentLoc);
+        }
 
         HashMap<String, Object> moodData = moodToMap(editedMood);
 
@@ -309,6 +328,7 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
         moodMap.put("dateTime", mood.getDateTime());
         moodMap.put("mood", mood.getMood());
         moodMap.put("reason", mood.getReason());
+        moodMap.put("location", mood.getLocation());
 
         return moodMap;
     }
