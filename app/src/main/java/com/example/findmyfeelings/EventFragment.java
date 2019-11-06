@@ -6,6 +6,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,8 +16,12 @@ import android.widget.EditText;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
 
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.lang.reflect.Array;
@@ -30,7 +35,7 @@ import java.util.List;
 public class EventFragment extends DialogFragment  {
     private static final String ARG_MOOD = "ride";
     private static final String ARG_INDEX = "index";
-
+    
     private EditText moodType;
     private EditText moodDate;
     private EditText moodTime;
@@ -234,5 +239,10 @@ public class EventFragment extends DialogFragment  {
         }
         return date != null;
     }
+
+
+
+
+
 
 }
