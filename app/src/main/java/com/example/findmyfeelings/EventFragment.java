@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +17,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import java.lang.reflect.Array;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -24,7 +27,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-public class EventFragment extends DialogFragment {
+public class EventFragment extends DialogFragment  {
     private static final String ARG_MOOD = "ride";
     private static final String ARG_INDEX = "index";
 
@@ -149,6 +152,14 @@ public class EventFragment extends DialogFragment {
                             flag = true;
                             moodTime.setError("Enter a valid time (HH:mm)!");
                         }
+
+                        // Add Marker if Location is checked
+                        itemClicked(checkLocation);
+
+
+
+
+
                         if (flag == false) {
                             System.out.println(moodDate+" "+ moodTime);
 
@@ -181,6 +192,33 @@ public class EventFragment extends DialogFragment {
         });
         return builder;
     }
+
+
+
+
+
+    // Check if location is checked
+    public void itemClicked(View v) {
+        // Check if checkbox if checked
+        CheckBox checkBox = (CheckBox)v;
+        if (checkBox.isChecked()){
+            double newLat = 53.5444;
+            double newLong = -113.4909;
+
+            LatLng fromPosition = new LatLng(newLat, newLong);
+            Bundle args = new Bundle();
+
+            args.putParcelable("LatLng_data", fromPosition);
+
+            Intent i = new Intent(getActivity(), MapActivity.class);
+            i.putExtras(args);
+            startActivity(i);
+
+        }
+
+
+    }
+
 
 
     public static boolean isValidFormat(String format, String value) {  // used stackoverflow, attributions shown in README.txt
