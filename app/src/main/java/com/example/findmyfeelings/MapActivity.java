@@ -2,6 +2,11 @@ package com.example.findmyfeelings;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -14,22 +19,23 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
 
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.common.io.Resources;
 
 
 public class MapActivity extends FragmentActivity implements OnMapReadyCallback {
     private GoogleMap mMap;
 
     Location mLastKnownLocation;
-
-    LocationManager locationManager;
-    LocationListener locationListener;
 
     private boolean mLocationPermissionGranted;
 
@@ -41,40 +47,6 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
         setContentView(R.layout.activity_map);
 
         getLocationPermission();
-
-        /**
-
-
-        locationManager = (LocationManager) this.getSystemService(LOCATION_SERVICE);
-        //getLocationPermission();
-
-
-
-        locationManager = (LocationManager) this.getSystemService(LOCATION_SERVICE);
-        boolean isGPS_Enabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
-
-        if (isGPS_Enabled){
-            locationListener = new LocationListener() {
-                @Override
-                public void onLocationChanged(Location location) {
-
-                    double longitude = location.getLongitude();
-                    double latitude = location.getLatitude();
-
-                }
-            };
-
-        }
-
-
-
-        // Check if permission is granted
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-
-            ActivityCompat.requestPermissions(this, new String[]{ACCESS_FINE_LOCATION}, 1);
-        }
-**/
-
 
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
@@ -173,31 +145,47 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
         // disable map toolbar on the bottom right corner
         mMap.getUiSettings().setMapToolbarEnabled(false);
 
+        //Get Location Data
+        Intent i = getIntent();
+        LatLng newLocation = i.getParcelableExtra("LatLng_data");
+
+        // If we got a location then we will add it to the map
+        if (i != null && newLocation != null) {
+
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(newLocation.latitude, newLocation.longitude), 20));
+
+            BitmapDescriptor icon = BitmapDescriptorFactory.fromResource(R.drawable.angry_face);
+            MarkerOptions marker = new MarkerOptions().position(newLocation).title("Current Location").icon(icon);
+            mMap.addMarker(marker);
+            //LatLng defaultLoc = new LatLng(newLocation.latitude, newLocation.longitude);
+            //mMap.moveCamera(CameraUpdateFactory.newLatLng(defaultLoc));
 
 
+
+        }
+
+
+
+    /**
         // Add a marker in Sydney and move the camera
-        LatLng sydney = new LatLng(53.5444, -113.4909);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+        LatLng cLocation = new LatLng(53.5444, -113.4909);
 
+        BitmapDescriptor icon = BitmapDescriptorFactory.fromResource(R.drawable.angry_face);
 
-/**
-        // Add Marker for CurrentLocation and move the camera
-        LatLng currentLocation = new LatLng(latitude, longitude);
-        mMap.addMarker(new MarkerOptions().position(currentLocation).title("Current Location"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(currentLocation));
- **/
+        MarkerOptions marker = new MarkerOptions().position(cLocation).title("Current Location").icon(icon);
+        mMap.addMarker(marker);
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(cLocation));
+**/
 
     }
 
 
 
 
-
-
-    
-
 }
+
+
+
 
 
 
