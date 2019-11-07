@@ -197,9 +197,12 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
                             myMoodDataList.add(rMood);
                         }
 
+                        // Offset for clustering
+                        double clusterIndex = 0;
+
                         for(Mood mood : myMoodDataList) {
                             GeoPoint location = mood.getLocation();
-                            LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+                            //LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
                             if (location !=  null) {
                                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 100));
 
@@ -231,14 +234,16 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
                                 //Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.sad_face);
                                 Bitmap bitmapRescale = Bitmap.createScaledBitmap(bitmap, 100,100,false);
                                 BitmapDescriptor aw = BitmapDescriptorFactory.fromBitmap(bitmapRescale);
+                                double offset = clusterIndex/60000d;
                                 MarkerOptions marker = new MarkerOptions()
-                                        .position(latLng)
+                                        .position(new LatLng((location.getLatitude() + offset), (location.getLongitude() + offset)))
                                         .title(mood.getMood())
                                         .icon(aw)
                                         .flat(false);
 
 
                                 mMap.addMarker(marker);
+                                clusterIndex++; // Increment clusterIndex for Offset
                             }
                         }
                     }
