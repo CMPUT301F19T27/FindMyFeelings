@@ -66,9 +66,7 @@ public class SignUpActivity extends AppCompatActivity {
                     passwordEditText.setError("Enter a password");
                     passwordEditText.requestFocus();
                 }
-                /*if (email.isEmpty() && password.isEmpty() && firstName.isEmpty() && lastName.isEmpty()) {
-                    Toast.makeText(SignUpActivity.this, "Empty fields!", Toast.LENGTH_SHORT).show();
-                }*/
+
                 if (firstName.isEmpty()) {
                     firstNameEditText.setError("Enter your first name");
                     firstNameEditText.requestFocus();
@@ -112,7 +110,7 @@ public class SignUpActivity extends AppCompatActivity {
                                                 Log.d(TAG, "Data addition to firestore failed");
                                             }
                                         });
-                                FirebaseAuth.getInstance().signOut();
+                                //FirebaseAuth.getInstance().signOut();
                                 Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
                                 startActivity(intent);
                             }

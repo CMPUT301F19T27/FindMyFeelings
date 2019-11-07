@@ -2,49 +2,44 @@ package com.example.findmyfeelings;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import android.annotation.SuppressLint;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
+
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 
-
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.OnSuccessListener;
 
+import android.widget.Button;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
-import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
-import org.w3c.dom.Document;
-
-import java.math.RoundingMode;
-import java.net.DatagramPacket;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
-
-
-import java.util.ArrayList;
-
 
 public class HomePageActivity extends AppCompatActivity implements EventFragment.OnFragmentInteractionListener, MoodCustomList.RecyclerViewListener, FilterFragment.OnFragmentInteractionListener {
     private String currentUserEmail;
@@ -63,8 +58,9 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
     private ArrayList<Mood> filteredMyMoodDataList;
     private ArrayList<Mood> filteredFollowingMoodDataList;
     private boolean onMyMoodList;
-
+    private String username;
     BottomNavigationView bottomNavigationView;
+    private GPSTracker mGPS = new GPSTracker(this);
   
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,12 +79,15 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
         /* ** Bottom Navigation Bar ** */
         // from stackoverflow : https://stackoverflow.com/questions/41649494/how-to-remove-icon-animation-for-bottom-navigation-view-in-android
 
-        BottomNavigationViewHelper.disableShiftMode(bottomNavigationView);      // disable default navigation bar animation
+//      BottomNavigationViewHelper.disableShiftMode(bottomNavigationView);      // disable default navigation bar animation
         bottomNavigationView.setSelectedItemId(R.id.ic_feed);   // sets default selected item on opening
         bottomNavigationView.setItemIconTintList(null);         // disables icon tint
 
         firebaseAuth = FirebaseAuth.getInstance();
         currentUserEmail = firebaseAuth.getCurrentUser().getEmail();
+
+        int indexEnd = currentUserEmail.indexOf("@");
+        username = currentUserEmail.substring(0 , indexEnd);
 
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -144,34 +143,38 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
         moodAdapter = new MoodCustomList(myMoodDataList, this); // Set to default list
         moodList.setAdapter(moodAdapter);
 
-        //User cUser = new User();
 
-       /* collectionRef
+        // READS MY MOODS FROM DATABASE
+        collectionRef
                 .document(currentUserEmail)
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                .collection("My Moods")
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        if (task.isSuccessful()){
-                            DocumentSnapshot document = task.getResult();
+                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                        myMoodDataList.clear();
+                        for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
+                            Timestamp timestamp = (Timestamp) doc.getData().get("dateTime");
+                            Date dateTime = timestamp.toDate();
 
-                            Mood m = (Mood)document.get("my_moods");
-                            moodAdapter.notifyDataSetChanged();
+                            String moodId = doc.getId();
+                            String mood = doc.getData().get("mood").toString();
+                            String reason = doc.getData().get("reason").toString();
+
+                            GeoPoint location = (GeoPoint) doc.getData().get("location");
+
+                            Mood rMood = new Mood(moodId, username,dateTime, mood, reason, location);
+
+                            myMoodDataList.add(rMood);
                         }
+                        moodAdapter.notifyDataSetChanged();
                     }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.d("Sample", "Data read failed" + e.toString());
-                    }
-                });*/
-
-
+                });
 
         myMoodListButton.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("RestrictedApi")
             @Override
             public void onClick(View view) {
+                addMoodButton.setVisibility(View.VISIBLE);
                 onMyMoodList = true;
 
                 // Apply filters
@@ -190,10 +193,11 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
             }
         });
 
-
         followingMoodListButton.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("RestrictedApi")
             @Override
             public void onClick(View view) {
+                addMoodButton.setVisibility(View.INVISIBLE);
                 onMyMoodList = false;
 
                 // Apply filters
@@ -219,6 +223,7 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
             }
         });
 
+
         /**
 
         // Test data
@@ -236,20 +241,20 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
         myMoodDataList.add(new Mood(2,11,19, 16,20, "Disgusted", ""));
 */
 
-        Date date1 = null;
+//         Date date1 = null;
 
-        SimpleDateFormat tFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm");
-        try {
-            date1 = tFormat.parse("2019/12/12 13:02");
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
+//         SimpleDateFormat tFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm");
+//         try {
+//             date1 = tFormat.parse("2019/12/12 13:02");
+//         } catch (ParseException e) {
+//             e.printStackTrace();
+//         }
 
-        Date date = new Date();
-        //System.out.println(date1.toString());
+//         Date date = new Date();
+//         //System.out.println(date1.toString());
 
-        followingMoodDataList.add(new Mood(date1, "Sad", ""));
-        myMoodDataList.add(new Mood(date1, "Happy", "asdf"));
+//         followingMoodDataList.add(new Mood(date1, "Sad", ""));
+//         myMoodDataList.add(new Mood(date1, "Happy", "asdf"));
 
         /*
         followingMoodDataList.add(new Mood("2019/11/12", "12:17", "Angry", ""));
@@ -272,29 +277,69 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
         db = FirebaseFirestore.getInstance();
         final DocumentReference docRef = db.collection("Users").document(currentUserEmail);
 
-        docRef.update("my_moods", FieldValue.arrayUnion(newMood));
-        docRef.update("recent_mood", newMood);
+        if (newMood.getLocation() != null) {
+            mGPS.getLocation();
+            GeoPoint currentLoc = new GeoPoint(mGPS.getLatitude(), mGPS.getLongitude());
+            newMood.setLocation(currentLoc);
+        }
+
+        HashMap<String, Object> moodData = moodToMap(newMood);
+
+        docRef
+                .collection("My Moods")
+                .document(newMood.getMoodId())
+                .set(moodData)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d("Sample", "Data addition successfull");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d("Sample", "Data addition failed");
+                    }
+                });
 
         myMoodDataList.add(newMood);
         moodAdapter.notifyDataSetChanged();
 
     }
 
-    // NOT WORKING
     @Override
     public void onEventEdited(Mood editedMood, int index) {
         db = FirebaseFirestore.getInstance();
         final DocumentReference docRef = db.collection("Users").document(currentUserEmail);
 
-        Mood currentMood = myMoodDataList.get(index);
-        Log.d("Sample", currentMood.getMood());
 
-        docRef.update("my_moods", FieldValue.arrayRemove(currentMood));
-        docRef.update("my_moods", FieldValue.arrayUnion(editedMood));
+        if (editedMood.getLocation() != null) {
+            mGPS.getLocation();
+            GeoPoint currentLoc = new GeoPoint(mGPS.getLatitude(), mGPS.getLongitude());
+            editedMood.setLocation(currentLoc);
+        }
+
+        HashMap<String, Object> moodData = moodToMap(editedMood);
+
+        docRef
+                .collection("My Moods")
+                .document(editedMood.getMoodId())
+                .set(moodData)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d("Sample", "Data edited successfully");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d("Sample", "Data editing failed");
+                    }
+                });
 
         myMoodDataList.set(index, editedMood);
         moodAdapter.notifyDataSetChanged();
-
     }
 
     @Override
@@ -302,10 +347,40 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
         db = FirebaseFirestore.getInstance();
         final DocumentReference docRef = db.collection("Users").document(currentUserEmail);
 
-        docRef.update("my_moods", FieldValue.arrayRemove(deletedMood));
+        docRef
+                .collection("My Moods")
+                .document(deletedMood.getMoodId())
+                .delete()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d("Sample", "Data deletion successful");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d("Sample", "Data deletion failed");
+                    }
+                });
 
         myMoodDataList.remove(deletedMood);
         moodAdapter.notifyDataSetChanged();
+    }
+
+    public HashMap<String, Object> moodToMap(Mood mood) {
+        HashMap<String, Object> moodMap = new HashMap<>();
+
+        mood.setUsername(username);
+
+        moodMap.put("moodId", mood.getMoodId());
+        moodMap.put("username", mood.getUsername());
+        moodMap.put("dateTime", mood.getDateTime());
+        moodMap.put("mood", mood.getMood());
+        moodMap.put("reason", mood.getReason());
+        moodMap.put("location", mood.getLocation());
+
+        return moodMap;
     }
 
     @Override
