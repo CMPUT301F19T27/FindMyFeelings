@@ -71,7 +71,7 @@ public class Mood implements Serializable {
     public int getEmoji() {
         int moodImage;
 
-        switch(mood) {
+        switch (mood) {
             case "Happy":
                 moodImage = R.drawable.happy_face;
                 break;
@@ -95,6 +95,7 @@ public class Mood implements Serializable {
         }
 
         return moodImage;
+    }
 
     public GeoPoint getLocation() {
         return location;
