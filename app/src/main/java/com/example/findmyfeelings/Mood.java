@@ -68,6 +68,16 @@ public class Mood implements Serializable {
         this.reason = reason;
     }
 
+
+    public GeoPoint getLocation() {
+        return location;
+    }
+
+    public void setLocation(GeoPoint location) {
+        this.location = location;
+
+    }
+
     public int getEmoji() {
         int moodImage;
 
@@ -95,13 +105,6 @@ public class Mood implements Serializable {
         }
 
         return moodImage;
-
-    public GeoPoint getLocation() {
-        return location;
     }
 
-    public void setLocation(GeoPoint location) {
-        this.location = location;
-
-    }
 }

@@ -2,13 +2,18 @@ package com.example.findmyfeelings;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
+import android.Manifest;
 import android.annotation.SuppressLint;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationManager;
@@ -113,6 +118,32 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
             }
         });
 
+
+        db = FirebaseFirestore.getInstance();
+        final DocumentReference docRef = db.collection("Users").document(currentUserEmail);
+
+        docRef
+                .collection("My Moods")
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                        myMoodDataList.clear();
+                        for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
+                            Timestamp timestamp = (Timestamp) doc.getData().get("dateTime");
+                            Date dateTime = timestamp.toDate();
+                            String moodId = doc.getId();
+                            String mood = doc.getData().get("mood").toString();
+                            String reason = doc.getData().get("reason").toString();
+                            GeoPoint location = (GeoPoint) doc.getData().get("location");
+
+                            Mood rMood = new Mood(moodId, username,dateTime, mood, reason, location);
+
+                            myMoodDataList.add(rMood);
+                        }
+                        moodAdapter.notifyDataSetChanged();
+                    }
+                });
+
         filterButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -144,31 +175,7 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
         moodList.setAdapter(moodAdapter);
 
 
-        // READS MY MOODS FROM DATABASE
-        collectionRef
-                .document(currentUserEmail)
-                .collection("My Moods")
-                .addSnapshotListener(new EventListener<QuerySnapshot>() {
-                    @Override
-                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
-                        myMoodDataList.clear();
-                        for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
-                            Timestamp timestamp = (Timestamp) doc.getData().get("dateTime");
-                            Date dateTime = timestamp.toDate();
 
-                            String moodId = doc.getId();
-                            String mood = doc.getData().get("mood").toString();
-                            String reason = doc.getData().get("reason").toString();
-
-                            GeoPoint location = (GeoPoint) doc.getData().get("location");
-
-                            Mood rMood = new Mood(moodId, username,dateTime, mood, reason, location);
-
-                            myMoodDataList.add(rMood);
-                        }
-                        moodAdapter.notifyDataSetChanged();
-                    }
-                });
 
         myMoodListButton.setOnClickListener(new View.OnClickListener() {
             @SuppressLint("RestrictedApi")
