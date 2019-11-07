@@ -30,6 +30,7 @@
 
             <Button
                 android:id="@+id/logout_button"
+                android:text="LOGOUT"
                 android:layout_width="52dp"
                 android:layout_height="45dp"
                 android:layout_alignParentRight="true"

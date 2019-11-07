@@ -21,12 +21,14 @@ public class MoodCustomList extends RecyclerView.Adapter<MoodCustomList.MoodView
 
     private ArrayList<Mood> moods;
     private RecyclerViewListener mRecyclerViewListener;
+    private String username;
 
 
     // Provide a suitable constructor (depends on the kind of dataset)
     public MoodCustomList(ArrayList<Mood> inputMoodDataset, RecyclerViewListener recyclerViewListener) {
         this.moods = inputMoodDataset;
         this.mRecyclerViewListener = recyclerViewListener;
+        this.username = username;
     }
 
     public static class MoodViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
@@ -71,7 +73,7 @@ public class MoodCustomList extends RecyclerView.Adapter<MoodCustomList.MoodView
         TextView usernameString = holder.view.findViewById(R.id.username_text);
 
         @SuppressLint("SimpleDateFormat")
-        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         String date = dateFormat.format(mood.getDateTime());
         Log.d("Sample", date);
         @SuppressLint("SimpleDateFormat")
@@ -83,7 +85,7 @@ public class MoodCustomList extends RecyclerView.Adapter<MoodCustomList.MoodView
         moodString.setText(mood.getMood());
         moodImage.setImageResource(mood.getEmoji());
 
-        String username = "LongGenericUsernameThatWillBeTruncated"; // TODO change to user.getName()
+        String username = mood.getUsername(); // TODO change to user.getName()
 
         if(username.length() > 16) {
             usernameString.setText(username.substring(0,16) + "...");

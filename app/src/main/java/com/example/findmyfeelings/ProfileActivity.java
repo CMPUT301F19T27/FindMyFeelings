@@ -57,7 +57,7 @@ public class ProfileActivity extends AppCompatActivity implements FollowNewUserF
         bottomNavigationView.setSelectedItemId(R.id.ic_profile);
 
         // disable default navigation bar animation
-        BottomNavigationViewHelper.disableShiftMode(bottomNavigationView);
+        //BottomNavigationViewHelper.disableShiftMode(bottomNavigationView);
 
         // disables icon tint
         bottomNavigationView.setItemIconTintList(null);
