@@ -14,13 +14,14 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
 
 
-public class ProfileActivity extends AppCompatActivity {
+public class ProfileActivity extends AppCompatActivity implements FollowNewUserFragment.OnFragmentInteractionListener {
 
     BottomNavigationView bottomNavigationView;
     TextView usernameText;
@@ -28,6 +29,7 @@ public class ProfileActivity extends AppCompatActivity {
     Button logoutButton;
     Button followerButton;
     Button followingButton;
+    private FloatingActionButton floatingFollowButton;
     FirebaseUser firebaseUser;
     FirebaseAuth firebaseAuth;
 
@@ -50,7 +52,7 @@ public class ProfileActivity extends AppCompatActivity {
         followingButton = findViewById(R.id.following_tab_button);
         listHintText = findViewById(R.id.list_hint_text);
         usernameText = findViewById(R.id.username_text);
-
+        floatingFollowButton = findViewById(R.id.follow_floating_button);
 
         bottomNavigationView.setSelectedItemId(R.id.ic_profile);
 
@@ -115,6 +117,13 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
 
+        floatingFollowButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new FollowNewUserFragment().show(getSupportFragmentManager(), "ADD_EVENT");
+            }
+        });
+
 
         /* ** Custom List Implementation ** */
         followList = findViewById(R.id.follow_list);
@@ -150,6 +159,11 @@ public class ProfileActivity extends AppCompatActivity {
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
 //        usernameText.setText(firebaseUser.getEmail()); //TODO make this the current user's username
+
+    }
+
+    @Override
+    public void onUserFollowed(User user) {
 
     }
 
