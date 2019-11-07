@@ -163,8 +163,8 @@ public class ProfileActivity extends AppCompatActivity implements FollowNewUserF
     }
 
     @Override
-    public void onUserFollowed(User user) {
-
+    public void onUserFollowed(User newUser) {
+        // TODO add the current user (the person using the app) to the newUser's request list
     }
 
 }

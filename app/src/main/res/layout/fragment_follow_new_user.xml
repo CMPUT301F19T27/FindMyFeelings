@@ -23,19 +23,35 @@
         android:text="@android:string/search_go" />
 
     <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/user_search_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="5dp"
         android:layout_below="@+id/search_editText"
-        android:id="@+id/user_search_list"/>
+        android:paddingTop="5dp"
+        android:visibility="invisible" />
 
-<!--    <TextView-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:paddingTop="5dp"-->
-<!--        android:layout_below="@+id/search_editText"-->
-<!--        android:gravity="center"-->
-<!--        android:text="Type in a username above to search for users!"/>-->
+    <TextView
+        android:id="@+id/hint_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/search_editText"
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="4dp"
+        android:paddingTop="5dp"
+        android:text="Type in a username above to search for users!" />
+
+    <TextView
+        android:id="@+id/error_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/search_editText"
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="4dp"
+        android:paddingTop="5dp"
+        android:text="No users found!"
+        android:visibility="invisible" />
 
 
 </RelativeLayout>
