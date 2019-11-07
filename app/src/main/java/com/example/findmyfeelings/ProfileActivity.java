@@ -1,6 +1,7 @@
 package com.example.findmyfeelings;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -13,28 +14,38 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 
 
 public class ProfileActivity extends AppCompatActivity {
 
-    BottomNavigationView bottomNavigationView;
-    TextView usernameText;
-    TextView listHintText;
-    Button logoutButton;
-    Button followerButton;
-    Button followingButton;
-    FirebaseUser firebaseUser;
-    FirebaseAuth firebaseAuth;
+    private BottomNavigationView bottomNavigationView;
+    private TextView usernameText;
+    private TextView listHintText;
+    private Button logoutButton;
+    private Button followerButton;
+    private Button followingButton;
+
+    private FirebaseFirestore db;
+    private FirebaseUser firebaseUser;
+    private FirebaseAuth firebaseAuth;
 
     private FirebaseAuth.AuthStateListener authStateListener;
 
-    private ArrayList<User> followingDataList;
-    private ArrayList<User> followerDataList;
+    private ArrayList<FollowUser> followingDataList;
+    private ArrayList<FollowUser> followerDataList;
     private RecyclerView followList;
     private RecyclerView.Adapter followAdapter;
     private RecyclerView.LayoutManager followLayoutManager;
@@ -67,7 +78,6 @@ public class ProfileActivity extends AppCompatActivity {
                     case R.id.ic_map:
                         Intent intent1 = new Intent(ProfileActivity.this, MapActivity.class);
                         //intent1.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-
                        // intent1.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         //intent1.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(intent1);
@@ -84,6 +94,57 @@ public class ProfileActivity extends AppCompatActivity {
                 return false;
             }
         });
+
+        // READ FOLLOWING AND FOLLOWER DATA
+
+        firebaseAuth = FirebaseAuth.getInstance();
+        String currentUserEmail = firebaseAuth.getCurrentUser().getEmail();
+
+        CollectionReference collectionRef = db.collection("Users");
+
+        // RETRIEVES FOLLOWING USERS DATA
+
+        collectionRef
+                .document(currentUserEmail)
+                .collection("Following")
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                        followingDataList.clear();
+
+                        for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
+                            String email = doc.getId();
+                            String username = (String) doc.getData().get("username");
+                            String firstName = (String) doc.getData().get("first_name");
+                            String lastName = (String) doc.getData().get("last_name");
+
+                            FollowUser followingUser = new FollowUser(email, username, firstName, lastName);
+                            followingDataList.add(followingUser);
+                        }
+                    }
+                });
+
+
+        // RETRIEVES FOLLOWER USER DATA
+        collectionRef
+                .document(currentUserEmail)
+                .collection("Followers")
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                        followerDataList.clear();
+
+                        for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
+                            String email = doc.getId();
+                            String username = (String) doc.getData().get("username");
+                            String firstName = (String) doc.getData().get("first_name");
+                            String lastName = (String) doc.getData().get("last_name");
+
+                            FollowUser followingUser = new FollowUser(email, username, firstName, lastName);
+                            followerDataList.add(followingUser);
+                        }
+                    }
+                });
 
         logoutButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -130,6 +191,7 @@ public class ProfileActivity extends AppCompatActivity {
         followAdapter = new FollowCustomList(followingDataList); // Set to the default
         followList.setAdapter(followAdapter);
 
+        /**
         // Test data
         followingDataList.add(new User("myemail0@gmail.com", "childebr", "Cameron", "Hildebrandt"));
         followingDataList.add(new User("myemail1@gmail.com", "jwwhite", "Josh", "White"));
@@ -141,6 +203,8 @@ public class ProfileActivity extends AppCompatActivity {
         followerDataList.add(new User("myemail1@gmail.com", "jwwhite", "Josh", "White"));
         followerDataList.add(new User("myemail2@gmail.com", "ramy", "Ramy", "Issa"));
         followerDataList.add(new User("myemail3@gmail.com", "kandathi", "Nevil", "Kandathil"));
+        */
+
 
     }
 

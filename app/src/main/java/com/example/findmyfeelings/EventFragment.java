@@ -201,7 +201,7 @@ public class EventFragment extends DialogFragment  {
                             }
                             builder.hide();
                             // Add Marker if Location is checked
-                            itemClicked(checkLocation);
+                            //itemClicked(checkLocation);
                         }
 
                     }
