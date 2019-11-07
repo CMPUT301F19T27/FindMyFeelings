@@ -35,8 +35,8 @@ public class FollowCustomList extends RecyclerView.Adapter<FollowCustomList.Foll
         // create a new view
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.follow_list_content, parent, false);
 
-        FollowViewHolder moodViewHolder = new FollowViewHolder(view);
-        return moodViewHolder;
+        FollowViewHolder followViewHolder = new FollowViewHolder(view);
+        return followViewHolder;
     }
 
 

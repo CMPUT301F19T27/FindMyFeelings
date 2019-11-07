@@ -72,29 +72,6 @@ public class MoodCustomList extends RecyclerView.Adapter<MoodCustomList.MoodView
         TextView moodString = holder.view.findViewById(R.id.mood_name_text);
         TextView usernameString = holder.view.findViewById(R.id.username_text);
 
-        switch(mood.getMood()) {
-            case "Happy":
-                moodImage.setImageResource(R.drawable.happy_face);
-                break;
-            case "Angry":
-                moodImage.setImageResource(R.drawable.angry_face);
-                break;
-            case "Disgusted":
-                moodImage.setImageResource(R.drawable.disgust_face);
-                break;
-            case "Scared":
-                moodImage.setImageResource(R.drawable.fear_face);
-                break;
-            case "Sad":
-                moodImage.setImageResource(R.drawable.sad_face);
-                break;
-            case "Surprised":
-                moodImage.setImageResource(R.drawable.surprised_face);
-                break;
-            default:
-                moodImage.setImageResource(R.drawable.null_face);
-        }
-
         @SuppressLint("SimpleDateFormat")
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         String date = dateFormat.format(mood.getDateTime());
@@ -106,11 +83,12 @@ public class MoodCustomList extends RecyclerView.Adapter<MoodCustomList.MoodView
         dateValue.setText(date);
         timeValue.setText(time);
         moodString.setText(mood.getMood());
+        moodImage.setImageResource(mood.getEmoji());
 
         String username = mood.getUsername(); // TODO change to user.getName()
 
-        if(username.length() > 10) {
-            usernameString.setText(username.substring(0,10) + "...");
+        if(username.length() > 16) {
+            usernameString.setText(username.substring(0,16) + "...");
         } else {
             usernameString.setText(username);
         }

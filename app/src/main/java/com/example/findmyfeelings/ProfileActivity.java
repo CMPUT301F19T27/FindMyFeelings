@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
@@ -29,7 +30,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 
 
-public class ProfileActivity extends AppCompatActivity {
+public class ProfileActivity extends AppCompatActivity implements FollowNewUserFragment.OnFragmentInteractionListener {
 
     private BottomNavigationView bottomNavigationView;
     private TextView usernameText;
@@ -41,6 +42,8 @@ public class ProfileActivity extends AppCompatActivity {
     private FirebaseFirestore db;
     private FirebaseUser firebaseUser;
     private FirebaseAuth firebaseAuth;
+    private FloatingActionButton floatingFollowButton;
+
 
     private FirebaseAuth.AuthStateListener authStateListener;
 
@@ -61,7 +64,7 @@ public class ProfileActivity extends AppCompatActivity {
         followingButton = findViewById(R.id.following_tab_button);
         listHintText = findViewById(R.id.list_hint_text);
         usernameText = findViewById(R.id.username_text);
-
+        floatingFollowButton = findViewById(R.id.follow_floating_button);
 
         bottomNavigationView.setSelectedItemId(R.id.ic_profile);
 
@@ -100,6 +103,7 @@ public class ProfileActivity extends AppCompatActivity {
         firebaseAuth = FirebaseAuth.getInstance();
         String currentUserEmail = firebaseAuth.getCurrentUser().getEmail();
 
+        db = FirebaseFirestore.getInstance();
         CollectionReference collectionRef = db.collection("Users");
 
         // RETRIEVES FOLLOWING USERS DATA
@@ -176,6 +180,13 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
 
+        floatingFollowButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new FollowNewUserFragment().show(getSupportFragmentManager(), "ADD_EVENT");
+            }
+        });
+
 
         /* ** Custom List Implementation ** */
         followList = findViewById(R.id.follow_list);
@@ -191,19 +202,19 @@ public class ProfileActivity extends AppCompatActivity {
         followAdapter = new FollowCustomList(followingDataList); // Set to the default
         followList.setAdapter(followAdapter);
 
-        /**
-        // Test data
-        followingDataList.add(new User("myemail0@gmail.com", "childebr", "Cameron", "Hildebrandt"));
-        followingDataList.add(new User("myemail1@gmail.com", "jwwhite", "Josh", "White"));
-        followingDataList.add(new User("myemail2@gmail.com", "ramy", "Ramy", "Issa"));
-        followingDataList.add(new User("myemail3@gmail.com", "kandathi", "Nevil", "Kandathil"));
-        followingDataList.add(new User("myemail4@gmail.com", "sandy6", "Sandy", "Huang"));
-        followingDataList.add(new User("myemail5@gmail.com", "wentao3", "Travis", "Zhao"));
 
-        followerDataList.add(new User("myemail1@gmail.com", "jwwhite", "Josh", "White"));
-        followerDataList.add(new User("myemail2@gmail.com", "ramy", "Ramy", "Issa"));
-        followerDataList.add(new User("myemail3@gmail.com", "kandathi", "Nevil", "Kandathil"));
-        */
+        // Test data
+        followingDataList.add(new FollowUser("myemail0@gmail.com", "childebr", "Cameron", "Hildebrandt"));
+        followingDataList.add(new FollowUser("myemail1@gmail.com", "jwwhite", "Josh", "White"));
+        followingDataList.add(new FollowUser("myemail2@gmail.com", "ramy", "Ramy", "Issa"));
+        followingDataList.add(new FollowUser("myemail3@gmail.com", "kandathi", "Nevil", "Kandathil"));
+        followingDataList.add(new FollowUser("myemail4@gmail.com", "sandy6", "Sandy", "Huang"));
+        followingDataList.add(new FollowUser("myemail5@gmail.com", "wentao3", "Travis", "Zhao"));
+
+        followerDataList.add(new FollowUser("myemail1@gmail.com", "jwwhite", "Josh", "White"));
+        followerDataList.add(new FollowUser("myemail2@gmail.com", "ramy", "Ramy", "Issa"));
+        followerDataList.add(new FollowUser("myemail3@gmail.com", "kandathi", "Nevil", "Kandathil"));
+
 
 
     }
@@ -214,6 +225,11 @@ public class ProfileActivity extends AppCompatActivity {
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
 //        usernameText.setText(firebaseUser.getEmail()); //TODO make this the current user's username
+
+    }
+
+    @Override
+    public void onUserFollowed(User user) {
 
     }
 

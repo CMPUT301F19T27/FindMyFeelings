@@ -165,7 +165,7 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
         final CollectionReference collectionRef = db.collection("Users");
 
         /* ** Custom List Implementation ** */
-        // use a linear layout manager
+        // Use a linear layout manager
         moodLayoutManager = new LinearLayoutManager(this);
         moodList.setLayoutManager(moodLayoutManager);
 
@@ -229,6 +229,54 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
                 new EventFragment().show(getSupportFragmentManager(), "ADD_EVENT");
             }
         });
+
+
+        /**
+
+        // Test data
+ /*       myMoodDataList.add(new Mood(22,10,19, 16,20, "Angry", "Null pointer exception happened"));
+        myMoodDataList.add(new Mood(23,10,19, 16,20, "Happy", "The code is working"));
+        myMoodDataList.add(new Mood(24,10,19, 16,20, "Sad", "I don't know why this error is happening"));
+        myMoodDataList.add(new Mood(25,10,19, 16,20, "Surprised", "Only 2 errors!"));
+        myMoodDataList.add(new Mood(26,10,19, 16,20, "Scared", ""));
+        myMoodDataList.add(new Mood(27,10,19, 16,20, "Disgusted", ""));
+        myMoodDataList.add(new Mood(28,10,19, 16,20, "Happy", ""));
+        myMoodDataList.add(new Mood(29,10,19, 16,20, "Happy", ""));
+        myMoodDataList.add(new Mood(30,10,19, 16,20, "Sad", ""));
+        myMoodDataList.add(new Mood(31,10,19, 16,20, "Surprised", "It compiled"));
+        myMoodDataList.add(new Mood(1,11,19, 16,20, "Surprised", ""));
+        myMoodDataList.add(new Mood(2,11,19, 16,20, "Disgusted", ""));
+*/
+
+//         Date date1 = null;
+
+//         SimpleDateFormat tFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm");
+//         try {
+//             date1 = tFormat.parse("2019/12/12 13:02");
+//         } catch (ParseException e) {
+//             e.printStackTrace();
+//         }
+
+//         Date date = new Date();
+//         //System.out.println(date1.toString());
+
+//         followingMoodDataList.add(new Mood(date1, "Sad", ""));
+//         myMoodDataList.add(new Mood(date1, "Happy", "asdf"));
+
+        /*
+        followingMoodDataList.add(new Mood("2019/11/12", "12:17", "Angry", ""));
+        followingMoodDataList.add(new Mood("2019/10/13", "14:02", "Disgusted", ""));
+        followingMoodDataList.add(new Mood("2019/09/21", "15:32", "Happy", ""));
+        followingMoodDataList.add(new Mood("2019/07/01", "18:12", "Surprised", ""));
+        followingMoodDataList.add(new Mood(new Date(),, "Disgusted", ""));
+        followingMoodDataList.add(new Mood(12,10,19, 16,20, "Sad", ""));
+        followingMoodDataList.add(new Mood(12,10,19, 16,20, "Angry", ""));
+        followingMoodDataList.add(new Mood(13,10,19, 16,20, "Disgusted", ""));
+        followingMoodDataList.add(new Mood(13,10,19, 16,20, "Happy", ""));
+        followingMoodDataList.add(new Mood(13,10,19, 16,20, "Surprised", ""));
+        followingMoodDataList.add(new Mood(14,11,19, 16,20, "Disgusted", ""));
+*/
+
     }
 
     @Override
@@ -237,15 +285,6 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
         final DocumentReference docRef = db.collection("Users").document(currentUserEmail);
 
         if (newMood.getLocation() != null) {
-            if (ContextCompat.checkSelfPermission(this.getApplicationContext(),
-                    android.Manifest.permission.ACCESS_FINE_LOCATION)
-                    == PackageManager.PERMISSION_GRANTED) {
-                //mLocationPermissionGranted = true;
-            } else {
-                ActivityCompat.requestPermissions(this,
-                        new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
-                        1);
-            }
             mGPS.getLocation();
             GeoPoint currentLoc = new GeoPoint(mGPS.getLatitude(), mGPS.getLongitude());
             newMood.setLocation(currentLoc);
