@@ -196,38 +196,48 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
 
                             myMoodDataList.add(rMood);
                         }
+
                         for(Mood mood : myMoodDataList) {
                             GeoPoint location = mood.getLocation();
                             LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
                             if (location !=  null) {
                                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 100));
 
-                                BitmapDescriptor icon;
+                                Bitmap bitmap;
                                 switch(mood.getMood()) {
                                     case "Happy":
-                                        icon = BitmapDescriptorFactory.fromResource(R.drawable.happy_face);
+                                        bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.happy_face);
                                         break;
                                     case "Angry":
-                                        icon = BitmapDescriptorFactory.fromResource(R.drawable.angry_face);
+                                        bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.angry_face);
                                         break;
                                     case "Disgusted":
-                                        icon = BitmapDescriptorFactory.fromResource(R.drawable.disgust_face);
+                                        bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.disgust_face);
                                         break;
                                     case "Scared":
-                                        icon = BitmapDescriptorFactory.fromResource(R.drawable.fear_face);
+                                        bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.fear_face);
                                         break;
                                     case "Sad":
-                                        icon = BitmapDescriptorFactory.fromResource(R.drawable.sad_face);
+                                        bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.sad_face);
                                         break;
                                     case "Surprised":
-                                        icon = BitmapDescriptorFactory.fromResource(R.drawable.surprised_face);
+                                        bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.surprised_face);
                                         break;
                                     default:
-                                        icon = BitmapDescriptorFactory.fromResource(R.drawable.null_face);
+                                        bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.null_face);
                                 }
 
                                 //BitmapDescriptor icon = BitmapDescriptorFactory.fromResource(R.drawable.angry_face);
-                                MarkerOptions marker = new MarkerOptions().position(latLng).title("Current Location").icon(icon);
+                                //Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.sad_face);
+                                Bitmap bitmapRescale = Bitmap.createScaledBitmap(bitmap, 100,100,false);
+                                BitmapDescriptor aw = BitmapDescriptorFactory.fromBitmap(bitmapRescale);
+                                MarkerOptions marker = new MarkerOptions()
+                                        .position(latLng)
+                                        .title(mood.getMood())
+                                        .icon(aw)
+                                        .flat(false);
+
+
                                 mMap.addMarker(marker);
                             }
                         }
