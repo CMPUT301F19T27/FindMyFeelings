@@ -106,6 +106,22 @@ public class ProfileActivity extends AppCompatActivity implements FollowNewUserF
         db = FirebaseFirestore.getInstance();
         CollectionReference collectionRef = db.collection("Users");
 
+
+        /* ** Custom List Implementation ** */
+        followList = findViewById(R.id.follow_list);
+
+        followingDataList = new ArrayList<>();
+        followerDataList = new ArrayList<>();
+
+        // use a linear layout manager
+        followLayoutManager = new LinearLayoutManager(this);
+        followList.setLayoutManager(followLayoutManager);
+
+        // Specify an adapter
+        followAdapter = new FollowCustomList(followingDataList); // Set to the default
+        followList.setAdapter(followAdapter);
+
+
         // RETRIEVES FOLLOWING USERS DATA
 
         collectionRef
@@ -125,11 +141,13 @@ public class ProfileActivity extends AppCompatActivity implements FollowNewUserF
                             FollowUser followingUser = new FollowUser(email, username, firstName, lastName);
                             followingDataList.add(followingUser);
                         }
+                        followAdapter.notifyDataSetChanged();
                     }
                 });
 
 
         // RETRIEVES FOLLOWER USER DATA
+
         collectionRef
                 .document(currentUserEmail)
                 .collection("Followers")
@@ -162,21 +180,21 @@ public class ProfileActivity extends AppCompatActivity implements FollowNewUserF
             }
         });
 
-        followerButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                followAdapter = new FollowCustomList(followerDataList);
-                followList.setAdapter(followAdapter);
-                listHintText.setText("Users who are following you:");
-            }
-        });
-
         followingButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 followAdapter = new FollowCustomList(followingDataList);
                 followList.setAdapter(followAdapter);
                 listHintText.setText("Users you are following:");
+            }
+        });
+
+        followerButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                followAdapter = new FollowCustomList(followerDataList);
+                followList.setAdapter(followAdapter);
+                listHintText.setText("Users who are following you:");
             }
         });
 
@@ -188,19 +206,7 @@ public class ProfileActivity extends AppCompatActivity implements FollowNewUserF
         });
 
 
-        /* ** Custom List Implementation ** */
-        followList = findViewById(R.id.follow_list);
 
-        followingDataList = new ArrayList<>();
-        followerDataList = new ArrayList<>();
-
-        // use a linear layout manager
-        followLayoutManager = new LinearLayoutManager(this);
-        followList.setLayoutManager(followLayoutManager);
-
-        // Specify an adapter
-        followAdapter = new FollowCustomList(followingDataList); // Set to the default
-        followList.setAdapter(followAdapter);
 
 
         // Test data

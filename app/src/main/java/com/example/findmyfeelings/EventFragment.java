@@ -163,13 +163,6 @@ public class EventFragment extends DialogFragment  {
                             flag = true;
                             moodTime.setError("Enter a valid time (HH:mm)!");
                         }
-
-
-
-
-
-
-
                         if (flag == false) {
                             System.out.println(moodDate+" "+ moodTime);
 

@@ -128,18 +128,18 @@ public class FollowNewUserFragment extends DialogFragment implements SearchCusto
     }
 
 
-//    public static boolean isValidFormat(String format, String value) {  // used stackoverflow, attributions shown in README.txt
-//        Date date = null;
-//        try {
-//            SimpleDateFormat sdf = new SimpleDateFormat(format);
-//            date = sdf.parse(value);
-//            if (!value.equals(sdf.format(date))) {
-//                date = null;
-//            }
-//        } catch (ParseException ex) {
-//            ex.printStackTrace();
-//        }
-//        return date != null;
-//    }
-
+/*    public static boolean isValidFormat(String format, String value) {  // used stackoverflow, attributions shown in README.txt
+        Date date = null;
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat(format);
+            date = sdf.parse(value);
+            if (!value.equals(sdf.format(date))) {
+                date = null;
+            }
+        } catch (ParseException ex) {
+            ex.printStackTrace();
+        }
+        return date != null;
+    }
+*/
 }

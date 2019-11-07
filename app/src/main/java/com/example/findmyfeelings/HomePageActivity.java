@@ -122,27 +122,7 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
         db = FirebaseFirestore.getInstance();
         final DocumentReference docRef = db.collection("Users").document(currentUserEmail);
 
-        docRef
-                .collection("My Moods")
-                .addSnapshotListener(new EventListener<QuerySnapshot>() {
-                    @Override
-                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
-                        myMoodDataList.clear();
-                        for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
-                            Timestamp timestamp = (Timestamp) doc.getData().get("dateTime");
-                            Date dateTime = timestamp.toDate();
-                            String moodId = doc.getId();
-                            String mood = doc.getData().get("mood").toString();
-                            String reason = doc.getData().get("reason").toString();
-                            GeoPoint location = (GeoPoint) doc.getData().get("location");
 
-                            Mood rMood = new Mood(moodId, username,dateTime, mood, reason, location);
-
-                            myMoodDataList.add(rMood);
-                        }
-                        moodAdapter.notifyDataSetChanged();
-                    }
-                });
 
         filterButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -175,7 +155,27 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
         moodList.setAdapter(moodAdapter);
 
 
+        docRef
+                .collection("My Moods")
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                        myMoodDataList.clear();
+                        for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
+                            Timestamp timestamp = (Timestamp) doc.getData().get("dateTime");
+                            Date dateTime = timestamp.toDate();
+                            String moodId = doc.getId();
+                            String mood = doc.getData().get("mood").toString();
+                            String reason = doc.getData().get("reason").toString();
+                            GeoPoint location = (GeoPoint) doc.getData().get("location");
 
+                            Mood rMood = new Mood(moodId, username,dateTime, mood, reason, location);
+
+                            myMoodDataList.add(rMood);
+                        }
+                        moodAdapter.notifyDataSetChanged();
+                    }
+                });
 
         myMoodListButton.setOnClickListener(new View.OnClickListener() {
             @SuppressLint("RestrictedApi")
@@ -229,54 +229,6 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
                 new EventFragment().show(getSupportFragmentManager(), "ADD_EVENT");
             }
         });
-
-
-        /**
-
-        // Test data
- /*       myMoodDataList.add(new Mood(22,10,19, 16,20, "Angry", "Null pointer exception happened"));
-        myMoodDataList.add(new Mood(23,10,19, 16,20, "Happy", "The code is working"));
-        myMoodDataList.add(new Mood(24,10,19, 16,20, "Sad", "I don't know why this error is happening"));
-        myMoodDataList.add(new Mood(25,10,19, 16,20, "Surprised", "Only 2 errors!"));
-        myMoodDataList.add(new Mood(26,10,19, 16,20, "Scared", ""));
-        myMoodDataList.add(new Mood(27,10,19, 16,20, "Disgusted", ""));
-        myMoodDataList.add(new Mood(28,10,19, 16,20, "Happy", ""));
-        myMoodDataList.add(new Mood(29,10,19, 16,20, "Happy", ""));
-        myMoodDataList.add(new Mood(30,10,19, 16,20, "Sad", ""));
-        myMoodDataList.add(new Mood(31,10,19, 16,20, "Surprised", "It compiled"));
-        myMoodDataList.add(new Mood(1,11,19, 16,20, "Surprised", ""));
-        myMoodDataList.add(new Mood(2,11,19, 16,20, "Disgusted", ""));
-*/
-
-//         Date date1 = null;
-
-//         SimpleDateFormat tFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm");
-//         try {
-//             date1 = tFormat.parse("2019/12/12 13:02");
-//         } catch (ParseException e) {
-//             e.printStackTrace();
-//         }
-
-//         Date date = new Date();
-//         //System.out.println(date1.toString());
-
-//         followingMoodDataList.add(new Mood(date1, "Sad", ""));
-//         myMoodDataList.add(new Mood(date1, "Happy", "asdf"));
-
-        /*
-        followingMoodDataList.add(new Mood("2019/11/12", "12:17", "Angry", ""));
-        followingMoodDataList.add(new Mood("2019/10/13", "14:02", "Disgusted", ""));
-        followingMoodDataList.add(new Mood("2019/09/21", "15:32", "Happy", ""));
-        followingMoodDataList.add(new Mood("2019/07/01", "18:12", "Surprised", ""));
-        followingMoodDataList.add(new Mood(new Date(),, "Disgusted", ""));
-        followingMoodDataList.add(new Mood(12,10,19, 16,20, "Sad", ""));
-        followingMoodDataList.add(new Mood(12,10,19, 16,20, "Angry", ""));
-        followingMoodDataList.add(new Mood(13,10,19, 16,20, "Disgusted", ""));
-        followingMoodDataList.add(new Mood(13,10,19, 16,20, "Happy", ""));
-        followingMoodDataList.add(new Mood(13,10,19, 16,20, "Surprised", ""));
-        followingMoodDataList.add(new Mood(14,11,19, 16,20, "Disgusted", ""));
-*/
-
     }
 
     @Override
