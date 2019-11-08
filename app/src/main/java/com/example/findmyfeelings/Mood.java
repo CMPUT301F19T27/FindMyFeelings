@@ -14,6 +14,7 @@ public class Mood implements Serializable {
     private Date dateTime;
     private String mood;
     private String reason;
+    private String situation;
     private GeoPoint location;
 
 //    private Location location;
@@ -23,12 +24,13 @@ public class Mood implements Serializable {
 
     }
 
-    public Mood(String moodId, String username, Date dateTime, String mood, String reason, GeoPoint location) {
+    public Mood(String moodId, String username, Date dateTime, String mood, String reason, String situation, GeoPoint location) {
         this.moodId = moodId;
         this.username = username;
         this.dateTime = dateTime;
         this.mood = mood;
         this.reason = reason;
+        this.situation = situation;
         this.location = location;
     }
 
@@ -66,6 +68,14 @@ public class Mood implements Serializable {
 
     public void setReason(String reason) {
         this.reason = reason;
+    }
+
+    public String getSituation() {
+        return situation;
+    }
+
+    public void setSituation(String situation) {
+        this.situation = situation;
     }
 
     public GeoPoint getLocation() {

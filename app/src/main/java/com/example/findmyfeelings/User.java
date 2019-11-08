@@ -52,37 +52,6 @@ public class User {
     public void setRecentMood(Mood recentMood) {
         this.recentMood = recentMood;
     }
-/*
-    public void addFollower(String  fUser) {
-        followersList.add(fUser);
-    }
-
-    public void addFollowing(String  fUser) {
-        followingList.add(fUser);
-    }
-
-    public void removeFollower(String fUser) {
-        followersList.remove(fUser);
-    }
-
-    public void removeFollowing(String fUser) {
-        followingList.remove(fUser);
-    }
-
-    public void addRequest(String rEmail) {
-        requestList.add(rEmail);
-    }
-
-    public void removeRequest(String rEmail) {
-        requestList.remove(rEmail);
-    }
-
-    public void addMood(Mood newMood) {
-        recentMood = newMood;
-        myMoods.add(newMood);
-
-    }
-*/
 
     public HashMap<String, Object> userToMap() {
 

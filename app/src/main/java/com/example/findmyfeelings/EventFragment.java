@@ -21,6 +21,7 @@ import androidx.fragment.app.DialogFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.firestore.GeoPoint;
 
+import java.lang.reflect.Array;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -41,6 +42,7 @@ public class EventFragment extends DialogFragment  {
     private EditText moodDate;
     private EditText moodTime;
     private EditText moodReason;
+    private EditText moodSituation;
     private CheckBox checkLocation;
 
 
@@ -88,11 +90,12 @@ public class EventFragment extends DialogFragment  {
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState){
-        View view= LayoutInflater.from(getActivity()).inflate(R.layout.fragment_event, null);
-        moodType=view.findViewById(R.id.mood_type_editText);
-        moodDate=view.findViewById(R.id.mood_date_editText);
-        moodTime=view.findViewById(R.id.mood_time_editText);
-        moodReason=view.findViewById(R.id.mood_reason_editText);
+        View view = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_event, null);
+        moodType = view.findViewById(R.id.mood_type_editText);
+        moodDate = view.findViewById(R.id.mood_date_editText);
+        moodTime = view.findViewById(R.id.mood_time_editText);
+        moodReason = view.findViewById(R.id.mood_reason_editText);
+        moodSituation =  view.findViewById(R.id.mood_situation_editText);
         checkLocation=view.findViewById(R.id.location_check);
 
 
@@ -114,6 +117,7 @@ public class EventFragment extends DialogFragment  {
             moodDate.setText(date);
             moodTime.setText(time);
             moodReason.setText(currentMood.getReason());
+            moodSituation.setText(currentMood.getSituation());
         }
 
         final AlertDialog builder = new AlertDialog.Builder(getContext())
@@ -143,6 +147,9 @@ public class EventFragment extends DialogFragment  {
                         String[] moods = new String[]{"Happy", "Sad", "Angry", "Disgusted", "Surprised", "Scared"};
                         List<String> validMoods = Arrays.asList(moods);
 
+                        String[] situations = new String[]{"alone", "Alone", "with 1", "with 2", "crowd", "Crowd"};
+                        List<String> validSituations = Arrays.asList(situations);
+
                         if (moodType.getText().toString().length() == 0) {
                             flag = true;
                             moodType.setError("Enter a mood!");
@@ -168,6 +175,15 @@ public class EventFragment extends DialogFragment  {
                             flag = true;
                             moodTime.setError("Enter a valid time (HH:mm)!");
                         }
+                        if (moodSituation.getText().toString().length() == 0) {
+                            flag = true;
+                            moodSituation.setError("Enter a situation!");
+                        }
+                        if (!(validSituations.contains(moodSituation.getText().toString()))) {
+                            flag = true;
+                            moodSituation.setError("Alone, With 1, With 2 or more, Crowd");
+
+                        }
                         if (flag == false) {
                             System.out.println(moodDate+" "+ moodTime);
 
@@ -179,7 +195,7 @@ public class EventFragment extends DialogFragment  {
                             }
 
                             String newMood = moodType.getText().toString();
-
+                            String situation = moodSituation.getText().toString();
                             String reason = moodReason.getText().toString();
                             String moodId = newMood + dateTime.toString();
 
@@ -189,7 +205,7 @@ public class EventFragment extends DialogFragment  {
                                 location = new GeoPoint(0,0);
                             }
 
-                            Mood mood = new Mood(moodId,"" ,dateTime, newMood, reason, location);
+                            Mood mood = new Mood(moodId,"" ,dateTime, newMood, reason, situation, location);
 
                             if (currentMood != null) {
                                 listener.onEventEdited(mood, index);
