@@ -83,6 +83,11 @@ public class FollowNewUserFragment extends DialogFragment implements SearchCusto
         hintText = view.findViewById(R.id.hint_text);
         errorText = view.findViewById(R.id.error_text);
 
+
+        searchList.setVisibility(View.VISIBLE);
+        hintText.setVisibility(View.INVISIBLE);
+        errorText.setVisibility(View.INVISIBLE);
+        
         db = FirebaseFirestore.getInstance();
         CollectionReference cRef = db.collection("Users");
 
