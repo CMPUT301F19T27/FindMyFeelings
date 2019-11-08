@@ -264,7 +264,7 @@ public class ProfileActivity extends AppCompatActivity implements FollowNewUserF
         floatingFollowButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new FollowNewUserFragment(currentUserEmail, followingDataList).show(getSupportFragmentManager(), "ADD_EVENT");
+                new FollowNewUserFragment(currentUserEmail).show(getSupportFragmentManager(), "ADD_EVENT");
             }
         });
 
