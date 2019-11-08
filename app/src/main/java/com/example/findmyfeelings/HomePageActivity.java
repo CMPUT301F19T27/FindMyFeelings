@@ -119,8 +119,8 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
         });
 
 
-        db = FirebaseFirestore.getInstance();
-        final DocumentReference docRef = db.collection("Users").document(currentUserEmail);
+        //db = FirebaseFirestore.getInstance();
+        //final DocumentReference docRef = db.collection("Users").document(currentUserEmail);
 
 
 
@@ -142,7 +142,7 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
 
 
         db = FirebaseFirestore.getInstance();
-        final CollectionReference collectionRef = db.collection("Users");
+        final CollectionReference cRef = db.collection("Users");
 
         /* ** Custom List Implementation ** */
         // Use a linear layout manager
@@ -155,7 +155,8 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
         moodList.setAdapter(moodAdapter);
 
 
-        docRef
+        cRef
+                .document(currentUserEmail)
                 .collection("My Moods")
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
@@ -244,6 +245,12 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
 
         HashMap<String, Object> moodData = moodToMap(newMood);
 
+        HashMap<String, Object> recentMoodData = new HashMap<>();
+        recentMoodData.put("recent_mood", moodData);
+
+        docRef
+                .set(recentMoodData);
+
         docRef
                 .collection("My Moods")
                 .document(newMood.getMoodId())
@@ -266,6 +273,7 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
 
     }
 
+    // RECENT MOOD UPDATED ON ADDITION. ASSUMES IT IS THE MOST RECENT MOOD
     @Override
     public void onEventEdited(Mood editedMood, int index) {
         db = FirebaseFirestore.getInstance();
@@ -301,6 +309,7 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
         moodAdapter.notifyDataSetChanged();
     }
 
+    // DOES NOT UPDATE RECENT MOOD
     @Override
     public void onEventDeleted(Mood deletedMood) {
         db = FirebaseFirestore.getInstance();

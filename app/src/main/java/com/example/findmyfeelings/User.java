@@ -25,6 +25,7 @@ public class User {
         this.username = username;
         this.firstName = firstName;
         this.lastName = lastName;
+        this.recentMood = new Mood();
     }
 
     public String getEmail() {

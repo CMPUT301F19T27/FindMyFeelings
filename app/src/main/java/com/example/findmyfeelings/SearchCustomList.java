@@ -19,12 +19,12 @@ import java.util.List;
 
 public class SearchCustomList extends RecyclerView.Adapter<SearchCustomList.SearchViewHolder> {
 
-    private List<User> users;
+    private List<FollowUser> users;
     private RecyclerViewListener mRecyclerViewListener;
 
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public SearchCustomList(List<User> inputUserDataset, RecyclerViewListener recyclerViewListener) {
+    public SearchCustomList(List<FollowUser> inputUserDataset, RecyclerViewListener recyclerViewListener) {
         this.users = inputUserDataset;
         this.mRecyclerViewListener = recyclerViewListener;
     }
@@ -62,15 +62,15 @@ public class SearchCustomList extends RecyclerView.Adapter<SearchCustomList.Sear
     // Replace the contents of a view (invoked by the layout manager)
     @Override
     public void onBindViewHolder(SearchViewHolder holder, int position) {
-        User user = users.get(position);
+        FollowUser fUser = users.get(position);
 
         TextView dateValue = holder.view.findViewById(R.id.first_name_text);
         TextView timeValue = holder.view.findViewById(R.id.last_name_text);
         TextView moodString = holder.view.findViewById(R.id.username_text);
 
-        dateValue.setText(user.getFirstName());
-        timeValue.setText(user.getLastName());
-        moodString.setText(user.getUsername());
+        dateValue.setText(fUser.getFirstName());
+        timeValue.setText(fUser.getLastName());
+        moodString.setText(fUser.getUsername());
 
     }
 

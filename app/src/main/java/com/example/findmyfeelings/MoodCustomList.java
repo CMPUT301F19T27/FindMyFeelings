@@ -83,7 +83,7 @@ public class MoodCustomList extends RecyclerView.Adapter<MoodCustomList.MoodView
         dateValue.setText(date);
         timeValue.setText(time);
         moodString.setText(mood.getMood());
-        moodImage.setImageResource(mood.getEmoji());
+        moodImage.setImageResource(getEmoji(mood));
 
         String username = mood.getUsername(); // TODO change to user.getName()
 
@@ -95,6 +95,34 @@ public class MoodCustomList extends RecyclerView.Adapter<MoodCustomList.MoodView
 
     }
 
+    public int getEmoji(Mood mood) {
+        int moodImage;
+
+        switch(mood.getMood()) {
+            case "Happy":
+                moodImage = R.drawable.happy_face;
+                break;
+            case "Angry":
+                moodImage = R.drawable.angry_face;
+                break;
+            case "Disgusted":
+                moodImage = R.drawable.disgust_face;
+                break;
+            case "Scared":
+                moodImage = R.drawable.fear_face;
+                break;
+            case "Sad":
+                moodImage = R.drawable.sad_face;
+                break;
+            case "Surprised":
+                moodImage = R.drawable.surprised_face;
+                break;
+            default:
+                moodImage = R.drawable.null_face;
+        }
+
+        return moodImage;
+    }
     public interface RecyclerViewListener {
         void onRecyclerViewClickListener(int position);
     }
