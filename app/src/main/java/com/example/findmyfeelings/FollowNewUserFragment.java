@@ -1,6 +1,5 @@
 package com.example.findmyfeelings;
 
-import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
@@ -24,18 +23,10 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
-import java.lang.reflect.Array;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+
 
 public class FollowNewUserFragment extends DialogFragment implements SearchCustomList.RecyclerViewListener {
-    private static final String ARG_MOOD = "ride";
-    private static final String ARG_INDEX = "index";
 
     private EditText searchEditText;
     private Button searchButton;
@@ -46,10 +37,7 @@ public class FollowNewUserFragment extends DialogFragment implements SearchCusto
 
     private FirebaseFirestore db;
 
-
-
     private OnFragmentInteractionListener listener;
-    private FollowUser currentUser;
     private int index;
 
     private String currentUserEmail;
@@ -131,7 +119,6 @@ public class FollowNewUserFragment extends DialogFragment implements SearchCusto
                     public void onClick(DialogInterface dialogInterface, int i) {
                         System.out.println();
                         FollowUser fUser = searchResultsList.get(index);
-                        System.out.println("*******************************      "+fUser.getEmail());
                         listener.onUserFollowed(fUser);
                     }
                 })
