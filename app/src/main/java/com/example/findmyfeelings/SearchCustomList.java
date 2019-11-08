@@ -1,28 +1,21 @@
 package com.example.findmyfeelings;
 
-import android.annotation.SuppressLint;
-import android.util.Log;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class SearchCustomList extends RecyclerView.Adapter<SearchCustomList.SearchViewHolder> {
 
     private List<FollowUser> users;
     private RecyclerViewListener mRecyclerViewListener;
-
-
+    
     // Provide a suitable constructor (depends on the kind of dataset)
     public SearchCustomList(List<FollowUser> inputUserDataset, RecyclerViewListener recyclerViewListener) {
         this.users = inputUserDataset;
