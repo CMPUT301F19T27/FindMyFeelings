@@ -46,6 +46,11 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 
+/**
+ * This class keeps track of events happening on the homepage
+ *
+ */
+
 public class HomePageActivity extends AppCompatActivity implements EventFragment.OnFragmentInteractionListener, MoodCustomList.RecyclerViewListener, FilterFragment.OnFragmentInteractionListener {
     private String currentUserEmail;
     private ArrayList<Mood> myMoodDataList;
@@ -228,6 +233,11 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
         });
     }
 
+    /**
+     * This method adds a Mood to the MoodCustomList
+     * @param newMood
+     */
+
     @Override
     public void onEventAdded(Mood newMood) {
         db = FirebaseFirestore.getInstance();
@@ -268,6 +278,13 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
         moodAdapter.notifyDataSetChanged();
 
     }
+
+    /**
+     * This method edits a Mood to the MoodCustomList
+     * @param editedMood
+     * @param index
+     */
+
 
     // RECENT MOOD UPDATED ON ADDITION. ASSUMES IT IS THE MOST RECENT MOOD
     @Override
