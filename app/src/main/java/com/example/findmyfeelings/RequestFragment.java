@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -117,6 +118,7 @@ public class RequestFragment extends DialogFragment implements SearchCustomList.
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         FollowUser fUser = requestDataList.get(index);
+                        Toast.makeText(getContext(), "Accept request from " + fUser.getUsername(), Toast.LENGTH_SHORT).show();
                         listener.onRequestAccepted(fUser);
                     }
                 })
@@ -126,6 +128,7 @@ public class RequestFragment extends DialogFragment implements SearchCustomList.
 
     @Override
     public void onRecyclerViewClickListener(int position) {
+        Toast.makeText(getContext(), "Selected " + requestDataList.get(position).getUsername(), Toast.LENGTH_SHORT).show();
         index = position;
     }
 }

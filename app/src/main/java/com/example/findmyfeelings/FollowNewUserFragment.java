@@ -51,11 +51,11 @@ public class FollowNewUserFragment extends DialogFragment implements SearchCusto
     private int index;
 
     private String currentUserEmail;
-    private ArrayList<FollowUser> followingDataList;
+    private ArrayList<String> followingDataList;
 
-    public FollowNewUserFragment(String currentUserEmail, ArrayList<FollowUser> followingDataList) {
+    public FollowNewUserFragment(String currentUserEmail) {
         this.currentUserEmail = currentUserEmail;
-        this.followingDataList = followingDataList;
+        this.followingDataList = new ArrayList<>();
     }
 
 
@@ -93,7 +93,7 @@ public class FollowNewUserFragment extends DialogFragment implements SearchCusto
 
         /* ** Database Instantiation ** */
         db = FirebaseFirestore.getInstance();
-        CollectionReference cRef = db.collection("Users");
+        final CollectionReference cRef = db.collection("Users");
 
         cRef
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
@@ -120,6 +120,23 @@ public class FollowNewUserFragment extends DialogFragment implements SearchCusto
 //                        searchAdapter.notifyDataSetChanged();
                     }
                 });
+
+
+        cRef
+                .document(currentUserEmail)
+                .collection("Following")
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                        followingDataList.clear();
+                        for (QueryDocumentSnapshot doc :queryDocumentSnapshots) {
+                            String email = doc.getId();
+                            followingDataList.add(email);
+                        }
+                        followingDataList.add(currentUserEmail);
+                    }
+                });
+
 
 
         /* ** Custom List Implementation ** */
@@ -151,21 +168,24 @@ public class FollowNewUserFragment extends DialogFragment implements SearchCusto
                 // Populate the list with all matching results
                 for (FollowUser currentUser : allUsersList) {
 
+                    if (!(followingDataList.contains(currentUser.getEmail()))) {
+                        System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"+currentUser.getEmail());
+                        String fullName = currentUser.getFirstName().toLowerCase() + " " + currentUser.getLastName().toLowerCase();
+
+                        if (currentUser.getUsername().toLowerCase().contains(query.toLowerCase())) {
+                            searchResultsList.add(currentUser);
+                        } else if (currentUser.getFirstName().toLowerCase().contains(query.toLowerCase())) {
+                            searchResultsList.add(currentUser);
+                        } else if (currentUser.getLastName().toLowerCase().contains(query.toLowerCase())) {
+                            searchResultsList.add(currentUser);
+                        } else if(fullName.contains(query.toLowerCase())) {
+                            searchResultsList.add(currentUser);
+                        }
+                    }
 //                    if(user is not in your current following list) {
 //                        // TODO
 //                    }
 
-                    String fullName = currentUser.getFirstName().toLowerCase() + " " + currentUser.getLastName().toLowerCase();
-
-                    if (currentUser.getUsername().toLowerCase().contains(query.toLowerCase())) {
-                        searchResultsList.add(currentUser);
-                    } else if (currentUser.getFirstName().toLowerCase().contains(query.toLowerCase())) {
-                        searchResultsList.add(currentUser);
-                    } else if (currentUser.getLastName().toLowerCase().contains(query.toLowerCase())) {
-                        searchResultsList.add(currentUser);
-                    } else if(fullName.contains(query.toLowerCase())) {
-                        searchResultsList.add(currentUser);
-                    }
                 }
 
                 // If the user isn't found, display the error message
