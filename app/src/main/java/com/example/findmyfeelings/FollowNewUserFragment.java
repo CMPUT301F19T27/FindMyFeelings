@@ -84,9 +84,9 @@ public class FollowNewUserFragment extends DialogFragment implements SearchCusto
         errorText = view.findViewById(R.id.error_text);
 
 
-        searchList.setVisibility(View.VISIBLE);
-        hintText.setVisibility(View.INVISIBLE);
-        errorText.setVisibility(View.INVISIBLE);
+        //searchList.setVisibility(View.VISIBLE);
+        //hintText.setVisibility(View.INVISIBLE);
+        //errorText.setVisibility(View.INVISIBLE);
 
         db = FirebaseFirestore.getInstance();
         CollectionReference cRef = db.collection("Users");
@@ -137,15 +137,15 @@ public class FollowNewUserFragment extends DialogFragment implements SearchCusto
             @Override
             public void onClick(View view) {
                 searchResultsList.clear();
-                //searchList.setVisibility(View.VISIBLE);
-                //hintText.setVisibility(View.INVISIBLE);
-                //errorText.setVisibility(View.INVISIBLE);
+                searchList.setVisibility(View.VISIBLE);
+                hintText.setVisibility(View.INVISIBLE);
+                errorText.setVisibility(View.INVISIBLE);
 
                 String query = searchEditText.getText().toString();
 
                 // Populate the list with all matching results
                 for (FollowUser currentUser : allUsersList) {
-                    String fullName = currentUser.getLastName().toLowerCase() + " " + currentUser.getLastName().toLowerCase();
+                    String fullName = currentUser.getFirstName().toLowerCase() + " " + currentUser.getLastName().toLowerCase();
 
                     if (currentUser.getUsername().toLowerCase().contains(query.toLowerCase())) {
                         searchResultsList.add(currentUser);
