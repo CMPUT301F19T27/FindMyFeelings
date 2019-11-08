@@ -35,6 +35,9 @@ public class MainActivity extends AppCompatActivity {
         emailEditText = findViewById(R.id.username_editText);
         passwordEditText = findViewById(R.id.password_editText);
 
+        emailEditText.setText("test1@gmail.com");
+        passwordEditText.setText("123456");
+
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -60,6 +63,7 @@ public class MainActivity extends AppCompatActivity {
                                 Toast.makeText(MainActivity.this, "Sign Up failed. Please try again", Toast.LENGTH_SHORT).show();
                             }
                             else {
+
                                 Intent intent = new Intent(MainActivity.this, HomePageActivity.class);
                                 //intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                 //intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);

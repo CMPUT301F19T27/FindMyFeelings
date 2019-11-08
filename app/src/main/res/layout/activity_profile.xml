@@ -239,6 +239,21 @@
 
         </RelativeLayout>
 
+
+        <RelativeLayout
+            android:id="@+id/adduser_bar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@id/bottom_bar"
+            android:layout_below="@id/top_bar"
+            android:visibility="gone"
+            >
+
+        </RelativeLayout>
+
     </RelativeLayout>
+
+
+
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
