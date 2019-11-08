@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -82,14 +83,44 @@ public class FollowNewUserFragment extends DialogFragment implements SearchCusto
         searchList = view.findViewById(R.id.user_search_list);
         hintText = view.findViewById(R.id.hint_text);
         errorText = view.findViewById(R.id.error_text);
+        searchEditText = view.findViewById(R.id.search_editText);
+        allUsersList = new ArrayList<>();
+
+        searchList.setVisibility(View.INVISIBLE);
+        hintText.setVisibility(View.VISIBLE);
+        errorText.setVisibility(View.INVISIBLE);
 
 
-        //searchList.setVisibility(View.VISIBLE);
-        //hintText.setVisibility(View.INVISIBLE);
-        //errorText.setVisibility(View.INVISIBLE);
-
+        /* ** Database Instantiation ** */
         db = FirebaseFirestore.getInstance();
         CollectionReference cRef = db.collection("Users");
+
+        cRef
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                        allUsersList.clear();
+
+                        Log.d("Sample", "************* DATABASE SZ: " + queryDocumentSnapshots.size());
+
+                        for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
+                            String email = doc.getId();
+                            String username = (String) doc.getData().get("username");
+                            String firstName = (String) doc.getData().get("first_name");
+                            String lastName = (String) doc.getData().get("last_name");
+
+
+                            // REQUIRE that all fields are non-null
+                            if (email != null && username != null && firstName != null && lastName != null) {
+                                FollowUser fUser = new FollowUser(email, username, firstName, lastName);
+                                allUsersList.add(fUser);
+                            }
+
+                        }
+//                        searchAdapter.notifyDataSetChanged();
+                    }
+                });
+
 
         /* ** Custom List Implementation ** */
         searchList = view.findViewById(R.id.user_search_list);
@@ -103,36 +134,9 @@ public class FollowNewUserFragment extends DialogFragment implements SearchCusto
         searchAdapter = new SearchCustomList(searchResultsList, this);
         searchList.setAdapter(searchAdapter);
 
-        cRef
-                .addSnapshotListener(new EventListener<QuerySnapshot>() {
-                    @Override
-                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
-                        allUsersList.clear();
-
-                        for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
-                            String email = doc.getId();
-                            String username = (String) doc.getData().get("username");
-                            String firstName = (String) doc.getData().get("first_name");
-                            String lastName = (String) doc.getData().get("last_name");
-
-                            FollowUser fUser = new FollowUser(email, username, firstName, lastName);
-                            allUsersList.add(fUser);
-
-                        }
-                        //searchAdapter.notifyDataSetChanged();
-                    }
-                });
 
     // CAMERON: SEARCH LIST IMPLEMENTATION
-        // Test data
-
-         //Search Bar Implementation
-
-        searchEditText = view.findViewById(R.id.search_editText);
-        allUsersList = new ArrayList<>();
-
-        //Test data // TODO Replace with the set of all users from firebase
-
+        /* ** Search Bar Implementation ** */
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -143,8 +147,14 @@ public class FollowNewUserFragment extends DialogFragment implements SearchCusto
 
                 String query = searchEditText.getText().toString();
 
+
                 // Populate the list with all matching results
                 for (FollowUser currentUser : allUsersList) {
+
+//                    if(user is not in your current following list) {
+//                        // TODO
+//                    }
+
                     String fullName = currentUser.getFirstName().toLowerCase() + " " + currentUser.getLastName().toLowerCase();
 
                     if (currentUser.getUsername().toLowerCase().contains(query.toLowerCase())) {

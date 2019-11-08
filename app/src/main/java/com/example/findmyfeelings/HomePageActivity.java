@@ -133,6 +133,11 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
                 FilterFragment.newInstance(filter).show(getSupportFragmentManager(), "EDIT_EVENT");
             }
         });
+
+
+        /* ** Firebase Linkage ** */
+        db = FirebaseFirestore.getInstance();
+        final CollectionReference cRef = db.collection("Users");
       
         /* Custom List Implementation */
         moodList = findViewById(R.id.my_mood_list);
@@ -143,9 +148,6 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
         filteredMyMoodDataList = new ArrayList<>();
         filteredFollowingMoodDataList = new ArrayList<>();
 
-
-        db = FirebaseFirestore.getInstance();
-        final CollectionReference cRef = db.collection("Users");
 
         /* ** Custom List Implementation ** */
         // Use a linear layout manager
@@ -219,7 +221,7 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
                 onMyMoodList = true;
 
                 // Apply filters
-                if(filter == "" ) {
+                if(filter.equals("")) {
                     moodAdapter = new MoodCustomList(myMoodDataList, HomePageActivity.this);
                 } else {
                     moodAdapter = new MoodCustomList(filteredMyMoodDataList, HomePageActivity.this);
@@ -274,7 +276,7 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
                         });*/
 
                 // Apply filters
-                if(filter == "" ) {
+                if(filter.equals("")) {
                     moodAdapter = new MoodCustomList(followingMoodDataList, HomePageActivity.this);
                 } else {
                     moodAdapter = new MoodCustomList(filteredFollowingMoodDataList, HomePageActivity.this);
@@ -445,24 +447,24 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
 
     @Override
     public void onFilterAdded(String newFilter) {
-//        filter = newFilter;
+        filter = newFilter;
 
         filteredMyMoodDataList.clear();
         filteredFollowingMoodDataList.clear();
 
         for(Mood mood : myMoodDataList) {
-            if(mood.getMood() == newFilter) {
+            if(mood.getMood().equals(filter)) {
                 filteredMyMoodDataList.add(mood);
             }
         }
 
         for(Mood mood : followingMoodDataList) {
-            if(mood.getMood() == newFilter) {
+            if(mood.getMood().equals(filter)) {
                 filteredFollowingMoodDataList.add(mood);
             }
         }
 
-        if(newFilter == "" ) {
+        if(filter.equals("")) {
             if(onMyMoodList) {
                 moodAdapter = new MoodCustomList(myMoodDataList, HomePageActivity.this);
             } else {

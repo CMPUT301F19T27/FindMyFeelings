@@ -39,7 +39,8 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="4dp"
         android:paddingTop="5dp"
-        android:text="Type in a username above to search for users!" />
+        android:text="Type in a username above to search for users!"
+        android:visibility="visible" />
 
     <TextView
         android:id="@+id/error_text"
