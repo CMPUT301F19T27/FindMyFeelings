@@ -352,6 +352,7 @@ public class ProfileActivity extends AppCompatActivity implements FollowNewUserF
                         Log.d("Sample", "Data add to other follower data");
                     }
                 });
+
     }
 
     public int getEmoji(String mood) {

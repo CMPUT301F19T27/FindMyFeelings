@@ -68,7 +68,6 @@ public class Mood implements Serializable {
         this.reason = reason;
     }
 
-
     public GeoPoint getLocation() {
         return location;
     }
@@ -77,7 +76,4 @@ public class Mood implements Serializable {
         this.location = location;
 
     }
-
-
-
 }

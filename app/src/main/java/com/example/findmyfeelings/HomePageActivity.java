@@ -349,24 +349,24 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
 
     @Override
     public void onFilterAdded(String newFilter) {
-        filter = newFilter;
+//        filter = newFilter;
 
         filteredMyMoodDataList.clear();
         filteredFollowingMoodDataList.clear();
 
         for(Mood mood : myMoodDataList) {
-            if(mood.getMood() == filter) {
+            if(mood.getMood() == newFilter) {
                 filteredMyMoodDataList.add(mood);
             }
         }
 
         for(Mood mood : followingMoodDataList) {
-            if(mood.getMood() == filter) {
+            if(mood.getMood() == newFilter) {
                 filteredFollowingMoodDataList.add(mood);
             }
         }
 
-        if(filter == "" ) {
+        if(newFilter == "" ) {
             if(onMyMoodList) {
                 moodAdapter = new MoodCustomList(myMoodDataList, HomePageActivity.this);
             } else {
