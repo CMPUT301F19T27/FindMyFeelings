@@ -122,7 +122,7 @@ public class ProfileActivity extends AppCompatActivity implements FollowNewUserF
         usernameText.setText(username);
 
         db = FirebaseFirestore.getInstance();
-        CollectionReference collectionRef = db.collection("Users");
+        final CollectionReference collectionRef = db.collection("Users");
 
 
         /* ** Custom List Implementation ** */
@@ -140,7 +140,29 @@ public class ProfileActivity extends AppCompatActivity implements FollowNewUserF
         //followAdapter = new FollowCustomList(followingDataList); // Set to the default
         //followList.setAdapter(followAdapter);
 
+        // RETRIEVES FOLLOWER USER DATA
 
+        collectionRef
+                .document(currentUserEmail)
+                .collection("Follower")
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                        followerDataList.clear();
+
+                        for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
+                            String email = doc.getId();
+                            String username = (String) doc.getData().get("username");
+                            String firstName = (String) doc.getData().get("first_name");
+                            String lastName = (String) doc.getData().get("last_name");
+
+                            FollowUser followingUser = new FollowUser(email, username, firstName, lastName);
+                            followerDataList.add(followingUser);
+                        }
+                        followerButton.setText(String.valueOf(followerDataList.size()));
+                        //followAdapter.notifyDataSetChanged();
+                    }
+                });
         // RETRIEVES FOLLOWING USERS DATA
 
         collectionRef
@@ -162,30 +184,6 @@ public class ProfileActivity extends AppCompatActivity implements FollowNewUserF
                         }
                         followingButton.setText(String.valueOf(followingDataList.size()));
                         //followAdapter.notifyDataSetChanged();
-                    }
-                });
-
-
-        // RETRIEVES FOLLOWER USER DATA
-
-        collectionRef
-                .document(currentUserEmail)
-                .collection("Followers")
-                .addSnapshotListener(new EventListener<QuerySnapshot>() {
-                    @Override
-                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
-                        followerDataList.clear();
-
-                        for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
-                            String email = doc.getId();
-                            String username = (String) doc.getData().get("username");
-                            String firstName = (String) doc.getData().get("first_name");
-                            String lastName = (String) doc.getData().get("last_name");
-
-                            FollowUser followingUser = new FollowUser(email, username, firstName, lastName);
-                            followerDataList.add(followingUser);
-                        }
-                        followerButton.setText(String.valueOf(followerDataList.size()));
                     }
                 });
 
@@ -249,6 +247,7 @@ public class ProfileActivity extends AppCompatActivity implements FollowNewUserF
                 followAdapter = new FollowCustomList(followingDataList);
                 followList.setAdapter(followAdapter);
                 listHintText.setText("Users you are following:");
+
             }
         });
 
@@ -258,6 +257,7 @@ public class ProfileActivity extends AppCompatActivity implements FollowNewUserF
                 followAdapter = new FollowCustomList(followerDataList);
                 followList.setAdapter(followAdapter);
                 listHintText.setText("Users who are following you:");
+
             }
         });
 
@@ -310,6 +310,7 @@ public class ProfileActivity extends AppCompatActivity implements FollowNewUserF
         db = FirebaseFirestore.getInstance();
         CollectionReference cRef = db.collection("Users");
 
+        // delete request from user
         cRef
                 .document(currentUserEmail)
                 .collection("Requests")
@@ -324,6 +325,7 @@ public class ProfileActivity extends AppCompatActivity implements FollowNewUserF
 
         HashMap<String, Object> newUserMap = fUser.userToMap();
 
+        // update follower in user
         cRef
                 .document(currentUserEmail)
                 .collection("Follower")
@@ -336,8 +338,9 @@ public class ProfileActivity extends AppCompatActivity implements FollowNewUserF
                     }
                 });
 
-        HashMap<String, Object> currentUserMap = fUser.userToMap();
+        HashMap<String, Object> currentUserMap = currentUser.userToMap();
 
+        //
         cRef
                 .document(fUser.getEmail())
                 .collection("Following")
