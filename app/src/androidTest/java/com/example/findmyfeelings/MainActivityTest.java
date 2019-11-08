@@ -62,6 +62,36 @@ public class MainActivityTest {
     }
 
     /**
+     * Check if Login is valid
+     * Will fail upon auto-login
+     */
+    /*
+    @Test
+    public void checkLogin(){
+        // Check if Login Page Starts
+        solo.assertCurrentActivity("Should be MainActivity", MainActivity.class);
+
+
+        //perform Login
+        solo.enterText((EditText)solo.getView(R.id.username_editText), "test@gmail.com");
+
+        //solo.clickOnCheckBox(R.id.location_check);
+        solo.clickOnButton(R.id.login_button);
+
+        // Wait for Home Page to Load
+        solo.waitForActivity(HomePageActivity.class, 3000);
+
+
+
+    }
+
+*/
+
+
+
+
+    /**
+     * MUST BE LOGGED IN TO WORK
      * Add a mood to the MoodCustomList and check the mood name using assertTrue
      * Delete the mood from the MoodCustomList and check again with assertFalse
      */
@@ -81,12 +111,13 @@ public class MainActivityTest {
         solo.enterText((EditText)solo.getView(R.id.mood_time_editText), "11:34");
         solo.enterText((EditText)solo.getView(R.id.mood_type_editText), "Happy");
         solo.enterText((EditText)solo.getView(R.id.mood_reason_editText), "Testing");
+        solo.enterText((EditText)solo.getView(R.id.mood_situation_editText), "Alone");
 
         //solo.clickOnCheckBox(R.id.location_check);
         solo.clickOnButton("OK");
 
         //Check if the Mood was added to the list
-        assertTrue(solo.waitForText("Happy", 1, 2000));
+        assertTrue(solo.waitForText("Happy", 1, 5000));
 
         //Delete Mood
         solo.clickOnView(solo.getView(R.id.mood_emoticon));
