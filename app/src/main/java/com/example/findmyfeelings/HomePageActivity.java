@@ -49,6 +49,7 @@ import java.util.HashMap;
 public class HomePageActivity extends AppCompatActivity implements EventFragment.OnFragmentInteractionListener, MoodCustomList.RecyclerViewListener, FilterFragment.OnFragmentInteractionListener {
     private String currentUserEmail;
     private ArrayList<Mood> myMoodDataList;
+    private ArrayList<String> followingDataList;
     private ArrayList<Mood> followingMoodDataList;
     private FirebaseFirestore db;
     private FirebaseAuth firebaseAuth;
@@ -84,7 +85,7 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
         /* ** Bottom Navigation Bar ** */
         // from stackoverflow : https://stackoverflow.com/questions/41649494/how-to-remove-icon-animation-for-bottom-navigation-view-in-android
 
-//      BottomNavigationViewHelper.disableShiftMode(bottomNavigationView);      // disable default navigation bar animation
+        //BottomNavigationViewHelper.disableShiftMode(bottomNavigationView);      // disable default navigation bar animation
         bottomNavigationView.setSelectedItemId(R.id.ic_feed);   // sets default selected item on opening
         bottomNavigationView.setItemIconTintList(null);         // disables icon tint
 
@@ -117,11 +118,6 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
                 return false;
             }
         });
-
-
-        //db = FirebaseFirestore.getInstance();
-        //final DocumentReference docRef = db.collection("Users").document(currentUserEmail);
-
 
 
         filterButton.setOnClickListener(new View.OnClickListener() {
@@ -249,7 +245,7 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
         recentMoodData.put("recent_mood", moodData);
 
         docRef
-                .set(recentMoodData);
+                .update("recent_mood",recentMoodData);
 
         docRef
                 .collection("My Moods")
