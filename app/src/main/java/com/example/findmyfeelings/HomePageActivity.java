@@ -143,6 +143,7 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
         moodList = findViewById(R.id.my_mood_list);
         myMoodDataList = new ArrayList<>();
         followingMoodDataList = new ArrayList<>();
+        followingDataList = new ArrayList<>();
 
         filteredMyMoodDataList = new ArrayList<>();
         filteredFollowingMoodDataList = new ArrayList<>();
@@ -183,11 +184,31 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
                         // UPDATE RECENT MOOD
                         cRef
                                 .document(currentUserEmail)
-                                .update("recent_mood", myMoodDataList.get(0));
+                                .collection("Recent Mood")
+                                .document("recent_mood")
+                                .set(myMoodDataList.get(0));
 
                         moodAdapter.notifyDataSetChanged();
                     }
                 });
+
+
+        // READ FOLLOWING USERS
+
+        cRef
+                .document(currentUserEmail)
+                .collection("Following")
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                        followingDataList.clear();
+                        for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
+                            String email = doc.getId();
+                            followingDataList.add(email);
+                        }
+                    }
+                });
+
 
 
 
@@ -221,6 +242,38 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
             public void onClick(View view) {
                 addMoodButton.setVisibility(View.INVISIBLE);
                 onMyMoodList = false;
+                System.out.println("1********************************************1");
+
+               /* cRef
+                        //.orderBy("recent_mood.dateTime", Query.Direction.DESCENDING)
+                        .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                            @Override
+                            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                                followingMoodDataList.clear();
+                                System.out.println("2*************************************************2");
+
+                                for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
+                                    if ()
+
+                                    HashMap<String, Object> recentMoodMap = (HashMap<String, Object>) doc.getData().get("recent_mood");
+
+                                    System.out.println(recentMoodMap+"############################################################");
+                                    System.out.println("3********************************************************3");
+                                    Timestamp timestamp = (Timestamp) recentMoodMap.get("dateTime");
+                                    System.out.println("4***************************************************************4");
+                                    Date dateTime = timestamp.toDate();
+                                    String moodId = recentMoodMap.get("moodId").toString();
+                                    String mood = recentMoodMap.get("mood").toString();
+                                    String reason = doc.getData().get("reason").toString();
+                                    GeoPoint location = (GeoPoint) recentMoodMap.get("location");
+
+                                    Mood rMood = new Mood(moodId, username,dateTime, mood, reason, location);
+
+                                    System.out.println("*************************                 "+username+"           ***   "+moodId);
+                                    followingMoodDataList.add(rMood);
+                                }
+                            }
+                        });*/
 
                 // Apply filters
                 if(filter.equals("")) {

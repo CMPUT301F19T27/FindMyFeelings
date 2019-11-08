@@ -150,6 +150,7 @@ public class FollowNewUserFragment extends DialogFragment implements SearchCusto
 
                 // Populate the list with all matching results
                 for (FollowUser currentUser : allUsersList) {
+
 //                    if(user is not in your current following list) {
 //                        // TODO
 //                    }
