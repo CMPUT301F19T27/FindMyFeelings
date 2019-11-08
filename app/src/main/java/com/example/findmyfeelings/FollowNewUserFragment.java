@@ -147,10 +147,14 @@ public class FollowNewUserFragment extends DialogFragment implements SearchCusto
 
                 String query = searchEditText.getText().toString();
 
-                
+
                 // Populate the list with all matching results
                 for (FollowUser currentUser : allUsersList) {
-                    String fullName = currentUser.getLastName().toLowerCase() + " " + currentUser.getLastName().toLowerCase();
+//                    if(user is not in your current following list) {
+//                        // TODO
+//                    }
+
+                    String fullName = currentUser.getFirstName().toLowerCase() + " " + currentUser.getLastName().toLowerCase();
 
                     if (currentUser.getUsername().toLowerCase().contains(query.toLowerCase())) {
                         searchResultsList.add(currentUser);
