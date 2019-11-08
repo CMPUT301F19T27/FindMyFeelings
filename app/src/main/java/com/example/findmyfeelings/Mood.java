@@ -8,6 +8,9 @@ import com.google.firebase.firestore.GeoPoint;
 import java.io.Serializable;
 import java.util.Date;
 
+/**
+ * contains user moods
+ */
 public class Mood implements Serializable {
     private String moodId;
     private String username;
