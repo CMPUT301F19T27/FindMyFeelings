@@ -26,6 +26,9 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 
+/**
+ * this class displays the request fragment
+ */
 public class RequestFragment extends DialogFragment implements SearchCustomList.RecyclerViewListener {
     private static final String ARG_MOOD = "ride";
     private static final String ARG_INDEX = "index";
@@ -55,8 +58,6 @@ public class RequestFragment extends DialogFragment implements SearchCustomList.
     public interface OnFragmentInteractionListener {
         void onRequestAccepted(FollowUser fUser);
     }
-
-
 
     @Override
     public void onAttach(Context context) {

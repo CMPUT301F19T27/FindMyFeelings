@@ -10,11 +10,16 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
+/**
+ * Custom List to display the current user's following and followers
+ */
 // CUSTOM LSI FOR DISPLAYING FOLLOWERS AND FOLLOWING
 public class FollowCustomList extends RecyclerView.Adapter<FollowCustomList.FollowViewHolder> {
     private List<FollowUser> fUsers;
 
-
+    /**
+     * View Holder for CustomList
+     */
     public static class FollowViewHolder extends RecyclerView.ViewHolder {
         private View view;
         private FollowViewHolder(@NonNull View v) {
@@ -24,12 +29,14 @@ public class FollowCustomList extends RecyclerView.Adapter<FollowCustomList.Foll
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)
+
     public FollowCustomList(List<FollowUser> inputMoodDataset) {
         fUsers = inputMoodDataset;
     }
 
 
     // Create new views (invoked by the layout manager)
+
     @Override
     @NonNull
     public FollowCustomList.FollowViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -42,6 +49,7 @@ public class FollowCustomList extends RecyclerView.Adapter<FollowCustomList.Foll
 
 
     // Replace the contents of a view (invoked by the layout manager)
+
     @Override
     public void onBindViewHolder(FollowViewHolder holder, int position) {
         FollowUser fUser = fUsers.get(position);
@@ -56,7 +64,10 @@ public class FollowCustomList extends RecyclerView.Adapter<FollowCustomList.Foll
 
     }
 
-
+    /**
+     * returns the item count
+     * @return
+     */
     @Override
     public int getItemCount() {
         if(fUsers != null) {

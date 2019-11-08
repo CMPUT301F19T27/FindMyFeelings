@@ -24,6 +24,10 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
 
+
+/**
+ * this class helps user to sign up to the app
+ */
 public class SignUpActivity extends AppCompatActivity {
 
     private String TAG = "Display";

@@ -73,6 +73,10 @@ public class EventFragment extends DialogFragment  {
         return fragment;
     }
 
+    /**
+     * intializes the context for listener
+     * @param context
+     */
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
