@@ -28,6 +28,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.protobuf.StringValue;
 
 import java.io.ObjectStreamException;
 import java.util.ArrayList;
@@ -159,6 +160,7 @@ public class ProfileActivity extends AppCompatActivity implements FollowNewUserF
                             FollowUser followingUser = new FollowUser(email, username, firstName, lastName);
                             followingDataList.add(followingUser);
                         }
+                        followingButton.setText(String.valueOf(followingDataList.size()));
                         //followAdapter.notifyDataSetChanged();
                     }
                 });
@@ -183,6 +185,7 @@ public class ProfileActivity extends AppCompatActivity implements FollowNewUserF
                             FollowUser followingUser = new FollowUser(email, username, firstName, lastName);
                             followerDataList.add(followingUser);
                         }
+                        followerButton.setText(String.valueOf(followerDataList.size()));
                     }
                 });
 
