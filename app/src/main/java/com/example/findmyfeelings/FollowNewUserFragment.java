@@ -87,7 +87,7 @@ public class FollowNewUserFragment extends DialogFragment implements SearchCusto
         searchList.setVisibility(View.VISIBLE);
         hintText.setVisibility(View.INVISIBLE);
         errorText.setVisibility(View.INVISIBLE);
-        
+
         db = FirebaseFirestore.getInstance();
         CollectionReference cRef = db.collection("Users");
 
@@ -102,47 +102,49 @@ public class FollowNewUserFragment extends DialogFragment implements SearchCusto
         // Specify an adapter
         searchAdapter = new SearchCustomList(searchResultsList, this);
         searchList.setAdapter(searchAdapter);
-/*
-// CAMERON: SEARCH LIST IMPLEMENTATION
+
+        cRef
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                        allUsersList.clear();
+
+                        for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
+                            String email = doc.getId();
+                            String username = (String) doc.getData().get("username");
+                            String firstName = (String) doc.getData().get("first_name");
+                            String lastName = (String) doc.getData().get("last_name");
+
+                            FollowUser fUser = new FollowUser(email, username, firstName, lastName);
+                            allUsersList.add(fUser);
+
+                        }
+                        //searchAdapter.notifyDataSetChanged();
+                    }
+                });
+
+    // CAMERON: SEARCH LIST IMPLEMENTATION
         // Test data
-//        searchResultsList.add(new User("123@456.ca", "Sup", "test", "input"));
 
+         //Search Bar Implementation
 
-         //Search Bar Implementation 
-        
         searchEditText = view.findViewById(R.id.search_editText);
         allUsersList = new ArrayList<>();
-      
+
         //Test data // TODO Replace with the set of all users from firebase
-      
-
-        
-        allUsersList.add(new User("myemail0@gmail.com", "childebr", "Cameron", "Hildebrandt"));
-        allUsersList.add(new User("myemail1@gmail.com", "jwwhite", "Josh", "White"));
-        allUsersList.add(new User("myemail2@gmail.com", "ramy", "Ramy", "Issa"));
-        allUsersList.add(new User("myemail3@gmail.com", "kandathi", "Nevil", "Kandathil"));
-        allUsersList.add(new User("myemail4@gmail.com", "sandy6", "Sandy", "Huang"));
-        allUsersList.add(new User("myemail5@gmail.com", "wentao3", "Travis", "Zhao"));
-        allUsersList.add(new User("myemail0@gmail.com", "childebr", "2Cameron", "Hildebrandt"));
-        allUsersList.add(new User("myemail1@gmail.com", "jwwhite", "2Josh", "White"));
-        allUsersList.add(new User("myemail2@gmail.com", "ramy", "2Ramy", "Issa"));
-        allUsersList.add(new User("myemail3@gmail.com", "kandathi", "N2evil", "Kandathil"));
-        allUsersList.add(new User("myemail4@gmail.com", "sandy6", "2Sandy", "Huang"));
-        allUsersList.add(new User("myemail5@gmail.com", "wentao3", "2Travis", "Zhao"));
-
 
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 searchResultsList.clear();
-                searchList.setVisibility(View.VISIBLE);
-                hintText.setVisibility(View.INVISIBLE);
-                errorText.setVisibility(View.INVISIBLE);
+                //searchList.setVisibility(View.VISIBLE);
+                //hintText.setVisibility(View.INVISIBLE);
+                //errorText.setVisibility(View.INVISIBLE);
 
                 String query = searchEditText.getText().toString();
 
                 // Populate the list with all matching results
-                for (User currentUser : allUsersList) {
+                for (FollowUser currentUser : allUsersList) {
                     String fullName = currentUser.getLastName().toLowerCase() + " " + currentUser.getLastName().toLowerCase();
 
                     if (currentUser.getUsername().toLowerCase().contains(query.toLowerCase())) {
@@ -166,30 +168,10 @@ public class FollowNewUserFragment extends DialogFragment implements SearchCusto
                 searchList.setAdapter(searchAdapter);
             }
         });
-*/
-        cRef
-                .addSnapshotListener(new EventListener<QuerySnapshot>() {
-                    @Override
-                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
-                        searchResultsList.clear();
 
-                        for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
-                            String email = doc.getId();
-                            String username = (String) doc.getData().get("username");
-                            String firstName = (String) doc.getData().get("first_name");
-                            String lastName = (String) doc.getData().get("last_name");
 
-                            FollowUser fUser = new FollowUser(email, username, firstName, lastName);
-                            searchResultsList.add(fUser);
-                        /*if (!(followingDataList.contains(fUser))) {
-                                searchResultsList.add(fUser);
-                            }*/
-                        }
-                        searchAdapter.notifyDataSetChanged();
-                    }
-                });
 
-        final AlertDialog builder = new AlertDialog.Builder(getContext())
+       /* final AlertDialog builder = new AlertDialog.Builder(getContext())
                 .setView(view)
                 .setTitle("Follow")
                 .setNeutralButton("Cancel", null)
@@ -201,9 +183,9 @@ public class FollowNewUserFragment extends DialogFragment implements SearchCusto
                         listener.onUserFollowed(fUser);
                     }
                 })
-                .create();
+                .create();*/
       
-      /*final AlertDialog builder = new AlertDialog.Builder(getContext())
+      final AlertDialog builder = new AlertDialog.Builder(getContext())
                 .setView(view)
                 .setTitle("Follow")
                 .setNeutralButton("Cancel", null)
@@ -217,7 +199,7 @@ public class FollowNewUserFragment extends DialogFragment implements SearchCusto
                     }
                 })
                 .create();
-       */
+
       
       
         return builder;
