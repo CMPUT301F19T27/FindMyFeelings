@@ -37,6 +37,16 @@
         android:hint="Reason(optional):"
         android:inputType="text"
         android:maxLength="20"/>
+
+    <EditText
+        android:id="@+id/mood_situation_editText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="Situation(alone, with 1, with 2, crowd):"
+        android:inputType="text"
+        android:maxLength="20"/>
+
     <CheckBox
         android:id="@+id/location_check"
         android:layout_width="wrap_content"
