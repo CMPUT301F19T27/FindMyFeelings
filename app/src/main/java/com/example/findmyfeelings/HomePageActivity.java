@@ -39,6 +39,7 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.GeoPoint;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -159,6 +160,7 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
         cRef
                 .document(currentUserEmail)
                 .collection("My Moods")
+                .orderBy("dateTime", Query.Direction.DESCENDING)
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
@@ -175,9 +177,18 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
 
                             myMoodDataList.add(rMood);
                         }
+
+                        // UPDATE RECENT MOOD
+                        cRef
+                                .document(currentUserEmail)
+                                .update("recent_mood", myMoodDataList.get(0));
+
                         moodAdapter.notifyDataSetChanged();
                     }
                 });
+
+
+
 
         myMoodListButton.setOnClickListener(new View.OnClickListener() {
             @SuppressLint("RestrictedApi")
@@ -249,18 +260,16 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
             newMood.setLocation(currentLoc);
         }
 
-        HashMap<String, Object> moodData = moodToMap(newMood);
+        //HashMap<String, Object> moodData = moodToMap(newMood);
 
-        HashMap<String, Object> recentMoodData = new HashMap<>();
-        recentMoodData.put("recent_mood", moodData);
+       // HashMap<String, Object> recentMoodData = new HashMap<>();
+       // recentMoodData.put("recent_mood", moodData);
 
-        docRef
-                .update("recent_mood",recentMoodData);
 
         docRef
                 .collection("My Moods")
                 .document(newMood.getMoodId())
-                .set(moodData)
+                .set(newMood)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
@@ -299,12 +308,17 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
             editedMood.setLocation(currentLoc);
         }
 
-        HashMap<String, Object> moodData = moodToMap(editedMood);
+        //HashMap<String, Object> moodData = moodToMap(editedMood);
+
+        docRef
+                .collection("My Moods")
+                .document(myMoodDataList.get(index).getMoodId())
+                .delete();
 
         docRef
                 .collection("My Moods")
                 .document(editedMood.getMoodId())
-                .set(moodData)
+                .set(editedMood)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
@@ -349,7 +363,7 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
         moodAdapter.notifyDataSetChanged();
     }
 
-    public HashMap<String, Object> moodToMap(Mood mood) {
+   /* public HashMap<String, Object> moodToMap(Mood mood) {
         HashMap<String, Object> moodMap = new HashMap<>();
 
         mood.setUsername(username);
@@ -362,7 +376,7 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
         moodMap.put("location", mood.getLocation());
 
         return moodMap;
-    }
+    }*/
 
     @Override
     public void onFilterAdded(String newFilter) {
