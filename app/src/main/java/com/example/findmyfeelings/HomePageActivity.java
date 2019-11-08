@@ -234,7 +234,7 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
     }
 
     /**
-     * This method adds a Mood to the MoodCustomList
+     * This method adds a Mood to MoodCustomList
      * @param newMood
      */
 
@@ -280,7 +280,7 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
     }
 
     /**
-     * This method edits a Mood to the MoodCustomList
+     * This method edits a Mood from MoodCustomList
      * @param editedMood
      * @param index
      */
@@ -322,6 +322,12 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
         moodAdapter.notifyDataSetChanged();
     }
 
+    /**
+     * This method deletes a Mood from MoodCustomList
+     * @param deletedMood
+     * =
+     */
+
     // DOES NOT UPDATE RECENT MOOD
     @Override
     public void onEventDeleted(Mood deletedMood) {
@@ -349,6 +355,11 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
         moodAdapter.notifyDataSetChanged();
     }
 
+    /**
+     * This method creates a Hashmap to store a mood object onto the Map
+     * @param mood
+     */
+
     public HashMap<String, Object> moodToMap(Mood mood) {
         HashMap<String, Object> moodMap = new HashMap<>();
 
@@ -363,6 +374,11 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
 
         return moodMap;
     }
+
+    /**
+     * This method filters out a selected mood (NOT WORKING)
+     * @param newFilter
+     */
 
     @Override
     public void onFilterAdded(String newFilter) {
@@ -398,6 +414,11 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
         }
         moodList.setAdapter(moodAdapter);
     }
+
+    /**
+     * This method allows the user to select an item in the RecyclerView onClick
+     * @param position
+     */
 
     @Override
     public void onRecyclerViewClickListener(int position) {
