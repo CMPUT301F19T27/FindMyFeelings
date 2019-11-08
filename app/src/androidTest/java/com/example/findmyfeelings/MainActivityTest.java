@@ -3,6 +3,7 @@ package com.example.findmyfeelings;
 
 import android.app.Activity;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ListView;
 
@@ -52,113 +53,83 @@ public class MainActivityTest {
 
     /**
      * Gets the Activity
-     * @throws
      */
 
     @Test
-    public void start() throws Exception{
+    public void start(){
         Activity activity = rule.getActivity();
 
     }
 
     /**
      * Add a mood to the MoodCustomList and check the mood name using assertTrue
-     * Clear all the Moods from the MoodCustomList and check again with assertFalse
+     * Delete the mood from the MoodCustomList and check again with assertFalse
      */
 
     @Test
     public void checkMoodCustomList(){
         // Check if Login Page Starts
-        solo.assertCurrentActivity("Wrong Activity", MainActivity.class);
+        solo.assertCurrentActivity("Should be MainActivity", MainActivity.class);
 
         // Wait for Home Page to Load
         solo.waitForActivity(HomePageActivity.class, 3000);
-        //solo.waitForActivity(HomePageActivity.class);
 
-       // solo.assertCurrentActivity("Wrong Activity", HomePageActivity.class);
 
         //perform adding a Mood
-        //solo.clickOnButton("ADD MOOD");
-        //solo.enterText((EditText)solo.getView(R.id.editText_name), "Edmonton");
-        //solo.clickOnButton("OK");
-        //solo.clearEditText((EditText)solo.getView(R.id.editText_name)); //clear edit text
+        solo.clickOnView(solo.getView(R.id.add_mood_button));
+        solo.enterText((EditText)solo.getView(R.id.mood_date_editText), "2012-06-14");
+        solo.enterText((EditText)solo.getView(R.id.mood_time_editText), "11:34");
+        solo.enterText((EditText)solo.getView(R.id.mood_type_editText), "Happy");
+        solo.enterText((EditText)solo.getView(R.id.mood_reason_editText), "Testing");
 
-        //assert the city shown
-        //assertTrue(solo.waitForText("Happy", 1, 2000));
+        //solo.clickOnCheckBox(R.id.location_check);
+        solo.clickOnButton("OK");
 
-        //solo.clickOnButton("ClEAR ALL");
+        //Check if the Mood was added to the list
+        assertTrue(solo.waitForText("Happy", 1, 2000));
 
-        //assert that the city is gone
-        //assertFalse(solo.searchText("Edmonton"));
+        //Delete Mood
+        solo.clickOnView(solo.getView(R.id.mood_emoticon));
+        solo.clickOnButton("DELETE");
 
-    }
-
-    /**
-     * Check item taken from the listview
-     */
-
-    /**
-    @Test
-    public void checkCityListItem(){
-        solo.assertCurrentActivity("Wrong Activity", MainActivity.class);
-
-        //perform adding a city
-        solo.clickOnButton("ADD CITY");
-        solo.enterText((EditText)solo.getView(R.id.editText_name), "Edmonton");
-        solo.clickOnButton("CONFIRM");
-        solo.clearEditText((EditText)solo.getView(R.id.editText_name)); //clear edit text
-
-        //assert the city shown
-        assertTrue(solo.waitForText("Edmonton", 1, 2000));
-
-        MainActivity activity = (MainActivity) solo.getCurrentActivity();
-        final ListView cityList = activity.cityList;
-        String city = (String) cityList.getItemAtPosition(0);
-        assertEquals(city, "Edmonton");
-
-
+        //Check if the Mood is Deleted
+        assertFalse(solo.searchText("Happy", true));
 
     }
 
-    /**
-     * Check if activity switched
-     */
 
     /**
+     * Check if activity switches upon clicking bottom navigation bar
+     * We are checking if the bottom bar cycles through map, home, & profile.
+     */
+
     @Test
     public void checkActivitySwitch(){
-        //perform adding a city
-        solo.clickOnButton("ADD CITY");
-        solo.enterText((EditText)solo.getView(R.id.editText_name), "Edmonton");
-        solo.clickOnButton("CONFIRM");
-        solo.clearEditText((EditText)solo.getView(R.id.editText_name)); //clear edit text
+        // Check if Login Page Starts
+        solo.assertCurrentActivity("Should be MainActivity", MainActivity.class);
 
-        //assert the city shown
-        assertTrue(solo.waitForText("Edmonton", 1, 2000));
+        // Wait for Home Page to Load
+        solo.waitForActivity(HomePageActivity.class, 3000);
 
-        //Get view object
-        View view = solo.getCurrentActivity().findViewById(R.id.content_view);
-        assertNotNull(view); // check if there is an entry
-        solo.clickOnView(view); // Click on Edmonton
+        // Goto Map
+        solo.clickOnView(solo.getView(R.id.ic_map));
 
-        // Check if We are on ShowActivity after click
-        // if activity != solo.getCurrentActivity then we have switched
-        solo.assertCurrentActivity("Wrong Activity", ShowActivity.class);
+        // Check if we are on MapActivity
+        solo.assertCurrentActivity("Should be MapActivity", MapActivity.class);
 
-        //assert the city shown, check if name is consistent
-        assertTrue(solo.waitForText("Edmonton", 1, 3000));
+        // Goto Profile
+        solo.clickOnView(solo.getView(R.id.ic_profile));
 
-        // check back Button
-        solo.clickOnButton("Back");
+        // Check if we are on ProfileActivity
+        solo.assertCurrentActivity("Should be ProfileActivity", ProfileActivity.class);
 
-        // Check if we are on Main Activity
-        solo.assertCurrentActivity("Wrong Activity", MainActivity.class);
+        // Goto HomePageActivity
+        solo.clickOnView(solo.getView(R.id.ic_feed));
 
+        // Check if we are on HomePageActivity
+        solo.assertCurrentActivity("Should be HomePageActivity", HomePageActivity.class);
 
     }
-
-
-
 
     /**
      * Closes the activity after each test
