@@ -119,10 +119,44 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
         });
 
 
-        db = FirebaseFirestore.getInstance();
-        final DocumentReference docRef = db.collection("Users").document(currentUserEmail);
+        //db = FirebaseFirestore.getInstance();
+        //final DocumentReference docRef = db.collection("Users").document(currentUserEmail);
 
-        docRef
+
+
+        filterButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+//                new FilterFragment().show(getSupportFragmentManager(), "ADD_EVENT");
+                FilterFragment.newInstance(filter).show(getSupportFragmentManager(), "EDIT_EVENT");
+            }
+        });
+      
+        /* Custom List Implementation */
+        moodList = findViewById(R.id.my_mood_list);
+        myMoodDataList = new ArrayList<>();
+        followingMoodDataList = new ArrayList<>();
+
+        filteredMyMoodDataList = new ArrayList<>();
+        filteredFollowingMoodDataList = new ArrayList<>();
+
+
+        db = FirebaseFirestore.getInstance();
+        final CollectionReference cRef = db.collection("Users");
+
+        /* ** Custom List Implementation ** */
+        // Use a linear layout manager
+        moodLayoutManager = new LinearLayoutManager(this);
+        moodList.setLayoutManager(moodLayoutManager);
+
+        // Specify an adapter
+        onMyMoodList = true;
+        moodAdapter = new MoodCustomList(myMoodDataList, this); // Set to default list
+        moodList.setAdapter(moodAdapter);
+
+
+        cRef
+                .document(currentUserEmail)
                 .collection("My Moods")
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
@@ -143,39 +177,6 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
                         moodAdapter.notifyDataSetChanged();
                     }
                 });
-
-        filterButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-//                new FilterFragment().show(getSupportFragmentManager(), "ADD_EVENT");
-                FilterFragment.newInstance(filter).show(getSupportFragmentManager(), "EDIT_EVENT");
-            }
-        });
-      
-        /* Custom List Implementation */
-        moodList = findViewById(R.id.my_mood_list);
-        myMoodDataList = new ArrayList<>();
-        followingMoodDataList = new ArrayList<>();
-
-        filteredMyMoodDataList = new ArrayList<>();
-        filteredFollowingMoodDataList = new ArrayList<>();
-
-
-        db = FirebaseFirestore.getInstance();
-        final CollectionReference collectionRef = db.collection("Users");
-
-        /* ** Custom List Implementation ** */
-        // Use a linear layout manager
-        moodLayoutManager = new LinearLayoutManager(this);
-        moodList.setLayoutManager(moodLayoutManager);
-
-        // Specify an adapter
-        onMyMoodList = true;
-        moodAdapter = new MoodCustomList(myMoodDataList, this); // Set to default list
-        moodList.setAdapter(moodAdapter);
-
-
-
 
         myMoodListButton.setOnClickListener(new View.OnClickListener() {
             @SuppressLint("RestrictedApi")
@@ -229,54 +230,6 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
                 new EventFragment().show(getSupportFragmentManager(), "ADD_EVENT");
             }
         });
-
-
-        /**
-
-        // Test data
- /*       myMoodDataList.add(new Mood(22,10,19, 16,20, "Angry", "Null pointer exception happened"));
-        myMoodDataList.add(new Mood(23,10,19, 16,20, "Happy", "The code is working"));
-        myMoodDataList.add(new Mood(24,10,19, 16,20, "Sad", "I don't know why this error is happening"));
-        myMoodDataList.add(new Mood(25,10,19, 16,20, "Surprised", "Only 2 errors!"));
-        myMoodDataList.add(new Mood(26,10,19, 16,20, "Scared", ""));
-        myMoodDataList.add(new Mood(27,10,19, 16,20, "Disgusted", ""));
-        myMoodDataList.add(new Mood(28,10,19, 16,20, "Happy", ""));
-        myMoodDataList.add(new Mood(29,10,19, 16,20, "Happy", ""));
-        myMoodDataList.add(new Mood(30,10,19, 16,20, "Sad", ""));
-        myMoodDataList.add(new Mood(31,10,19, 16,20, "Surprised", "It compiled"));
-        myMoodDataList.add(new Mood(1,11,19, 16,20, "Surprised", ""));
-        myMoodDataList.add(new Mood(2,11,19, 16,20, "Disgusted", ""));
-*/
-
-//         Date date1 = null;
-
-//         SimpleDateFormat tFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm");
-//         try {
-//             date1 = tFormat.parse("2019/12/12 13:02");
-//         } catch (ParseException e) {
-//             e.printStackTrace();
-//         }
-
-//         Date date = new Date();
-//         //System.out.println(date1.toString());
-
-//         followingMoodDataList.add(new Mood(date1, "Sad", ""));
-//         myMoodDataList.add(new Mood(date1, "Happy", "asdf"));
-
-        /*
-        followingMoodDataList.add(new Mood("2019/11/12", "12:17", "Angry", ""));
-        followingMoodDataList.add(new Mood("2019/10/13", "14:02", "Disgusted", ""));
-        followingMoodDataList.add(new Mood("2019/09/21", "15:32", "Happy", ""));
-        followingMoodDataList.add(new Mood("2019/07/01", "18:12", "Surprised", ""));
-        followingMoodDataList.add(new Mood(new Date(),, "Disgusted", ""));
-        followingMoodDataList.add(new Mood(12,10,19, 16,20, "Sad", ""));
-        followingMoodDataList.add(new Mood(12,10,19, 16,20, "Angry", ""));
-        followingMoodDataList.add(new Mood(13,10,19, 16,20, "Disgusted", ""));
-        followingMoodDataList.add(new Mood(13,10,19, 16,20, "Happy", ""));
-        followingMoodDataList.add(new Mood(13,10,19, 16,20, "Surprised", ""));
-        followingMoodDataList.add(new Mood(14,11,19, 16,20, "Disgusted", ""));
-*/
-
     }
 
     @Override
@@ -291,6 +244,12 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
         }
 
         HashMap<String, Object> moodData = moodToMap(newMood);
+
+        HashMap<String, Object> recentMoodData = new HashMap<>();
+        recentMoodData.put("recent_mood", moodData);
+
+        docRef
+                .set(recentMoodData);
 
         docRef
                 .collection("My Moods")
@@ -314,6 +273,7 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
 
     }
 
+    // RECENT MOOD UPDATED ON ADDITION. ASSUMES IT IS THE MOST RECENT MOOD
     @Override
     public void onEventEdited(Mood editedMood, int index) {
         db = FirebaseFirestore.getInstance();
@@ -349,6 +309,7 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
         moodAdapter.notifyDataSetChanged();
     }
 
+    // DOES NOT UPDATE RECENT MOOD
     @Override
     public void onEventDeleted(Mood deletedMood) {
         db = FirebaseFirestore.getInstance();

@@ -110,7 +110,7 @@ public class SignUpActivity extends AppCompatActivity {
                                                 Log.d(TAG, "Data addition to firestore failed");
                                             }
                                         });
-                                //FirebaseAuth.getInstance().signOut();
+                                FirebaseAuth.getInstance().signOut();
                                 Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
                                 startActivity(intent);
                             }

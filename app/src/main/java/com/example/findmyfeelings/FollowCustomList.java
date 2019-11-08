@@ -1,15 +1,16 @@
 package com.example.findmyfeelings;
 
-        import android.view.LayoutInflater;
-        import android.view.View;
-        import android.view.ViewGroup;
-        import android.widget.TextView;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
 
-        import androidx.annotation.NonNull;
-        import androidx.recyclerview.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
-        import java.util.List;
+import java.util.List;
 
+// CUSTOM LSI FOR DISPLAYING FOLLOWERS AND FOLLOWING
 public class FollowCustomList extends RecyclerView.Adapter<FollowCustomList.FollowViewHolder> {
     private List<FollowUser> fUsers;
 

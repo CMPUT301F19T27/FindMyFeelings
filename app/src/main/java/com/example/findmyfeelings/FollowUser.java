@@ -1,5 +1,7 @@
 package com.example.findmyfeelings;
 
+import java.util.HashMap;
+
 public class FollowUser {
 
     private String email;
@@ -38,5 +40,15 @@ public class FollowUser {
 
     public String getLastName() {
         return lastName;
+    }
+
+    public HashMap<String, Object> userToMap() {
+        HashMap<String, Object> newMap = new HashMap<>();
+
+        newMap.put("username", username);
+        newMap.put("first_name", firstName);
+        newMap.put("last_name", lastName);
+
+        return newMap;
     }
 }
