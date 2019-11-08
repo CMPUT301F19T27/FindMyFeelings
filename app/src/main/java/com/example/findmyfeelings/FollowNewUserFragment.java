@@ -20,6 +20,13 @@ import androidx.fragment.app.DialogFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+
 import java.lang.reflect.Array;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -35,27 +42,34 @@ public class FollowNewUserFragment extends DialogFragment implements SearchCusto
 
     private EditText searchEditText;
     private Button searchButton;
-    private ArrayList<User> searchResultsList;
-    private ArrayList<User> allUsersList;
+    private ArrayList<FollowUser> allUsersList;
+    private TextView hintText;
+    private TextView errorText;
+  
+    private FollowUser selectedUserToFollow;
+
+    private ArrayList<FollowUser> searchResultsList;
     private RecyclerView searchList;
     private RecyclerView.Adapter searchAdapter;
     private RecyclerView.LayoutManager searchLayoutManager;
-    private TextView hintText;
-    private TextView errorText;
+
+    private FirebaseFirestore db;
+
     private OnFragmentInteractionListener listener;
-    private User selectedUserToFollow;
+    private FollowUser currentUser;
+    private int index;
+
+    private String currentUserEmail;
+    private ArrayList<FollowUser> followingDataList;
+
+    public FollowNewUserFragment(String currentUserEmail, ArrayList<FollowUser> followingDataList) {
+        this.currentUserEmail = currentUserEmail;
+        this.followingDataList = followingDataList;
+    }
 
 
     public interface OnFragmentInteractionListener {
-        void onUserFollowed(User user);
-    }
-
-    static EventFragment newInstance() {
-        Bundle args = new Bundle();
-
-        EventFragment fragment = new EventFragment();
-        fragment.setArguments(args);
-        return fragment;
+        void onUserFollowed(FollowUser fUser);
     }
 
     @Override
@@ -79,24 +93,8 @@ public class FollowNewUserFragment extends DialogFragment implements SearchCusto
         hintText = view.findViewById(R.id.hint_text);
         errorText = view.findViewById(R.id.error_text);
 
-//        Bundle args = getArguments();
-
-
-        final AlertDialog builder = new AlertDialog.Builder(getContext())
-                .setView(view)
-                .setTitle("Follow")
-                .setNeutralButton("Cancel", null)
-                .setPositiveButton("Follow", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        if (selectedUserToFollow != null) {
-                            listener.onUserFollowed(selectedUserToFollow);
-                            Toast.makeText(getContext(), "Sent a request to " + selectedUserToFollow.getUsername(), Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                })
-                .create();
-
+        db = FirebaseFirestore.getInstance();
+        CollectionReference cRef = db.collection("Users");
 
         /* ** Custom List Implementation ** */
         searchList = view.findViewById(R.id.user_search_list);
@@ -109,16 +107,21 @@ public class FollowNewUserFragment extends DialogFragment implements SearchCusto
         // Specify an adapter
         searchAdapter = new SearchCustomList(searchResultsList, this);
         searchList.setAdapter(searchAdapter);
-
+/*
+// CAMERON: SEARCH LIST IMPLEMENTATION
         // Test data
 //        searchResultsList.add(new User("123@456.ca", "Sup", "test", "input"));
 
 
-        /* ** Search Bar Implementation ** */
+         //Search Bar Implementation 
+        
         searchEditText = view.findViewById(R.id.search_editText);
         allUsersList = new ArrayList<>();
+      
+        //Test data // TODO Replace with the set of all users from firebase
+      
 
-        // Test data // TODO Replace with the set of all users from firebase
+        
         allUsersList.add(new User("myemail0@gmail.com", "childebr", "Cameron", "Hildebrandt"));
         allUsersList.add(new User("myemail1@gmail.com", "jwwhite", "Josh", "White"));
         allUsersList.add(new User("myemail2@gmail.com", "ramy", "Ramy", "Issa"));
@@ -168,7 +171,61 @@ public class FollowNewUserFragment extends DialogFragment implements SearchCusto
                 searchList.setAdapter(searchAdapter);
             }
         });
+*/
+        cRef
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                        searchResultsList.clear();
 
+                        for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
+                            String email = doc.getId();
+                            String username = (String) doc.getData().get("username");
+                            String firstName = (String) doc.getData().get("first_name");
+                            String lastName = (String) doc.getData().get("last_name");
+
+                            FollowUser fUser = new FollowUser(email, username, firstName, lastName);
+                            searchResultsList.add(fUser);
+                        /*if (!(followingDataList.contains(fUser))) {
+                                searchResultsList.add(fUser);
+                            }*/
+                        }
+                        searchAdapter.notifyDataSetChanged();
+                    }
+                });
+
+        final AlertDialog builder = new AlertDialog.Builder(getContext())
+                .setView(view)
+                .setTitle("Follow")
+                .setNeutralButton("Cancel", null)
+                .setPositiveButton("Follow", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        System.out.println();
+                        FollowUser fUser = searchResultsList.get(index);
+                        System.out.println("*******************************      "+fUser.getEmail());
+                        listener.onUserFollowed(fUser);
+                    }
+                })
+                .create();
+      
+      /*final AlertDialog builder = new AlertDialog.Builder(getContext())
+                .setView(view)
+                .setTitle("Follow")
+                .setNeutralButton("Cancel", null)
+                .setPositiveButton("Follow", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        if (selectedUserToFollow != null) {
+                            listener.onUserFollowed(selectedUserToFollow);
+                            Toast.makeText(getContext(), "Sent a request to " + selectedUserToFollow.getUsername(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                })
+                .create();
+       */
+      
+      
         return builder;
     }
 
@@ -176,6 +233,7 @@ public class FollowNewUserFragment extends DialogFragment implements SearchCusto
     public void onRecyclerViewClickListener(int position) {
         Toast.makeText(getContext(), "Selected " + searchResultsList.get(position).getUsername(), Toast.LENGTH_SHORT).show();
         selectedUserToFollow = searchResultsList.get(position);
+        index = position;
     }
 
 }

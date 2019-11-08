@@ -1,17 +1,18 @@
 package com.example.findmyfeelings;
 
-        import android.view.LayoutInflater;
-        import android.view.View;
-        import android.view.ViewGroup;
-        import android.widget.TextView;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
 
-        import androidx.annotation.NonNull;
-        import androidx.recyclerview.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
-        import java.util.List;
+import java.util.List;
 
+// CUSTOM LSI FOR DISPLAYING FOLLOWERS AND FOLLOWING
 public class FollowCustomList extends RecyclerView.Adapter<FollowCustomList.FollowViewHolder> {
-    private List<User> users;
+    private List<FollowUser> fUsers;
 
 
     public static class FollowViewHolder extends RecyclerView.ViewHolder {
@@ -23,8 +24,8 @@ public class FollowCustomList extends RecyclerView.Adapter<FollowCustomList.Foll
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public FollowCustomList(List<User> inputMoodDataset) {
-        users = inputMoodDataset;
+    public FollowCustomList(List<FollowUser> inputMoodDataset) {
+        fUsers = inputMoodDataset;
     }
 
 
@@ -43,22 +44,23 @@ public class FollowCustomList extends RecyclerView.Adapter<FollowCustomList.Foll
     // Replace the contents of a view (invoked by the layout manager)
     @Override
     public void onBindViewHolder(FollowViewHolder holder, int position) {
-        User user = users.get(position);
+        FollowUser fUser = fUsers.get(position);
 
         TextView dateValue = holder.view.findViewById(R.id.first_name_text);
         TextView timeValue = holder.view.findViewById(R.id.last_name_text);
         TextView moodString = holder.view.findViewById(R.id.username_text);
 
-        dateValue.setText(user.getFirstName());
-        timeValue.setText(user.getLastName());
-        moodString.setText(user.getUsername());
+        dateValue.setText(fUser.getFirstName());
+        timeValue.setText(fUser.getLastName());
+        moodString.setText(fUser.getUsername());
+
     }
 
 
     @Override
     public int getItemCount() {
-        if(users != null) {
-            return users.size();
+        if(fUsers != null) {
+            return fUsers.size();
         } else {
             return 0;
         }

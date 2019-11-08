@@ -50,6 +50,8 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
     private GoogleMap mMap;
     private ArrayList<Mood> myMoodDataList;
     Location mLastKnownLocation;
+    private String currentUserEmail;
+    private String username;
 
     private boolean mLocationPermissionGranted;
 
@@ -105,37 +107,11 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
         });
 
         firebaseAuth = FirebaseAuth.getInstance();
-        String currentUserEmail = firebaseAuth.getCurrentUser().getEmail();
+        currentUserEmail = firebaseAuth.getCurrentUser().getEmail();
 
 
         int indexEnd = currentUserEmail.indexOf("@");
-        final String username = currentUserEmail.substring(0 , indexEnd);
-
-        db = FirebaseFirestore.getInstance();
-        final CollectionReference collectionRef = db.collection("Users");
-        collectionRef
-                .document(currentUserEmail)
-                .collection("My Moods")
-                .addSnapshotListener(new EventListener<QuerySnapshot>() {
-                    @Override
-                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
-                        myMoodDataList.clear();
-                        for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
-                            Timestamp timestamp = (Timestamp) doc.getData().get("dateTime");
-                            Date dateTime = timestamp.toDate();
-
-                            String moodId = doc.getId();
-                            String mood = doc.getData().get("mood").toString();
-                            String reason = doc.getData().get("reason").toString();
-
-                            GeoPoint location = (GeoPoint) doc.getData().get("location");
-
-                            Mood rMood = new Mood(moodId, username,dateTime, mood, reason, location);
-
-                            myMoodDataList.add(rMood);
-                        }
-                    }
-                });
+        username = currentUserEmail.substring(0 , indexEnd);
 
     }
 
@@ -199,41 +175,80 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
         //Intent i = getIntent();
         //LatLng newLocation = i.getParcelableExtra("LatLng_data");
 
-        for(Mood mood : myMoodDataList) {
-            GeoPoint location = mood.getLocation();
-            LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-            if (location !=  null) {
-                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 100));
+        db = FirebaseFirestore.getInstance();
+        final CollectionReference collectionRef = db.collection("Users");
+        collectionRef
+                .document(currentUserEmail)
+                .collection("My Moods")
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                        myMoodDataList.clear();
+                        for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
+                            Timestamp timestamp = (Timestamp) doc.getData().get("dateTime");
+                            Date dateTime = timestamp.toDate();
+                            String moodId = doc.getId();
+                            String mood = doc.getData().get("mood").toString();
+                            String reason = doc.getData().get("reason").toString();
+                            GeoPoint location = (GeoPoint) doc.getData().get("location");
 
-                BitmapDescriptor icon;
-                switch(mood.getMood()) {
-                    case "Happy":
-                        icon = BitmapDescriptorFactory.fromResource(R.drawable.happy_face);
-                        break;
-                    case "Angry":
-                        icon = BitmapDescriptorFactory.fromResource(R.drawable.angry_face);
-                        break;
-                    case "Disgusted":
-                        icon = BitmapDescriptorFactory.fromResource(R.drawable.disgust_face);
-                        break;
-                    case "Scared":
-                        icon = BitmapDescriptorFactory.fromResource(R.drawable.fear_face);
-                        break;
-                    case "Sad":
-                        icon = BitmapDescriptorFactory.fromResource(R.drawable.sad_face);
-                        break;
-                    case "Surprised":
-                        icon = BitmapDescriptorFactory.fromResource(R.drawable.surprised_face);
-                        break;
-                    default:
-                        icon = BitmapDescriptorFactory.fromResource(R.drawable.null_face);
-                }
+                            Mood rMood = new Mood(moodId, username,dateTime, mood, reason, location);
 
-                //BitmapDescriptor icon = BitmapDescriptorFactory.fromResource(R.drawable.angry_face);
-                MarkerOptions marker = new MarkerOptions().position(latLng).title("Current Location").icon(icon);
-                mMap.addMarker(marker);
-            }
-        }
+                            myMoodDataList.add(rMood);
+                        }
+
+                        // Offset for clustering
+                        double clusterIndex = 0;
+
+                        for(Mood mood : myMoodDataList) {
+                            GeoPoint location = mood.getLocation();
+                            //LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+                            if (location !=  null) {
+                                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 100));
+
+                                Bitmap bitmap;
+                                switch(mood.getMood()) {
+                                    case "Happy":
+                                        bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.happy_face);
+                                        break;
+                                    case "Angry":
+                                        bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.angry_face);
+                                        break;
+                                    case "Disgusted":
+                                        bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.disgust_face);
+                                        break;
+                                    case "Scared":
+                                        bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.fear_face);
+                                        break;
+                                    case "Sad":
+                                        bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.sad_face);
+                                        break;
+                                    case "Surprised":
+                                        bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.surprised_face);
+                                        break;
+                                    default:
+                                        bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.null_face);
+                                }
+
+                                //BitmapDescriptor icon = BitmapDescriptorFactory.fromResource(R.drawable.angry_face);
+                                //Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.sad_face);
+                                Bitmap bitmapRescale = Bitmap.createScaledBitmap(bitmap, 100,100,false);
+                                BitmapDescriptor aw = BitmapDescriptorFactory.fromBitmap(bitmapRescale);
+                                double offset = clusterIndex/60000d;
+                                MarkerOptions marker = new MarkerOptions()
+                                        .position(new LatLng((location.getLatitude() + offset), (location.getLongitude() + offset)))
+                                        .title(mood.getMood())
+                                        .icon(aw)
+                                        .flat(false);
+
+
+                                mMap.addMarker(marker);
+                                clusterIndex++; // Increment clusterIndex for Offset
+                            }
+                        }
+                    }
+                });
+
 
 
 

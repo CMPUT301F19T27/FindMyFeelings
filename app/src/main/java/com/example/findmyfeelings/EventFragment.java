@@ -6,8 +6,6 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -15,20 +13,14 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ListPopupWindow;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
 
-import com.google.android.gms.location.LocationListener;
-import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.firestore.GeoPoint;
 
-import java.lang.reflect.Array;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -50,8 +42,6 @@ public class EventFragment extends DialogFragment  {
     private OnFragmentInteractionListener listener;
     private Mood currentMood;
     private int index;
-
-    private LocationManager locationManager;
 
     public interface OnFragmentInteractionListener {
         void onEventAdded(Mood newMood);
@@ -83,7 +73,7 @@ public class EventFragment extends DialogFragment  {
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState){
-        View view= LayoutInflater.from(getActivity()).inflate(R.layout.event_fragment, null);
+        View view= LayoutInflater.from(getActivity()).inflate(R.layout.fragment_event, null);
         moodType=view.findViewById(R.id.mood_type_editText);
         moodDate=view.findViewById(R.id.mood_date_editText);
         moodTime=view.findViewById(R.id.mood_time_editText);
@@ -163,13 +153,6 @@ public class EventFragment extends DialogFragment  {
                             flag = true;
                             moodTime.setError("Enter a valid time (HH:mm)!");
                         }
-
-
-
-
-
-
-
                         if (flag == false) {
                             System.out.println(moodDate+" "+ moodTime);
 
@@ -179,7 +162,6 @@ public class EventFragment extends DialogFragment  {
                             } catch (ParseException e) {
                                 e.printStackTrace();
                             }
-
 
                             String newMood = moodType.getText().toString();
 
@@ -200,10 +182,7 @@ public class EventFragment extends DialogFragment  {
                                 listener.onEventAdded(mood);
                             }
                             builder.hide();
-                            // Add Marker if Location is checked
-                            itemClicked(checkLocation);
                         }
-
                     }
                 });
             }
@@ -212,31 +191,7 @@ public class EventFragment extends DialogFragment  {
     }
 
 
-    // Check if location is checked
-    public void itemClicked(View v) {
-        // Check if checkbox if checked
-        CheckBox checkBox = (CheckBox)v;
-        if (checkBox.isChecked()){
-            double newLat = 53.5444;
-            double newLong = -113.4909;
-
-            LatLng fromPosition = new LatLng(newLat, newLong);
-            Bundle args = new Bundle();
-
-            //args.putParcelable("LatLng_data", fromPosition);
-
-            Intent i = new Intent(getActivity(), MapActivity.class);
-            //i.putExtras(args);
-            startActivity(i);
-
-        }
-
-
-    }
-
-
-
-    public static boolean isValidFormat(String format, String value) {  // used stackoverflow, attributions shown in README.txt
+    public static boolean isValidFormat(String format, String value) {  // used stackoverflow, assignment 1
         Date date = null;
         try {
             SimpleDateFormat sdf = new SimpleDateFormat(format);
@@ -249,10 +204,4 @@ public class EventFragment extends DialogFragment  {
         }
         return date != null;
     }
-
-
-
-
-
-
 }

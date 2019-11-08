@@ -1,18 +1,19 @@
 package com.example.findmyfeelings;
 
-
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
-//https://stackoverflow.com/questions/17591147/how-to-get-current-location-in-android
+
 public final class GPSTracker implements LocationListener {
 
     private final Context mContext;
@@ -72,8 +73,7 @@ public final class GPSTracker implements LocationListener {
             } else {
                 this.canGetLocation = true;
                 if (isNetworkEnabled) {
-                    location=null;
-
+                    location = null;
 
                     locationManager.requestLocationUpdates(
                             LocationManager.NETWORK_PROVIDER,
