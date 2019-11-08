@@ -140,6 +140,27 @@ public class ProfileActivity extends AppCompatActivity implements FollowNewUserF
         //followAdapter = new FollowCustomList(followingDataList); // Set to the default
         //followList.setAdapter(followAdapter);
 
+        collectionRef
+                .document(currentUserEmail)
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot document) {
+                        String email = document.getId();
+                        String username = (String) document.getData().get("username");
+                        String firstName = (String) document.getData().get("first_name");
+                        String lastName = (String) document.getData().get("last_name");
+
+                        HashMap<String, Object> userMap = (HashMap<String, Object>) document.getData().get("recent_mood");
+
+                        moodType = (String) userMap.get("mood");
+
+                        moodImage.setImageResource(getEmoji(moodType));
+
+                        currentUser = new FollowUser(email, username, firstName, lastName);
+                    }
+                });
+
         // RETRIEVES FOLLOWER USER DATA
 
         collectionRef
@@ -160,7 +181,6 @@ public class ProfileActivity extends AppCompatActivity implements FollowNewUserF
                             followerDataList.add(followingUser);
                         }
                         followerButton.setText(String.valueOf(followerDataList.size()));
-                        //followAdapter.notifyDataSetChanged();
                     }
                 });
         // RETRIEVES FOLLOWING USERS DATA
@@ -183,7 +203,6 @@ public class ProfileActivity extends AppCompatActivity implements FollowNewUserF
                             followingDataList.add(followingUser);
                         }
                         followingButton.setText(String.valueOf(followingDataList.size()));
-                        //followAdapter.notifyDataSetChanged();
                     }
                 });
 
@@ -208,26 +227,7 @@ public class ProfileActivity extends AppCompatActivity implements FollowNewUserF
                 });
 
 
-        collectionRef
-                .document(currentUserEmail)
-                .get()
-                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                    @Override
-                    public void onSuccess(DocumentSnapshot document) {
-                        String email = document.getId();
-                        String username = (String) document.getData().get("username");
-                        String firstName = (String) document.getData().get("first_name");
-                        String lastName = (String) document.getData().get("last_name");
 
-                        HashMap<String, Object> userMap = (HashMap<String, Object>) document.getData().get("recent_mood");
-
-                        moodType = (String) userMap.get("mood");
-
-                        moodImage.setImageResource(getEmoji(moodType));
-
-                        currentUser = new FollowUser(email, username, firstName, lastName);
-                    }
-                });
 
         logoutButton.setOnClickListener(new View.OnClickListener() {
             @Override
