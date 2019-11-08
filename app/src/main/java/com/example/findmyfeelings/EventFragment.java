@@ -28,6 +28,11 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * This class allows us to add/edit/delete our Moods
+ *
+ */
+
 public class EventFragment extends DialogFragment  {
     private static final String ARG_MOOD = "ride";
     private static final String ARG_INDEX = "index";
@@ -43,12 +48,19 @@ public class EventFragment extends DialogFragment  {
     private Mood currentMood;
     private int index;
 
+    /**
+     * This interface allows us to use the methods add, edit, & delete
+     *
+     */
     public interface OnFragmentInteractionListener {
         void onEventAdded(Mood newMood);
         void onEventEdited(Mood editedMood, int index);
         void onEventDeleted(Mood deletedMood);
     }
 
+    /**
+     * This method creates an Instance of EventFragment
+     */
     static EventFragment newInstance(Mood mood, int index) {
         Bundle args = new Bundle();
         args.putSerializable(ARG_MOOD, mood);
@@ -70,6 +82,9 @@ public class EventFragment extends DialogFragment  {
         }
     }
 
+    /**
+     * This method creates a dialog and shows a dialog
+     */
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState){
@@ -190,7 +205,9 @@ public class EventFragment extends DialogFragment  {
         return builder;
     }
 
-
+    /**
+     * This method checks whether valid format was entered in our dialog
+     */
     public static boolean isValidFormat(String format, String value) {  // used stackoverflow, assignment 1
         Date date = null;
         try {

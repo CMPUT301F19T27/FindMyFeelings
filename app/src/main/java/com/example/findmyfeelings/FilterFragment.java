@@ -18,6 +18,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
+
+/**
+ * This class filters out a selected Mood
+ *
+ */
 public class FilterFragment extends DialogFragment {
     private static final String ARG_FILTER = "filter";
 
@@ -36,6 +41,10 @@ public class FilterFragment extends DialogFragment {
         void onFilterAdded(String filter);
     }
 
+    /**
+     * This interface allows the use of the filtering tab above HomepageActivity
+     *
+     */
     static FilterFragment newInstance(String filter){
         Bundle args = new Bundle();
         args.putSerializable(ARG_FILTER, filter);
