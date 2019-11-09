@@ -162,44 +162,11 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
         cRef
                 .document(currentUserEmail)
                 .collection("My Moods")
-                .orderBy("dateTime", Query.Direction.DESCENDING)
-                .addSnapshotListener(new EventListener<QuerySnapshot>() {
-                    @Override
-                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
-                        myMoodDataList.clear();
-                        for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
-                            Timestamp timestamp = (Timestamp) doc.getData().get("dateTime");
-                            Date dateTime = timestamp.toDate();
-                            String moodId = doc.getId();
-                            String mood = doc.getData().get("mood").toString();
-                            String reason = doc.getData().get("reason").toString();
-                            //String situation = doc.getData().get("situation").toString();
-                            GeoPoint location = (GeoPoint) doc.getData().get("location");
-
-                            Mood rMood = new Mood(moodId, username,dateTime, mood, reason, location);
-
-                            myMoodDataList.add(rMood);
-                        }
-
-                        // UPDATE RECENT MOOD
-                        HashMap<String, Object> recentMoodData = moodToMap(myMoodDataList.get(0));
-                        recentMoodData.put("recent_mood", recentMoodData);
-
-                        cRef
-                                .document(currentUserEmail)
-                                .set(recentMoodData);
-
-                        moodAdapter.notifyDataSetChanged();
-                    }
-                });
-/*        cRef
-                .document(currentUserEmail)
-                .collection("My Moods")
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
 
-                        if (!(queryDocumentSnapshots == null)){
+                        if (!(queryDocumentSnapshots.isEmpty())){
                             cRef
                                     .document(currentUserEmail)
                                     .collection("My Moods")
@@ -222,22 +189,24 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
                                                 myMoodDataList.add(rMood);
                                             }
 
-                                            // UPDATE RECENT MOOD
-                                            HashMap<String, Object> recentMoodData = moodToMap(myMoodDataList.get(0));
-                                            recentMoodData.put("recent_mood", recentMoodData);
+                                                // UPDATE RECENT MOOD
+                                                HashMap<String, Object> recentMoodData = moodToMap(myMoodDataList.get(0));
+                                                recentMoodData.put("recent_mood", recentMoodData);
 
-                                            cRef
-                                                    .document(currentUserEmail)
-                                                    .set(recentMoodData);
+                                                cRef
+                                                        .document(currentUserEmail)
+                                                        .set(recentMoodData);
 
-                                            moodAdapter.notifyDataSetChanged();
-                                        }
-                                    });
+                                                moodAdapter.notifyDataSetChanged();
+                                                                }
+                                                            });
 
                         }
                     }
                 });
-*/
+
+
+
 
 
         // READ FOLLOWING USERS
@@ -353,10 +322,10 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
             newMood.setLocation(currentLoc);
         }
 
-        //HashMap<String, Object> moodData = moodToMap(newMood);
+        HashMap<String, Object> moodData = moodToMap(newMood);
 
-       // HashMap<String, Object> recentMoodData = new HashMap<>();
-       // recentMoodData.put("recent_mood", moodData);
+        HashMap<String, Object> recentMoodData = new HashMap<>();
+        recentMoodData.put("recent_mood", moodData);
 
 
         docRef
@@ -401,7 +370,7 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
             editedMood.setLocation(currentLoc);
         }
 
-        //HashMap<String, Object> moodData = moodToMap(editedMood);
+        HashMap<String, Object> moodData = moodToMap(editedMood);
 
         docRef
                 .collection("My Moods")
@@ -411,7 +380,7 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
         docRef
                 .collection("My Moods")
                 .document(editedMood.getMoodId())
-                .set(editedMood)
+                .set(moodData)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
