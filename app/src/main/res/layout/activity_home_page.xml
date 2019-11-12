@@ -31,6 +31,16 @@
                 android:paddingTop="5dp"
                 android:paddingLeft="15dp"/>
 
+            <Button
+                android:id="@+id/filter_button"
+                android:layout_width="52dp"
+                android:layout_height="45dp"
+                android:layout_alignParentRight="true"
+                android:layout_marginTop="5dp"
+                android:layout_marginRight="10dp"
+                android:background="@drawable/filter_icon"/>
+
+
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="35dp"
@@ -43,22 +53,21 @@
 
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/selected_bar"
+                    android:background="@drawable/selected_bar_left"
                     android:text="My Moods"
                     android:textSize="18dp"
                     android:textColor="@color/white"
                     android:textAllCaps="false"
-                    android:fontFamily="@font/regular"
-                    />
+                    android:fontFamily="@font/regular"/>
 
 
                 <Button
                     android:id="@+id/following_mood_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/unselected_bar"
+                    android:background="@drawable/unselected_bar_right"
                     android:fontFamily="@font/regular"
-                    android:text="Following Moods"
+                    android:text="Other's Moods"
                     android:textAllCaps="false"
                     android:textSize="18dp" />
 

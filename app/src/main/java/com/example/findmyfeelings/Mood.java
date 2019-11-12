@@ -1,18 +1,21 @@
 package com.example.findmyfeelings;
 
+import android.widget.ImageView;
+import android.location.Location;
+
+import com.google.firebase.firestore.GeoPoint;
+
 import java.io.Serializable;
+import java.util.Date;
 
 public class Mood implements Serializable {
-    private int dateDay;
-    private int dateMonth;
-    private int dateYear;
-
-    private int timeMinute;
-    private int timeHour;
-
+    private String moodId;
+    private String username;
+    private Date dateTime;
     private String mood;
-
     private String reason;
+    private String situation;
+    private GeoPoint location;
 
 //    private Location location;
 //    private Photo photo;
@@ -21,65 +24,34 @@ public class Mood implements Serializable {
 
     }
 
-    public Mood(int dateDay, int dateMonth, int dateYear, int timeHour, int timeMinute, String mood, String reason) {
-        this.dateDay = dateDay;
-        this.dateMonth = dateMonth;
-        this.dateYear = dateYear;
-
-        this.timeMinute = timeMinute;
-        this.timeHour = timeHour;
-
+    public Mood(String moodId, String username, Date dateTime, String mood, String reason, String situation, GeoPoint location) {
+        this.moodId = moodId;
+        this.username = username;
+        this.dateTime = dateTime;
         this.mood = mood;
-
         this.reason = reason;
+        this.situation = situation;
+        this.location = location;
     }
 
-    public int getDateDay() {
-        return dateDay;
+    public String getMoodId() {
+        return moodId;
     }
 
-    public void setDateDay(int dateDay) {
-        this.dateDay = dateDay;
+    public String getUsername() {
+        return username;
     }
 
-    public int getDateMonth() {
-        return dateMonth;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
-    public void setDateMonth(int dateMonth) {
-        this.dateMonth = dateMonth;
+    public Date getDateTime() {
+        return dateTime;
     }
 
-    public int getDateYear() {
-        return dateYear;
-    }
-
-    public void setDateYear(int dateYear) {
-        this.dateYear = dateYear;
-    }
-    
-    public String getDateString() {
-        return this.dateDay + "/" + this.dateMonth + "/" + this.dateYear;
-    }
-
-    public int getTimeMinute() {
-        return timeMinute;
-    }
-
-    public void setTimeMinute(int timeMinute) {
-        this.timeMinute = timeMinute;
-    }
-
-    public String getTimeString() {
-        return this.timeHour + ":" + this.timeMinute;
-    }
-
-    public int getTimeHour() {
-        return timeHour;
-    }
-
-    public void setTimeHour(int timeHour) {
-        this.timeHour = timeHour;
+    public void setDateTime(Date dateTime) {
+        this.dateTime = dateTime;
     }
 
     public String getMood() {
@@ -97,4 +69,28 @@ public class Mood implements Serializable {
     public void setReason(String reason) {
         this.reason = reason;
     }
+
+    public void setMoodId(String moodId) {
+        this.moodId = moodId;
+    }
+
+    public String getSituation() {
+        return situation;
+    }
+
+    public void setSituation(String situation) {
+        this.situation = situation;
+    }
+
+    public GeoPoint getLocation() {
+        return location;
+    }
+
+    public void setLocation(GeoPoint location) {
+        this.location = location;
+
+    }
+
+
+
 }

@@ -10,7 +10,13 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.lang.reflect.Field;
 
+/**
+ * This class allows the use of our BottomNavigation Bar
+ *
+ */
+
 public class BottomNavigationViewHelper {
+
     @SuppressLint("RestrictedApi")
     public static void disableShiftMode(BottomNavigationView view) {
         BottomNavigationMenuView menuView = (BottomNavigationMenuView) view.getChildAt(0);
