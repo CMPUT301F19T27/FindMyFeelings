@@ -215,7 +215,7 @@ public class EventFragment extends DialogFragment  {
                                 location = new GeoPoint(0,0);
                             }
 
-                            Mood mood = new Mood(moodId,"" ,dateTime, newMood, reason, situation, location);
+                            Mood mood = new Mood(moodId,"test@gmail.com",dateTime, newMood, reason, situation, location);
 
                             if (currentMood != null) {
                                 listener.onEventEdited(mood, index);
