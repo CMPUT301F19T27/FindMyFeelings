@@ -89,4 +89,7 @@ public class Mood implements Serializable {
         this.location = location;
 
     }
+
+
+
 }

@@ -94,13 +94,14 @@ public class EventFragment extends DialogFragment  {
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState){
-        View view = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_event, null);
-        moodType = view.findViewById(R.id.mood_type_editText);
-        moodDate = view.findViewById(R.id.mood_date_editText);
-        moodTime = view.findViewById(R.id.mood_time_editText);
-        moodReason = view.findViewById(R.id.mood_reason_editText);
-        moodSituation =  view.findViewById(R.id.mood_situation_editText);
-        checkLocation=view.findViewById(R.id.location_check);
+
+        View view= LayoutInflater.from(getActivity()).inflate(R.layout.fragment_event, null);
+        moodType=view.findViewById(R.id.mood_type_editText);
+        moodDate=view.findViewById(R.id.mood_date_editText);
+        moodTime=view.findViewById(R.id.mood_time_editText);
+        moodReason=view.findViewById(R.id.mood_reason_editText);
+        moodSituation = view.findViewById(R.id.mood_situation_editText);
+        checkLocation =view.findViewById(R.id.location_check);
 
 
         Bundle args = getArguments();
@@ -180,7 +181,8 @@ public class EventFragment extends DialogFragment  {
                             moodTime.setError("Enter a valid time (HH:mm)!");
                         }
 
-                        if (moodSituation.getText().toString().length() == 0) {
+
+                        if (moodSituation.getText().toString().length() == 0){
                             flag = true;
                             moodSituation.setError("Enter a situation!");
                         }
@@ -194,6 +196,7 @@ public class EventFragment extends DialogFragment  {
                         }
 
                          */
+
                         if (flag == false) {
                             System.out.println(moodDate+" "+ moodTime);
 
@@ -215,7 +218,8 @@ public class EventFragment extends DialogFragment  {
                                 location = new GeoPoint(0,0);
                             }
 
-                            Mood mood = new Mood(moodId,"test@gmail.com",dateTime, newMood, reason, situation, location);
+                            Mood mood = new Mood(moodId,"" ,dateTime, newMood, reason, situation, location);
+
 
                             if (currentMood != null) {
                                 listener.onEventEdited(mood, index);

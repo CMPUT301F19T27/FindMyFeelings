@@ -165,7 +165,8 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
-                        if (queryDocumentSnapshots == null){
+                        myMoodDataList.clear();
+                        if (queryDocumentSnapshots == null) {
                             cRef
                                     .document(currentUserEmail)
                                     .collection("My Moods")
@@ -193,9 +194,9 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
                                                 cRef
                                                         .document(currentUserEmail)
                                                         .update("recent_mood", myMoodDataList.get(0));
-                                                        //.collection("Recent Mood")
-                                                        //.document("recent_mood")
-                                                        //.set(myMoodDataList.get(0));
+                                                //.collection("Recent Mood")
+                                                //.document("recent_mood")
+                                                //.set(myMoodDataList.get(0));
                                             }
 
 
@@ -203,8 +204,8 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
                                         }
                                     });
 
-                        }
 
+                        }
                     }
                 });
 
@@ -225,6 +226,9 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
                         }
                     }
                 });
+
+
+
 
         cRef
                 .orderBy("recent_mood.dateTime", Query.Direction.DESCENDING)
@@ -247,6 +251,7 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
                                 GeoPoint location = (GeoPoint) recentMoodMap.get("location");
 
                                 Mood rMood = new Mood(moodId, uName,dateTime, mood, reason, situation, location);
+
                                 followingMoodDataList.add(rMood);
                             }
                         }
@@ -299,6 +304,10 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
             }
         });
 
+
+
+
+
         addMoodButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -306,6 +315,9 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
             }
         });
     }
+
+
+
 
     /**
      * This method adds a Mood to MoodCustomList
@@ -499,4 +511,3 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
         EventFragment.newInstance(selectedMood, position).show(getSupportFragmentManager(), "EDIT_EVENT");
     }
 }
-
