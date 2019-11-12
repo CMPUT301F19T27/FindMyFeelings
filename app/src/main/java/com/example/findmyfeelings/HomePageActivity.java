@@ -174,20 +174,21 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
                             String moodId = doc.getId();
                             String mood = doc.getData().get("mood").toString();
                             String reason = doc.getData().get("reason").toString();
+                            String situation = doc.getData().get("situation").toString();
                             GeoPoint location = (GeoPoint) doc.getData().get("location");
 
-                            Mood rMood = new Mood(moodId, username,dateTime, mood, reason, location);
+                            Mood rMood = new Mood(moodId, username,dateTime, mood, situation, reason, location);
 
                             myMoodDataList.add(rMood);
                         }
-/*
+
                         // UPDATE RECENT MOOD
                         cRef
                                 .document(currentUserEmail)
                                 .collection("Recent Mood")
                                 .document("recent_mood")
                                 .set(myMoodDataList.get(0));
-*/
+
                         moodAdapter.notifyDataSetChanged();
                     }
                 });
@@ -226,9 +227,10 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
                                 String mood = recentMoodMap.get("mood").toString();
                                 String uName = recentMoodMap.get("username").toString();
                                 String reason = recentMoodMap.get("reason").toString();
+                                String situation = recentMoodMap.get("situation").toString();
                                 GeoPoint location = (GeoPoint) recentMoodMap.get("location");
 
-                                Mood rMood = new Mood(moodId, uName,dateTime, mood, reason, location);
+                                Mood rMood = new Mood(moodId, uName,dateTime, mood, reason, situation, location);
 
                                 followingMoodDataList.add(rMood);
                             }
