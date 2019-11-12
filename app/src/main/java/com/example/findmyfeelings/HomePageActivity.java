@@ -189,14 +189,15 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
                                             }
 
                                             // UPDATE RECENT MOOD
-                                            /*
-                                            cRef
-                                                    .document(currentUserEmail)
-                                                    .collection("Recent Mood")
-                                                    .document("recent_mood")
-                                                    .set(myMoodDataList.get(0));
+                                            if (myMoodDataList.size() != 0) {
+                                                cRef
+                                                        .document(currentUserEmail)
+                                                        .update("recent_mood", myMoodDataList.get(0));
+                                                        //.collection("Recent Mood")
+                                                        //.document("recent_mood")
+                                                        //.set(myMoodDataList.get(0));
+                                            }
 
-                                             */
 
                                             moodAdapter.notifyDataSetChanged();
                                         }
