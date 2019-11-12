@@ -179,6 +179,7 @@ public class EventFragment extends DialogFragment  {
                             flag = true;
                             moodTime.setError("Enter a valid time (HH:mm)!");
                         }
+
                         if (moodSituation.getText().toString().length() == 0) {
                             flag = true;
                             moodSituation.setError("Enter a situation!");
