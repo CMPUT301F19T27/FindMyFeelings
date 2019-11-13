@@ -4,7 +4,10 @@ package com.example.findmyfeelings;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.location.LocationManager;
 import android.net.ConnectivityManager;
+import android.net.Network;
+import android.net.wifi.WifiInfo;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -26,6 +29,7 @@ import org.junit.runner.RunWith;
 
 import java.util.concurrent.TimeoutException;
 
+import static android.content.Context.CONNECTIVITY_SERVICE;
 import static androidx.core.content.ContextCompat.getSystemService;
 import static junit.framework.TestCase.assertFalse;
 import static junit.framework.TestCase.assertTrue;
@@ -74,12 +78,13 @@ public class MainActivityTest {
     }
 
     /**
-     * Check if there is wifi
+     * Enable Wifi
      */
 
     @Test
     public void setWifiEnabled(){
-        solo.setWiFiData(false);
+        solo.setWiFiData(true);
+
 
 
 
