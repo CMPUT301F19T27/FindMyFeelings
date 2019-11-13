@@ -179,7 +179,6 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
                             
                             Mood rMood = new Mood(moodId, username, dateTime, mood, reason, situation, location);
 
-
                             System.out.println("*************************************** TEST 2*********************");
                             myMoodDataList.add(rMood);
                         }
@@ -195,7 +194,7 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
 
 
                         moodAdapter.notifyDataSetChanged();
-                    }
+              }
                 });
 
         // READ FOLLOWING USERS
@@ -303,35 +302,28 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
         });
     }
 
-
-
-
     /**
      * This method adds a Mood to MoodCustomList
      * @param newMood
      */
 
     @Override
-    public void onEventAdded(Mood newMood) {
+    public void onEventAdded(Mood newMood, boolean checked) {
         db = FirebaseFirestore.getInstance();
         final DocumentReference docRef = db.collection("Users").document(currentUserEmail);
 
-        if (newMood.getLocation() != null) {
+        if (checked) {
             mGPS.getLocation();
             GeoPoint currentLoc = new GeoPoint(mGPS.getLatitude(), mGPS.getLongitude());
             newMood.setLocation(currentLoc);
         }
 
-        //HashMap<String, Object> moodData = moodToMap(newMood);
-
-       // HashMap<String, Object> recentMoodData = new HashMap<>();
-       // recentMoodData.put("recent_mood", moodData);
-
+        HashMap<String, Object> moodData = moodToMap(newMood);
 
         docRef
                 .collection("My Moods")
                 .document(newMood.getMoodId())
-                .set(newMood)
+                .set(moodData)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
@@ -359,18 +351,18 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
 
     // RECENT MOOD UPDATED ON ADDITION. ASSUMES IT IS THE MOST RECENT MOOD
     @Override
-    public void onEventEdited(Mood editedMood, int index) {
+    public void onEventEdited(Mood editedMood, int index, boolean checked) {
         db = FirebaseFirestore.getInstance();
         final DocumentReference docRef = db.collection("Users").document(currentUserEmail);
 
 
-        if (editedMood.getLocation() != null) {
+        if (checked) {
             mGPS.getLocation();
             GeoPoint currentLoc = new GeoPoint(mGPS.getLatitude(), mGPS.getLongitude());
             editedMood.setLocation(currentLoc);
         }
 
-        //HashMap<String, Object> moodData = moodToMap(editedMood);
+        HashMap<String, Object> moodData = moodToMap(editedMood);
 
         docRef
                 .collection("My Moods")
@@ -380,7 +372,7 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
         docRef
                 .collection("My Moods")
                 .document(editedMood.getMoodId())
-                .set(editedMood)
+                .set(moodData)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
@@ -431,7 +423,7 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
         moodAdapter.notifyDataSetChanged();
     }
 
-/*      public HashMap<String, Object> moodToMap(Mood mood) {
+      public HashMap<String, Object> moodToMap(Mood mood) {
         HashMap<String, Object> moodMap = new HashMap<>();
 
         mood.setUsername(username);
@@ -441,11 +433,12 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
         moodMap.put("dateTime", mood.getDateTime());
         moodMap.put("mood", mood.getMood());
         moodMap.put("reason", mood.getReason());
+        moodMap.put("situation", mood.getSituation());
         moodMap.put("location", mood.getLocation());
 
         return moodMap;
     }
-*/
+
 
     /**
      * This method filters out a selected mood (NOT WORKING)
@@ -494,7 +487,9 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
 
     @Override
     public void onRecyclerViewClickListener(int position) {
-        Mood selectedMood = myMoodDataList.get(position);
-        EventFragment.newInstance(selectedMood, position).show(getSupportFragmentManager(), "EDIT_EVENT");
+        if (onMyMoodList==true) {
+            Mood selectedMood = myMoodDataList.get(position);
+            EventFragment.newInstance(selectedMood, position).show(getSupportFragmentManager(), "EDIT_EVENT");
+        }
     }
 }
