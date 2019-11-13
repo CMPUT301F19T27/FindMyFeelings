@@ -77,7 +77,6 @@ public class FollowNewUserFragment extends DialogFragment implements SearchCusto
     /**
      * display the dialog fragment to search for a new user to follow
      * @param savedInstanceState
-     * @return
      */
     @NonNull
     @Override
