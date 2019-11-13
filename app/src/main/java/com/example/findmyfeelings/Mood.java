@@ -17,6 +17,7 @@ public class Mood implements Serializable {
     private Date dateTime;
     private String mood;
     private String reason;
+
     private String situation;
     private GeoPoint location;
 

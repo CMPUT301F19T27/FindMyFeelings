@@ -195,7 +195,6 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
                             String situation = doc.getData().get("situation").toString();
                             GeoPoint location = (GeoPoint) doc.getData().get("location");
 
-
                             Mood rMood = new Mood(moodId, username,dateTime, mood, reason, situation,location);
 
                             myMoodDataList.add(rMood);
