@@ -12,6 +12,7 @@
         android:id="@+id/search_editText"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:inputType="text"
         android:layout_toLeftOf="@+id/search_button"
         android:hint="Search for a user to follow" />
 
