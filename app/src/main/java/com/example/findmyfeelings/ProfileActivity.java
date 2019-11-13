@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -46,6 +47,7 @@ public class ProfileActivity extends AppCompatActivity implements FollowNewUserF
     private Button followerButton;
     private Button followingButton;
     private Button requestButton;
+    private TextView requestBadge;
 
     private FirebaseFirestore db;
     private FirebaseUser firebaseUser;
@@ -78,6 +80,8 @@ public class ProfileActivity extends AppCompatActivity implements FollowNewUserF
         floatingFollowButton = findViewById(R.id.follow_floating_button);
         requestButton = findViewById(R.id.requests_button);
         moodImage = findViewById(R.id.mood_emoticon);
+        requestBadge = findViewById(R.id.requests_badge);
+
         bottomNavigationView.setSelectedItemId(R.id.ic_profile);
 
         // disable default navigation bar animation
@@ -270,9 +274,21 @@ public class ProfileActivity extends AppCompatActivity implements FollowNewUserF
         requestButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new RequestFragment(currentUserEmail, requestDataList).show(getSupportFragmentManager(), "REQUESTS");
+                if(requestDataList.size() > 0) {
+                    new RequestFragment(currentUserEmail, requestDataList).show(getSupportFragmentManager(), "REQUESTS");
+                } else {
+                    Toast.makeText(ProfileActivity.this, "You have no requests", Toast.LENGTH_SHORT).show();
+                }
             }
         });
+
+        // Request Badge Implementation
+        if(requestDataList.size() > 0) {
+            requestBadge.setVisibility(View.VISIBLE);
+            requestBadge.setText(String.valueOf(requestDataList.size())); // TODO requestDataList.size() returns 0 regardless of how many requests you have
+        } else {
+            requestBadge.setVisibility(View.INVISIBLE);
+        }
     }
 
     @Override

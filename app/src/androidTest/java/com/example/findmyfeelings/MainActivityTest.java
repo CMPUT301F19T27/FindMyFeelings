@@ -162,6 +162,209 @@ public class MainActivityTest {
 
     }
 
+    @Test
+    public void checkMoodFilter() {
+        // Check if Login Page Starts
+        solo.assertCurrentActivity("Should be MainActivity", MainActivity.class);
+
+        // Wait for Home Page to Load
+        solo.waitForActivity(HomePageActivity.class, 3000);
+
+
+        // Add a few moods
+        // Happy
+        solo.clickOnView(solo.getView(R.id.add_mood_button));
+        solo.enterText((EditText)solo.getView(R.id.mood_date_editText), "2019-11-12");
+        solo.enterText((EditText)solo.getView(R.id.mood_time_editText), "18:48");
+        solo.enterText((EditText)solo.getView(R.id.mood_type_editText), "Happy");
+        solo.enterText((EditText)solo.getView(R.id.mood_reason_editText), "Testing");
+        solo.enterText((EditText)solo.getView(R.id.mood_situation_editText), "Alone");
+
+        solo.clickOnButton("OK");
+
+        // Sad
+        solo.clickOnView(solo.getView(R.id.add_mood_button));
+        solo.enterText((EditText)solo.getView(R.id.mood_date_editText), "2019-11-12");
+        solo.enterText((EditText)solo.getView(R.id.mood_time_editText), "18:49");
+        solo.enterText((EditText)solo.getView(R.id.mood_type_editText), "Sad");
+        solo.enterText((EditText)solo.getView(R.id.mood_reason_editText), "Testing");
+        solo.enterText((EditText)solo.getView(R.id.mood_situation_editText), "Alone");
+
+        solo.clickOnButton("OK");
+
+        // Angry
+        solo.clickOnView(solo.getView(R.id.add_mood_button));
+        solo.enterText((EditText)solo.getView(R.id.mood_date_editText), "2019-11-12");
+        solo.enterText((EditText)solo.getView(R.id.mood_time_editText), "18:50");
+        solo.enterText((EditText)solo.getView(R.id.mood_type_editText), "Angry");
+        solo.enterText((EditText)solo.getView(R.id.mood_reason_editText), "Testing");
+        solo.enterText((EditText)solo.getView(R.id.mood_situation_editText), "Alone");
+
+        solo.clickOnButton("OK");
+
+        // Disgusted
+        solo.clickOnView(solo.getView(R.id.add_mood_button));
+        solo.enterText((EditText)solo.getView(R.id.mood_date_editText), "2019-11-12");
+        solo.enterText((EditText)solo.getView(R.id.mood_time_editText), "18:51");
+        solo.enterText((EditText)solo.getView(R.id.mood_type_editText), "Disgusted");
+        solo.enterText((EditText)solo.getView(R.id.mood_reason_editText), "Testing");
+        solo.enterText((EditText)solo.getView(R.id.mood_situation_editText), "Alone");
+
+        solo.clickOnButton("OK");
+
+        // Scared
+        solo.clickOnView(solo.getView(R.id.add_mood_button));
+        solo.enterText((EditText)solo.getView(R.id.mood_date_editText), "2019-11-12");
+        solo.enterText((EditText)solo.getView(R.id.mood_time_editText), "18:52");
+        solo.enterText((EditText)solo.getView(R.id.mood_type_editText), "Scared");
+        solo.enterText((EditText)solo.getView(R.id.mood_reason_editText), "Testing");
+        solo.enterText((EditText)solo.getView(R.id.mood_situation_editText), "Alone");
+
+        solo.clickOnButton("OK");
+
+        // Surprised
+        solo.clickOnView(solo.getView(R.id.add_mood_button));
+        solo.enterText((EditText)solo.getView(R.id.mood_date_editText), "2019-11-12");
+        solo.enterText((EditText)solo.getView(R.id.mood_time_editText), "18:53");
+        solo.enterText((EditText)solo.getView(R.id.mood_type_editText), "Surprised");
+        solo.enterText((EditText)solo.getView(R.id.mood_reason_editText), "Testing");
+        solo.enterText((EditText)solo.getView(R.id.mood_situation_editText), "Alone");
+
+        solo.clickOnButton("OK");
+
+
+        // Open Filter Menu
+        solo.clickOnView(solo.getView(R.id.filter_button));
+
+        // Select Happy filter
+        solo.clickOnView(solo.getView(R.id.happy_emoticon));
+        solo.clickOnButton("OK");
+
+        // Check if it filtered
+        assertTrue(solo.waitForText("Happy", 1, 5000));
+        assertFalse(solo.waitForText("Sad", 1, 1000));
+        assertFalse(solo.waitForText("Angry", 1, 1000));
+        assertFalse(solo.waitForText("Disgusted", 1, 1000));
+        assertFalse(solo.waitForText("Surprised", 1, 1000));
+        assertFalse(solo.waitForText("Scared", 1, 1000));
+
+
+        // Open Filter Menu
+        solo.clickOnView(solo.getView(R.id.filter_button));
+
+        // Select Sad filter
+        solo.clickOnView(solo.getView(R.id.sad_emoticon));
+        solo.clickOnButton("OK");
+
+        // Check if it filtered
+        assertFalse(solo.waitForText("Happy", 1, 5000));
+        assertTrue(solo.waitForText("Sad", 1, 1000));
+        assertFalse(solo.waitForText("Angry", 1, 1000));
+        assertFalse(solo.waitForText("Disgusted", 1, 1000));
+        assertFalse(solo.waitForText("Surprised", 1, 1000));
+        assertFalse(solo.waitForText("Scared", 1, 1000));
+
+
+        // Open Filter Menu
+        solo.clickOnView(solo.getView(R.id.filter_button));
+
+        // Select Angry filter
+        solo.clickOnView(solo.getView(R.id.angry_emoticon));
+        solo.clickOnButton("OK");
+
+        // Check if it filtered
+        assertFalse(solo.waitForText("Happy", 1, 5000));
+        assertFalse(solo.waitForText("Sad", 1, 1000));
+        assertTrue(solo.waitForText("Angry", 1, 1000));
+        assertFalse(solo.waitForText("Disgusted", 1, 1000));
+        assertFalse(solo.waitForText("Surprised", 1, 1000));
+        assertFalse(solo.waitForText("Scared", 1, 1000));
+
+
+        // Open Filter Menu
+        solo.clickOnView(solo.getView(R.id.filter_button));
+
+        // Select Disgusted filter
+        solo.clickOnView(solo.getView(R.id.disgusted_emoticon));
+        solo.clickOnButton("OK");
+
+        // Check if it filtered
+        assertFalse(solo.waitForText("Happy", 1, 5000));
+        assertFalse(solo.waitForText("Sad", 1, 1000));
+        assertFalse(solo.waitForText("Angry", 1, 1000));
+        assertTrue(solo.waitForText("Disgusted", 1, 1000));
+        assertFalse(solo.waitForText("Surprised", 1, 1000));
+        assertFalse(solo.waitForText("Scared", 1, 1000));
+
+
+        // Open Filter Menu
+        solo.clickOnView(solo.getView(R.id.filter_button));
+
+        // Select Scared filter
+        solo.clickOnView(solo.getView(R.id.scared_emoticon));
+        solo.clickOnButton("OK");
+
+        // Check if it filtered
+        assertFalse(solo.waitForText("Happy", 1, 5000));
+        assertFalse(solo.waitForText("Sad", 1, 1000));
+        assertFalse(solo.waitForText("Angry", 1, 1000));
+        assertFalse(solo.waitForText("Disgusted", 1, 1000));
+        assertFalse(solo.waitForText("Surprised", 1, 1000));
+        assertTrue(solo.waitForText("Scared", 1, 1000));
+
+
+        // Open Filter Menu
+        solo.clickOnView(solo.getView(R.id.filter_button));
+
+        // Select Surprised filter
+        solo.clickOnView(solo.getView(R.id.happy_emoticon));
+        solo.clickOnButton("OK");
+
+        // Check if it filtered
+        assertFalse(solo.waitForText("Happy", 1, 5000));
+        assertFalse(solo.waitForText("Sad", 1, 1000));
+        assertFalse(solo.waitForText("Angry", 1, 1000));
+        assertFalse(solo.waitForText("Disgusted", 1, 1000));
+        assertTrue(solo.waitForText("Surprised", 1, 1000));
+        assertFalse(solo.waitForText("Scared", 1, 1000));
+
+
+        // Open Filter Menu
+        solo.clickOnView(solo.getView(R.id.filter_button));
+
+        // Remove filters
+        solo.clickOnView(solo.getView(R.id.remove_filters_button));
+        solo.clickOnButton("OK");
+
+        // Check if it filtered
+        assertTrue(solo.waitForText("Happy", 1, 5000));
+        assertTrue(solo.waitForText("Sad", 1, 1000));
+        assertTrue(solo.waitForText("Angry", 1, 1000));
+        assertTrue(solo.waitForText("Disgusted", 1, 1000));
+        assertTrue(solo.waitForText("Surprised", 1, 1000));
+        assertTrue(solo.waitForText("Scared", 1, 1000));
+
+        // Clean up the moods
+        solo.clickOnView(solo.getView(R.id.mood_emoticon));
+        solo.clickOnButton("DELETE");
+
+        solo.clickOnView(solo.getView(R.id.mood_emoticon));
+        solo.clickOnButton("DELETE");
+
+        solo.clickOnView(solo.getView(R.id.mood_emoticon));
+        solo.clickOnButton("DELETE");
+
+        solo.clickOnView(solo.getView(R.id.mood_emoticon));
+        solo.clickOnButton("DELETE");
+
+        solo.clickOnView(solo.getView(R.id.mood_emoticon));
+        solo.clickOnButton("DELETE");
+
+        solo.clickOnView(solo.getView(R.id.mood_emoticon));
+        solo.clickOnButton("DELETE");
+    }
+
+
     /**
      * Closes the activity after each test
      */
