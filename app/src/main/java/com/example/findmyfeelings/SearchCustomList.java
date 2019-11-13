@@ -11,7 +11,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
-public class  SearchCustomList extends RecyclerView.Adapter<SearchCustomList.SearchViewHolder> {
+
+/**
+ * displays a custom list for searched users
+ */
+public class SearchCustomList extends RecyclerView.Adapter<SearchCustomList.SearchViewHolder> {
+
 
     private List<FollowUser> users;
     private RecyclerViewListener mRecyclerViewListener;

@@ -74,11 +74,6 @@ public class Mood implements Serializable {
         this.reason = reason;
     }
 
-
-    public void setMoodId(String moodId) {
-        this.moodId = moodId;
-    }
-
     public String getSituation() {
         return situation;
     }

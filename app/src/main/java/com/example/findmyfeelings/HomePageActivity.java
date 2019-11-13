@@ -159,51 +159,44 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
         moodAdapter = new MoodCustomList(myMoodDataList, this); // Set to default list
         moodList.setAdapter(moodAdapter);
 
+        System.out.println("*************************************** TEST 1*********************");
         cRef
                 .document(currentUserEmail)
                 .collection("My Moods")
+                .orderBy("dateTime", Query.Direction.DESCENDING)
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
 
-                        if (!(queryDocumentSnapshots.size() == 0)){
+                        myMoodDataList.clear();
+                        for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
+                            Timestamp timestamp = (Timestamp) doc.getData().get("dateTime");
+                            Date dateTime = timestamp.toDate();
+                            String moodId = doc.getId();
+                            String mood = doc.getData().get("mood").toString();
+                            String reason = doc.getData().get("reason").toString();
+                            String situation = doc.getData().get("situation").toString();
+                            GeoPoint location = (GeoPoint) doc.getData().get("location");
+                            
+                            Mood rMood = new Mood(moodId, username, dateTime, mood, reason, situation, location);
+
+                            System.out.println("*************************************** TEST 2*********************");
+                            myMoodDataList.add(rMood);
+                        }
+
+                        // UPDATE RECENT MOOD
+                        if (myMoodDataList.size() != 0) {
                             cRef
                                     .document(currentUserEmail)
-                                    .collection("My Moods")
-                                    .orderBy("dateTime", Query.Direction.DESCENDING)
-                                    .addSnapshotListener(new EventListener<QuerySnapshot>() {
-                                        @Override
-                                        public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
-                                            myMoodDataList.clear();
-                                            for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
-                                                Timestamp timestamp = (Timestamp) doc.getData().get("dateTime");
-                                                Date dateTime = timestamp.toDate();
-                                                String moodId = doc.getId();
-                                                String mood = doc.getData().get("mood").toString();
-                                                String reason = doc.getData().get("reason").toString();
-                                                String situation = doc.getData().get("situation").toString();
-                                                GeoPoint location = (GeoPoint) doc.getData().get("location");
-
-                                                Mood rMood = new Mood(moodId, username,dateTime, mood, reason, situation, location);
-
-                                                myMoodDataList.add(rMood);
-                                            }
-
-                                            // UPDATE RECENT MOOD
-                                            HashMap<String, Object> recentMoodData = moodToMap(myMoodDataList.get(0));
-                                            HashMap<String, Object> data = new HashMap<>();
-                                            data.put("recent_mood", recentMoodData);
-
-                                            cRef
-                                                    .document(currentUserEmail)
-                                                    .set(data);
-                                            moodAdapter.notifyDataSetChanged();
-
-                                        }
-                                    });
-
+                                    .update("recent_mood", myMoodDataList.get(0));
+                            //.collection("Recent Mood")
+                            //.document("recent_mood")
+                            //.set(myMoodDataList.get(0));
                         }
-                    }
+
+
+                        moodAdapter.notifyDataSetChanged();
+              }
                 });
 
         // READ FOLLOWING USERS
@@ -221,6 +214,9 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
                         }
                     }
                 });
+
+
+
 
         cRef
                 .orderBy("recent_mood.dateTime", Query.Direction.DESCENDING)
@@ -242,8 +238,8 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
                                 String situation = recentMoodMap.get("situation").toString();
                                 GeoPoint location = (GeoPoint) recentMoodMap.get("location");
 
-
                                 Mood rMood = new Mood(moodId, uName,dateTime, mood, reason, situation, location);
+
                                 followingMoodDataList.add(rMood);
                             }
                         }
@@ -295,6 +291,10 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
                 followingMoodListButton.setTextColor(Color.parseColor("#FFFFFF"));
             }
         });
+
+
+
+
 
         addMoodButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -493,4 +493,3 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
         EventFragment.newInstance(selectedMood, position).show(getSupportFragmentManager(), "EDIT_EVENT");
     }
 }
-
