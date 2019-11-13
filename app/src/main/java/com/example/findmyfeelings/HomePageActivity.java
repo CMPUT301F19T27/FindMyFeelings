@@ -163,7 +163,7 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
         cRef
                 .document(currentUserEmail)
                 .collection("My Moods")
-                .orderBy("dateTIme", Query.Direction.DESCENDING)
+                .orderBy("dateTime", Query.Direction.DESCENDING)
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
