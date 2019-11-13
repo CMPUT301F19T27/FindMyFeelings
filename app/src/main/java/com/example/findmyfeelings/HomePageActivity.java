@@ -179,6 +179,8 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
 
                             Mood rMood = new Mood(moodId, username,dateTime, mood, reason, situation, location);
 
+                            System.out.println("************************BOOB");
+
                             myMoodDataList.add(rMood);
                         }
 
