@@ -124,6 +124,9 @@ public class EventFragment extends DialogFragment  {
             moodTime.setText(time);
             moodReason.setText(currentMood.getReason());
             moodSituation.setText(currentMood.getSituation());
+            if (currentMood.getLocation() != null) {
+                checkLocation.setChecked(true);
+            }
 
         }
 
