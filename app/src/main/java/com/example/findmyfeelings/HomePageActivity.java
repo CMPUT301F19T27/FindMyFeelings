@@ -184,13 +184,12 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
                         }
 
                         // UPDATE RECENT MOOD
-                        if (myMoodDataList.size() != 0) {
+                        if(myMoodDataList.size() != 0) {
                             cRef
                                     .document(currentUserEmail)
-                                    .update("recent_mood", myMoodDataList.get(0));
-                            //.collection("Recent Mood")
-                            //.document("recent_mood")
-                            //.set(myMoodDataList.get(0));
+                                    .collection("Recent Mood")
+                                    .document("recent_mood")
+                                    .set(myMoodDataList.get(0));
                         }
 
 
@@ -491,6 +490,10 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
         if (onMyMoodList==true) {
             Mood selectedMood = myMoodDataList.get(position);
             EventFragment.newInstance(selectedMood, position).show(getSupportFragmentManager(), "EDIT_EVENT");
+        }
+        else {
+            Mood selectedMood = followingMoodDataList.get(position);
+            FollowingEventFragment.newInstance(selectedMood, position).show(getSupportFragmentManager(), "VIEW_EVENT");
         }
     }
 }

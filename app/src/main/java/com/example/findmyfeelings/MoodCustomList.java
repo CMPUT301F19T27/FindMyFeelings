@@ -85,9 +85,7 @@ public class MoodCustomList extends RecyclerView.Adapter<MoodCustomList.MoodView
         moodString.setText(mood.getMood());
         moodImage.setImageResource(getEmoji(mood));
 
-
-
-        String username = mood.getUsername(); // TODO change to user.getName()
+        String username = mood.getUsername();
 
         if(username.length() > 16) {
             usernameString.setText(username.substring(0,16) + "...");
