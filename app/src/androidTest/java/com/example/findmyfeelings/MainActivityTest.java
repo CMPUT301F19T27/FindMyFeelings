@@ -79,7 +79,7 @@ public class MainActivityTest {
 
     @Test
     public void setWifiEnabled(){
-        solo.setWiFiData(true);
+        solo.setWiFiData(false);
 
 
 
@@ -87,11 +87,8 @@ public class MainActivityTest {
 
 
 
-
-
-
     /**
-     * MUST BE LOGGED IN TO WORK
+     * MUST BE LOGGED IN TO WORK/ MUST ALSO START OUT WITH EMPTY MOODS
      * Add a mood to the MoodCustomList and check the mood name using assertTrue
      * Delete the mood from the MoodCustomList and check again with assertFalse
      */
