@@ -2,6 +2,9 @@ package com.example.findmyfeelings;
 
 import java.util.HashMap;
 
+/**
+ * class contains details of other users
+ */
 public class FollowUser {
 
     private String email;
@@ -24,10 +27,6 @@ public class FollowUser {
 
     public String getEmail() {
         return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
     }
 
     public String getUsername() {

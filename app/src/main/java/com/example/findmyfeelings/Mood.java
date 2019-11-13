@@ -8,6 +8,9 @@ import com.google.firebase.firestore.GeoPoint;
 import java.io.Serializable;
 import java.util.Date;
 
+/**
+ * contains user moods
+ */
 public class Mood implements Serializable {
     private String moodId;
     private String username;
@@ -68,10 +71,6 @@ public class Mood implements Serializable {
 
     public void setReason(String reason) {
         this.reason = reason;
-    }
-
-    public void setMoodId(String moodId) {
-        this.moodId = moodId;
     }
 
     public String getSituation() {

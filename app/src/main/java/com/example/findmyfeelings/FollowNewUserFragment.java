@@ -74,6 +74,11 @@ public class FollowNewUserFragment extends DialogFragment implements SearchCusto
         }
     }
 
+    /**
+     * display the dialog fragment to search for a new user to follow
+     * @param savedInstanceState
+     * @return
+     */
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
@@ -117,7 +122,6 @@ public class FollowNewUserFragment extends DialogFragment implements SearchCusto
                             }
 
                         }
-//                        searchAdapter.notifyDataSetChanged();
                     }
                 });
 
@@ -199,22 +203,6 @@ public class FollowNewUserFragment extends DialogFragment implements SearchCusto
             }
         });
 
-
-
-       /* final AlertDialog builder = new AlertDialog.Builder(getContext())
-                .setView(view)
-                .setTitle("Follow")
-                .setNeutralButton("Cancel", null)
-                .setPositiveButton("Follow", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        System.out.println();
-                        FollowUser fUser = searchResultsList.get(index);
-                        listener.onUserFollowed(fUser);
-                    }
-                })
-                .create();*/
-      
       final AlertDialog builder = new AlertDialog.Builder(getContext())
                 .setView(view)
                 .setTitle("Follow")
@@ -229,9 +217,6 @@ public class FollowNewUserFragment extends DialogFragment implements SearchCusto
                     }
                 })
                 .create();
-
-      
-      
         return builder;
     }
 

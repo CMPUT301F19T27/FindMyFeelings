@@ -159,7 +159,7 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
         moodAdapter = new MoodCustomList(myMoodDataList, this); // Set to default list
         moodList.setAdapter(moodAdapter);
 
-
+        System.out.println("*************************************** TEST 1*********************");
         cRef
                 .document(currentUserEmail)
                 .collection("My Moods")
@@ -176,9 +176,11 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
                             String reason = doc.getData().get("reason").toString();
                             String situation = doc.getData().get("situation").toString();
                             GeoPoint location = (GeoPoint) doc.getData().get("location");
+                            
+                            Mood rMood = new Mood(moodId, username, dateTime, mood, reason, situation, location);
 
-                            Mood rMood = new Mood(moodId, username,dateTime, mood, reason, situation, location);
 
+                            System.out.println("*************************************** TEST 2*********************");
                             myMoodDataList.add(rMood);
                         }
 
@@ -196,7 +198,6 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
                     }
                 });
 
-
         // READ FOLLOWING USERS
 
         cRef
@@ -212,6 +213,9 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
                         }
                     }
                 });
+
+
+
 
         cRef
                 .orderBy("recent_mood.dateTime", Query.Direction.DESCENDING)
@@ -237,8 +241,6 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
 
                                 followingMoodDataList.add(rMood);
                             }
-
-
                         }
                     }
                 });
@@ -289,6 +291,10 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
             }
         });
 
+
+
+
+
         addMoodButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -296,6 +302,9 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
             }
         });
     }
+
+
+
 
     /**
      * This method adds a Mood to MoodCustomList
@@ -489,4 +498,3 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
         EventFragment.newInstance(selectedMood, position).show(getSupportFragmentManager(), "EDIT_EVENT");
     }
 }
-

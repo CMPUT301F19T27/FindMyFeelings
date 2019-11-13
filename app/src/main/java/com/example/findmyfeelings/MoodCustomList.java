@@ -17,6 +17,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * custom list to display user moods
+ */
 public class MoodCustomList extends RecyclerView.Adapter<MoodCustomList.MoodViewHolder> {
 
     private ArrayList<Mood> moods;
