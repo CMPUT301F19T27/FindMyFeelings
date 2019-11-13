@@ -347,7 +347,6 @@ public class ProfileActivity extends AppCompatActivity implements FollowNewUserF
 
         HashMap<String, Object> currentUserMap = currentUser.userToMap();
 
-        //
         cRef
                 .document(fUser.getEmail())
                 .collection("Following")
