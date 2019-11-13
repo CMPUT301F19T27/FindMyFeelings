@@ -30,7 +30,7 @@ public class MoodTest {
     }
 
     private Mood mockMood(){
-        return new Mood("1", "test", new Date(), "Happy", "none", "alone", new GeoPoint(24,2));
+        return new Mood("1", "test", new Date(2012/12/15), "Happy", "none", "alone", new GeoPoint(24,2));
 
 
     }
@@ -42,7 +42,7 @@ public class MoodTest {
         assertEquals(1, moodList.size()); // Should have 1 mood
         assertTrue(moodList.get(0).getMood().contains("Happy")); // Test if Sad is in list
 
-        Mood mood = new Mood("2", "test1", new Date(), "Sad", "none", "alone", new GeoPoint(24,2));
+        Mood mood = new Mood("2", "test1", new Date(2012/12/15), "Sad", "none", "alone", new GeoPoint(24,2));
         moodList.add(mood); // List is size 2
 
         assertEquals(2, moodList.size());
@@ -51,21 +51,26 @@ public class MoodTest {
 
     }
 
-/*
+
     @Test
-    public void testgetMoodId(){
-        CityList cityList = mockCityList();
+    public void testGetMoodAttributes(){
+        ArrayList<Mood> moodList= mockMoodList();
+        Date date = new Date(2012/12/15);
+        GeoPoint geopoint = new GeoPoint(24,2);
 
-        assertEquals(0,mockCity().compareTo(cityList.getCities().get(0))); // Comparing Edmonton == Edmonton
+        assertTrue(moodList.get(0).getMoodId().contains("1"));
 
-        City city = new City ("Charlottetown", "Prince Edward Island");
-        cityList.add(city);
+        assertTrue(moodList.get(0).getUsername().contains("test"));
+        assertEquals(date,moodList.get(0).getDateTime());
 
-        assertEquals(0,city.compareTo(cityList.getCities().get(0))); // Charlottetown == Charlottetown
-        assertEquals(0,mockCity().compareTo(cityList.getCities().get(1))); // Edmonton == Edmonton
+        assertTrue(moodList.get(0).getReason().contains("none"));
+        assertTrue(moodList.get(0).getSituation().contains("alone"));
+
+        assertEquals(geopoint,moodList.get(0).getLocation());
+
 
     }
-
+/*
     @Test
     public void testHasCity(){
         CityList cityList = mockCityList();
