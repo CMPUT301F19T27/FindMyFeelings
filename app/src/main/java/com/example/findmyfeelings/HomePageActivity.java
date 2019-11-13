@@ -159,57 +159,44 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
         moodAdapter = new MoodCustomList(myMoodDataList, this); // Set to default list
         moodList.setAdapter(moodAdapter);
 
+        System.out.println("*************************************** TEST 1*********************");
         cRef
                 .document(currentUserEmail)
                 .collection("My Moods")
+                .orderBy("dateTIme", Query.Direction.DESCENDING)
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
                         myMoodDataList.clear();
-                        if (queryDocumentSnapshots == null) {
+                        for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
+                            Timestamp timestamp = (Timestamp) doc.getData().get("dateTime");
+                            Date dateTime = timestamp.toDate();
+                            String moodId = doc.getId();
+                            String mood = doc.getData().get("mood").toString();
+                            String reason = doc.getData().get("reason").toString();
+                            String situation = doc.getData().get("situation").toString();
+                            GeoPoint location = (GeoPoint) doc.getData().get("location");
+
+                            Mood rMood = new Mood(moodId, username, dateTime, mood, reason, situation, location);
+
+                            System.out.println("*************************************** TEST 2*********************");
+                            myMoodDataList.add(rMood);
+                        }
+
+                        // UPDATE RECENT MOOD
+                        if (myMoodDataList.size() != 0) {
                             cRef
                                     .document(currentUserEmail)
-                                    .collection("My Moods")
-                                    .orderBy("dateTime", Query.Direction.DESCENDING)
-                                    .addSnapshotListener(new EventListener<QuerySnapshot>() {
-                                        @Override
-                                        public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
-                                            myMoodDataList.clear();
-                                            for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
-                                                Timestamp timestamp = (Timestamp) doc.getData().get("dateTime");
-                                                Date dateTime = timestamp.toDate();
-                                                String moodId = doc.getId();
-                                                String mood = doc.getData().get("mood").toString();
-                                                String reason = doc.getData().get("reason").toString();
-                                                String situation = doc.getData().get("situation").toString();
-                                                GeoPoint location = (GeoPoint) doc.getData().get("location");
-
-                                                Mood rMood = new Mood(moodId, username, dateTime, mood, reason, situation, location);
-
-                                                myMoodDataList.add(rMood);
-                                            }
-
-                                            // UPDATE RECENT MOOD
-                                            if (myMoodDataList.size() != 0) {
-                                                cRef
-                                                        .document(currentUserEmail)
-                                                        .update("recent_mood", myMoodDataList.get(0));
-                                                //.collection("Recent Mood")
-                                                //.document("recent_mood")
-                                                //.set(myMoodDataList.get(0));
-                                            }
-
-
-                                            moodAdapter.notifyDataSetChanged();
-                                        }
-                                    });
-
-
+                                    .update("recent_mood", myMoodDataList.get(0));
+                            //.collection("Recent Mood")
+                            //.document("recent_mood")
+                            //.set(myMoodDataList.get(0));
                         }
+
+
+                        moodAdapter.notifyDataSetChanged();
                     }
                 });
-
-
 
         // READ FOLLOWING USERS
 
