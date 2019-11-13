@@ -158,6 +158,7 @@ public class EventFragment extends DialogFragment  {
                         List<String> validMoods = Arrays.asList(moods);
 
                         String[] situations = new String[]{"alone", "Alone", "with 1", "with 2", "With 1", "With 2", "crowd", "Crowd"};
+
                         List<String> validSituations = Arrays.asList(situations);
 
                         if (moodType.getText().toString().length() == 0) {
@@ -189,10 +190,12 @@ public class EventFragment extends DialogFragment  {
                             flag = true;
                             moodSituation.setError("Enter a situation!");
                         }
+
                         if (!(validSituations.contains(moodSituation.getText().toString()))) {
                             flag = true;
                             moodSituation.setError("Alone, With 1, With 2 or more, Crowd");
                         }
+
                         if (flag == false) {
                             System.out.println(moodDate+" "+ moodTime);
 

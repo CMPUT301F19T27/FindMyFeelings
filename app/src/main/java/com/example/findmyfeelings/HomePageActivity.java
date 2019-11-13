@@ -176,7 +176,7 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
                             String reason = doc.getData().get("reason").toString();
                             String situation = doc.getData().get("situation").toString();
                             GeoPoint location = (GeoPoint) doc.getData().get("location");
-                            
+
                             Mood rMood = new Mood(moodId, username, dateTime, mood, reason, situation, location);
 
                             System.out.println("*************************************** TEST 2*********************");
