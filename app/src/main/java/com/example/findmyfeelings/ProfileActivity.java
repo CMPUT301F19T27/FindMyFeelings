@@ -380,7 +380,7 @@ public class ProfileActivity extends AppCompatActivity implements FollowNewUserF
     /**
      * returns the image value of mood type
      * @param mood
-     * @return
+     * @return moodImage
      */
     public int getEmoji(String mood) {
         int moodImage;

@@ -66,7 +66,7 @@ public class FollowCustomList extends RecyclerView.Adapter<FollowCustomList.Foll
 
     /**
      * returns the item count
-     * @return
+     * @return int
      */
     @Override
     public int getItemCount() {

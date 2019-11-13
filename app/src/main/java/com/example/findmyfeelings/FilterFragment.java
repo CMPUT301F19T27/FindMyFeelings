@@ -67,7 +67,6 @@ public class FilterFragment extends DialogFragment {
     /**
      * This functions returns a filter fragment which filter the moods based on the filter result
      * @param savedInstanceState
-     * @return
      */
     @NonNull
     @Override

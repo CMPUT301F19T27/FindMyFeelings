@@ -52,7 +52,7 @@ public final class GPSTracker implements LocationListener {
     /**
      * Function to get the user's current location
      *
-     * @return
+     * @return location
      */
     @SuppressLint("MissingPermission")
     public Location getLocation() {
