@@ -1,6 +1,13 @@
-package com.example.simpleparadox.listycity;
+package com.example.findmyfeelings;
+
+import com.example.findmyfeelings.Mood;
+import com.example.findmyfeelings.MoodCustomList;
+import com.google.firebase.firestore.GeoPoint;
 
 import org.junit.Test;
+
+import java.util.ArrayList;
+import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -8,18 +15,22 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
-public class MoodCustomListTest{
-/*
-    private CityList mockCityList(){
-        CityList cityList = new CityList();
-        cityList.add(mockCity());
-        return cityList;
+
+/**
+ * Test class for Mood: add, delete, edit!
+ */
+public class MoodTest {
+
+    private ArrayList<Mood> mockMoodList(){
+        ArrayList<Mood> moodList = new ArrayList<>();
+        moodList.add(mockMood());
+        return moodList;
 
 
     }
 
-    private City mockCity(){
-        return new City("Edmonton","Alberta");
+    private Mood mockMood(){
+        return new Mood("1", "test", new Date(), "Happy", "none", "alone", new GeoPoint(24,2));
 
 
     }
@@ -27,35 +38,22 @@ public class MoodCustomListTest{
 
     @Test
     public void testAdd(){
-        CityList cityList = mockCityList();
-        assertEquals(1, cityList.getCities().size()); //Edmonton should in in list
+        ArrayList<Mood> moodList= mockMoodList();
+        assertEquals(1, moodList.size()); // Should have 1 mood
+        assertTrue(moodList.get(0).getMood().contains("Happy")); // Test if Sad is in list
 
-        City city = new City("Regina", "Saskatchewan");
-        cityList.add(city); // List is size 2
+        Mood mood = new Mood("2", "test1", new Date(), "Sad", "none", "alone", new GeoPoint(24,2));
+        moodList.add(mood); // List is size 2
 
-        assertEquals(2, cityList.getCities().size());
+        assertEquals(2, moodList.size());
 
-        assertTrue(cityList.getCities().contains(city)); // test if Regina is in the list
-
-    }
-
-
-    @Test
-    public void testAddException(){
-        final CityList cityList = mockCityList();
-
-        City city = new City("Yellowknife","Northwest Territories");
-        cityList.add(city);
-
-        assertThrows(IllegalArgumentException.class, ()->{ //if valid city it will pass
-            cityList.add(city);                             // else !valid city then fail
-
-        });
+        assertTrue(moodList.get(1).getMood().contains("Sad")); // Test if Sad is in list
 
     }
 
+/*
     @Test
-    public void testGetCities(){
+    public void testgetMoodId(){
         CityList cityList = mockCityList();
 
         assertEquals(0,mockCity().compareTo(cityList.getCities().get(0))); // Comparing Edmonton == Edmonton
@@ -160,8 +158,7 @@ public class MoodCustomListTest{
     }
 
 
-
-
 */
+
 
 }
