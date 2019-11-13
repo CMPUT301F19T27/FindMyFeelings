@@ -21,14 +21,11 @@ public class MoodCustomList extends RecyclerView.Adapter<MoodCustomList.MoodView
 
     private ArrayList<Mood> moods;
     private RecyclerViewListener mRecyclerViewListener;
-    private String username;
-
 
     // Provide a suitable constructor (depends on the kind of dataset)
     public MoodCustomList(ArrayList<Mood> inputMoodDataset, RecyclerViewListener recyclerViewListener) {
         this.moods = inputMoodDataset;
         this.mRecyclerViewListener = recyclerViewListener;
-        this.username = username;
     }
 
     public static class MoodViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
@@ -92,7 +89,7 @@ public class MoodCustomList extends RecyclerView.Adapter<MoodCustomList.MoodView
         } else {
             usernameString.setText(username);
         }
-
+        System.out.println(usernameString.getText().toString()+"################################################3");
     }
 
     public int getEmoji(Mood mood) {

@@ -174,9 +174,10 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
                             String moodId = doc.getId();
                             String mood = doc.getData().get("mood").toString();
                             String reason = doc.getData().get("reason").toString();
+                            String situation = doc.getData().get("situation").toString();
                             GeoPoint location = (GeoPoint) doc.getData().get("location");
 
-                            Mood rMood = new Mood(moodId, username,dateTime, mood, reason, location);
+                            Mood rMood = new Mood(moodId, username,dateTime, mood, reason, situation, location);
 
                             myMoodDataList.add(rMood);
                         }
@@ -212,9 +213,35 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
                     }
                 });
 
+        cRef
+                .orderBy("recent_mood.dateTime", Query.Direction.DESCENDING)
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                        followingMoodDataList.clear();
+
+                        for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
+                            if (followingDataList.contains(doc.getId())) {
+                                HashMap<String, Object> recentMoodMap = (HashMap<String, Object>) doc.getData().get("recent_mood");
+
+                                Timestamp timestamp = (Timestamp) recentMoodMap.get("dateTime");
+                                Date dateTime = timestamp.toDate();
+                                String moodId = recentMoodMap.get("moodId").toString();
+                                String mood = recentMoodMap.get("mood").toString();
+                                String uName = recentMoodMap.get("username").toString();
+                                String reason = recentMoodMap.get("reason").toString();
+                                String situation = recentMoodMap.get("situation").toString();
+                                GeoPoint location = (GeoPoint) recentMoodMap.get("location");
+
+                                Mood rMood = new Mood(moodId, uName,dateTime, mood, reason, situation, location);
+
+                                followingMoodDataList.add(rMood);
+                            }
 
 
-
+                        }
+                    }
+                });
 
         myMoodListButton.setOnClickListener(new View.OnClickListener() {
             @SuppressLint("RestrictedApi")
@@ -245,38 +272,6 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
             public void onClick(View view) {
                 addMoodButton.setVisibility(View.INVISIBLE);
                 onMyMoodList = false;
-                System.out.println("1********************************************1");
-
-               /* cRef
-                        //.orderBy("recent_mood.dateTime", Query.Direction.DESCENDING)
-                        .addSnapshotListener(new EventListener<QuerySnapshot>() {
-                            @Override
-                            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
-                                followingMoodDataList.clear();
-                                System.out.println("2*************************************************2");
-
-                                for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
-                                    if ()
-
-                                    HashMap<String, Object> recentMoodMap = (HashMap<String, Object>) doc.getData().get("recent_mood");
-
-                                    System.out.println(recentMoodMap+"############################################################");
-                                    System.out.println("3********************************************************3");
-                                    Timestamp timestamp = (Timestamp) recentMoodMap.get("dateTime");
-                                    System.out.println("4***************************************************************4");
-                                    Date dateTime = timestamp.toDate();
-                                    String moodId = recentMoodMap.get("moodId").toString();
-                                    String mood = recentMoodMap.get("mood").toString();
-                                    String reason = doc.getData().get("reason").toString();
-                                    GeoPoint location = (GeoPoint) recentMoodMap.get("location");
-
-                                    Mood rMood = new Mood(moodId, username,dateTime, mood, reason, location);
-
-                                    System.out.println("*************************                 "+username+"           ***   "+moodId);
-                                    followingMoodDataList.add(rMood);
-                                }
-                            }
-                        });*/
 
                 // Apply filters
                 if(filter.equals("")) {
