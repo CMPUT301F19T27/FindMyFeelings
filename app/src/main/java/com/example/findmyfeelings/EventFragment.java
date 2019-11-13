@@ -56,8 +56,8 @@ public class EventFragment extends DialogFragment  {
      *
      */
     public interface OnFragmentInteractionListener {
-        void onEventAdded(Mood newMood);
-        void onEventEdited(Mood editedMood, int index);
+        void onEventAdded(Mood newMood, boolean checked);
+        void onEventEdited(Mood editedMood, int index, boolean checked);
         void onEventDeleted(Mood deletedMood);
     }
 
@@ -207,18 +207,19 @@ public class EventFragment extends DialogFragment  {
                             String moodId = newMood + dateTime.toString();
 
                             GeoPoint location = null;
+                            boolean checked = false;
 
                             if (checkLocation.isChecked()) {
-                                location = null;
+                                checked = true;
                             }
 
                             Mood mood = new Mood(moodId,"" ,dateTime, newMood, reason, situation, location);
 
 
                             if (currentMood != null) {
-                                listener.onEventEdited(mood, index);
+                                listener.onEventEdited(mood, index, checked);
                             } else {
-                                listener.onEventAdded(mood);
+                                listener.onEventAdded(mood, checked);
                             }
                             builder.hide();
                         }

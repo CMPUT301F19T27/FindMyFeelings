@@ -167,7 +167,6 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
-
                         myMoodDataList.clear();
                         for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
                             Timestamp timestamp = (Timestamp) doc.getData().get("dateTime");
@@ -310,11 +309,11 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
      */
 
     @Override
-    public void onEventAdded(Mood newMood) {
+    public void onEventAdded(Mood newMood, boolean checked) {
         db = FirebaseFirestore.getInstance();
         final DocumentReference docRef = db.collection("Users").document(currentUserEmail);
 
-        if (newMood.getLocation() != null) {
+        if (checked) {
             mGPS.getLocation();
             GeoPoint currentLoc = new GeoPoint(mGPS.getLatitude(), mGPS.getLongitude());
             newMood.setLocation(currentLoc);
@@ -353,12 +352,12 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
 
     // RECENT MOOD UPDATED ON ADDITION. ASSUMES IT IS THE MOST RECENT MOOD
     @Override
-    public void onEventEdited(Mood editedMood, int index) {
+    public void onEventEdited(Mood editedMood, int index, boolean checked) {
         db = FirebaseFirestore.getInstance();
         final DocumentReference docRef = db.collection("Users").document(currentUserEmail);
 
 
-        if (editedMood.getLocation() != null) {
+        if (checked) {
             mGPS.getLocation();
             GeoPoint currentLoc = new GeoPoint(mGPS.getLatitude(), mGPS.getLongitude());
             editedMood.setLocation(currentLoc);
