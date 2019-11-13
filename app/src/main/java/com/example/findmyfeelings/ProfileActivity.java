@@ -34,7 +34,9 @@ import java.io.ObjectStreamException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-
+/**
+ * this class supports to sent and accept requests
+ */
 public class ProfileActivity extends AppCompatActivity implements FollowNewUserFragment.OnFragmentInteractionListener, RequestFragment.OnFragmentInteractionListener {
 
     private BottomNavigationView bottomNavigationView;
@@ -49,9 +51,6 @@ public class ProfileActivity extends AppCompatActivity implements FollowNewUserF
     private FirebaseUser firebaseUser;
     private FirebaseAuth firebaseAuth;
     private FloatingActionButton floatingFollowButton;
-
-
-    private FirebaseAuth.AuthStateListener authStateListener;
 
     private ArrayList<FollowUser> followingDataList;
     private ArrayList<FollowUser> followerDataList;
@@ -285,6 +284,10 @@ public class ProfileActivity extends AppCompatActivity implements FollowNewUserF
 
     }
 
+    /**
+     * adds a request to followed user's request list
+     * @param fUser
+     */
     @Override
     public void onUserFollowed(FollowUser fUser) {
         db = FirebaseFirestore.getInstance();
@@ -304,6 +307,10 @@ public class ProfileActivity extends AppCompatActivity implements FollowNewUserF
                 });
     }
 
+    /**
+     * adds follower to user following list and adds user to followed user's follower list
+     * @param fUser
+     */
     @Override
     public void onRequestAccepted(FollowUser fUser) {
 
@@ -355,6 +362,11 @@ public class ProfileActivity extends AppCompatActivity implements FollowNewUserF
 
     }
 
+    /**
+     * returns the image value of mood type
+     * @param mood
+     * @return
+     */
     public int getEmoji(String mood) {
         int moodImage;
 

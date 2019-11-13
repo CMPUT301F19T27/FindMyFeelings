@@ -14,6 +14,10 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
 
+// https://stackoverflow.com/questions/17591147/how-to-get-current-location-in-android
+/**
+ * this class helps to get the current location of device
+ */
 public final class GPSTracker implements LocationListener {
 
     private final Context mContext;

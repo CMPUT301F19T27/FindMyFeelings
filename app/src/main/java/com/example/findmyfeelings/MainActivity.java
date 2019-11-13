@@ -17,6 +17,9 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+/**
+ * this class supports the user login
+ */
 public class MainActivity extends AppCompatActivity {
 
     Button loginButton;
@@ -87,6 +90,9 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * checks if the user is already signed in
+     */
     @Override
     protected void onStart() {
         super.onStart();

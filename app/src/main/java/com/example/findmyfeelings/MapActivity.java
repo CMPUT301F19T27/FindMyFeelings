@@ -45,7 +45,9 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 import java.util.Date;
 
-
+/**
+ * this class displays the users mood on map
+ */
 public class MapActivity extends FragmentActivity implements OnMapReadyCallback {
     private GoogleMap mMap;
     private ArrayList<Mood> myMoodDataList;
@@ -192,6 +194,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
                             String reason = doc.getData().get("reason").toString();
                             String situation = doc.getData().get("situation").toString();
                             GeoPoint location = (GeoPoint) doc.getData().get("location");
+
 
                             Mood rMood = new Mood(moodId, username,dateTime, mood, reason, situation,location);
 

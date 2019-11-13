@@ -1,8 +1,5 @@
 package com.example.findmyfeelings;
 
-import java.io.ObjectStreamException;
-import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.HashMap;
 
 public class User {
@@ -10,11 +7,6 @@ public class User {
     private String username;
     private String firstName;
     private String lastName;
-    /*private ArrayList<FollowUser> followersList;
-    private ArrayList<FollowUser> followingList;
-    private ArrayList<Mood> myMoods;
-    private ArrayList<FollowUser> requestList;
-    */
     private Mood recentMood;
 
     public User() {
@@ -52,37 +44,6 @@ public class User {
     public void setRecentMood(Mood recentMood) {
         this.recentMood = recentMood;
     }
-/*
-    public void addFollower(String  fUser) {
-        followersList.add(fUser);
-    }
-
-    public void addFollowing(String  fUser) {
-        followingList.add(fUser);
-    }
-
-    public void removeFollower(String fUser) {
-        followersList.remove(fUser);
-    }
-
-    public void removeFollowing(String fUser) {
-        followingList.remove(fUser);
-    }
-
-    public void addRequest(String rEmail) {
-        requestList.add(rEmail);
-    }
-
-    public void removeRequest(String rEmail) {
-        requestList.remove(rEmail);
-    }
-
-    public void addMood(Mood newMood) {
-        recentMood = newMood;
-        myMoods.add(newMood);
-
-    }
-*/
 
     public HashMap<String, Object> userToMap() {
 
