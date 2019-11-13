@@ -488,7 +488,9 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
 
     @Override
     public void onRecyclerViewClickListener(int position) {
-        Mood selectedMood = myMoodDataList.get(position);
-        EventFragment.newInstance(selectedMood, position).show(getSupportFragmentManager(), "EDIT_EVENT");
+        if (onMyMoodList==true) {
+            Mood selectedMood = myMoodDataList.get(position);
+            EventFragment.newInstance(selectedMood, position).show(getSupportFragmentManager(), "EDIT_EVENT");
+        }
     }
 }
