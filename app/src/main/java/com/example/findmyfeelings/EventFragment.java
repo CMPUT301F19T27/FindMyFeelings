@@ -35,7 +35,7 @@ import java.util.List;
  */
 
 public class EventFragment extends DialogFragment  {
-    private static final String ARG_MOOD = "ride";
+    private static final String ARG_MOOD = "mood";
     private static final String ARG_INDEX = "index";
     
     private EditText moodType;

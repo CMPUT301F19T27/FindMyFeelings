@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/mood_date_Text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:text="Mood Date:"
+        android:textColor="@color/black"
+        android:padding="5dp"/>
+
+    <TextView
+        android:id="@+id/mood_time_Text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:text="Mood Time:"
+        android:textColor="@color/black"
+        android:padding="5dp"/>
+
+    <TextView
+        android:id="@+id/mood_type_Text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:text="Mood Type:"
+        android:textColor="@color/black"
+        android:padding="5dp"/>
+
+    <TextView
+        android:id="@+id/mood_reason_Text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:text="Reason:"
+        android:textColor="@color/black"
+        android:padding="5dp"/>
+
+    <TextView
+        android:id="@+id/mood_situation_Text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:text="Situation:"
+        android:textColor="@color/black"
+        android:padding="5dp"/>
+
+    <TextView
+        android:id="@+id/mood_location_Text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:text="Location:"
+        android:textColor="@color/black"
+        android:padding="5dp"/>
+
+
+
+
+
+
+
+
+</LinearLayout>

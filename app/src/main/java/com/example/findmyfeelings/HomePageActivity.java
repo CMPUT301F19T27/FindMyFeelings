@@ -491,5 +491,9 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
             Mood selectedMood = myMoodDataList.get(position);
             EventFragment.newInstance(selectedMood, position).show(getSupportFragmentManager(), "EDIT_EVENT");
         }
+        else {
+            Mood selectedMood = followingMoodDataList.get(position);
+            FollowingEventFragment.newInstance(selectedMood, position).show(getSupportFragmentManager(), "VIEW_EVENT");
+        }
     }
 }
