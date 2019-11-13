@@ -2,14 +2,22 @@ package com.example.findmyfeelings;
 
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.location.LocationManager;
+import android.net.ConnectivityManager;
+import android.net.Network;
+import android.net.wifi.WifiInfo;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ListView;
 
+import androidx.test.core.app.ApplicationProvider;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
+import androidx.test.rule.ServiceTestRule;
 
 import com.robotium.solo.Solo;
 
@@ -19,6 +27,10 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.util.concurrent.TimeoutException;
+
+import static android.content.Context.CONNECTIVITY_SERVICE;
+import static androidx.core.content.ContextCompat.getSystemService;
 import static junit.framework.TestCase.assertFalse;
 import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertEquals;
@@ -38,6 +50,10 @@ public class MainActivityTest {
     @Rule
     public ActivityTestRule<MainActivity> rule = new ActivityTestRule<>
             (MainActivity.class, true, true);
+
+
+    @Rule
+    public final ServiceTestRule serviceTestRule = new ServiceTestRule();
 
     /**
      * Runs before all tests and creates a solo instance
@@ -62,36 +78,22 @@ public class MainActivityTest {
     }
 
     /**
-     * Check if Login is valid
-     * Will fail upon auto-login
+     * Enable Wifi
      */
-    /*
+
     @Test
-    public void checkLogin(){
-        // Check if Login Page Starts
-        solo.assertCurrentActivity("Should be MainActivity", MainActivity.class);
+    public void setWifiEnabled(){
+        solo.setWiFiData(true);
 
-
-        //perform Login
-        solo.enterText((EditText)solo.getView(R.id.username_editText), "test@gmail.com");
-
-        //solo.clickOnCheckBox(R.id.location_check);
-        solo.clickOnButton(R.id.login_button);
-
-        // Wait for Home Page to Load
-        solo.waitForActivity(HomePageActivity.class, 3000);
 
 
 
     }
 
-*/
-
-
 
 
     /**
-     * MUST BE LOGGED IN TO WORK
+     * MUST BE LOGGED IN TO WORK/ MUST ALSO START OUT WITH EMPTY MOODS
      * Add a mood to the MoodCustomList and check the mood name using assertTrue
      * Delete the mood from the MoodCustomList and check again with assertFalse
      */
