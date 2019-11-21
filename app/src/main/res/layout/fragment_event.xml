@@ -3,57 +3,214 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content"
+    android:padding="5dp">
 
-    <EditText
-        android:id="@+id/mood_date_editText"
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center_horizontal">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/happy_emoticon"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:padding="10dp"
+                    android:src="@drawable/happy_face_bw" />
+
+                <ImageView
+                    android:id="@+id/sad_emoticon"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:padding="10dp"
+                    android:src="@drawable/sad_face_bw" />
+
+                <ImageView
+                    android:id="@+id/angry_emoticon"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:padding="10dp"
+                    android:src="@drawable/angry_face_bw" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/disgusted_emoticon"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:padding="10dp"
+                    android:src="@drawable/disgust_face_bw" />
+
+                <ImageView
+                    android:id="@+id/surprised_emoticon"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:padding="10dp"
+                    android:src="@drawable/surprised_face_bw" />
+
+                <ImageView
+                    android:id="@+id/scared_emoticon"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:padding="10dp"
+                    android:src="@drawable/fear_face_bw" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="Mood Date: yyyy-mm-dd"
-        android:inputType="date"/>
+        android:orientation="horizontal"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp">
 
-    <EditText
-        android:id="@+id/mood_time_editText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="Mood Time"
-        android:inputType="time"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Situation: "
+            android:textSize="20sp"
+            android:textStyle="bold" />
 
-    <EditText
-        android:id="@+id/mood_type_editText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="Mood Type:"
-        android:inputType="text" />
+        <RadioGroup
+            android:id="@+id/situation_selector"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
 
-    <EditText
-        android:id="@+id/mood_reason_editText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="Reason(optional):"
-        android:inputType="text"
-        android:maxLength="20"/>
+                <RadioButton
+                    android:id="@+id/radio_alone"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:text="Alone" />
 
-    <EditText
-        android:id="@+id/mood_situation_editText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Situation(alone, with 1, with 2, crowd):"
-        android:inputType="text"
-        android:maxLength="20"/>
+                <RadioButton
+                    android:id="@+id/radio_two"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="With Someone" />
 
-    <CheckBox
-        android:id="@+id/location_check"
+                <RadioButton
+                    android:id="@+id/radio_group"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Group" />
+
+        </RadioGroup>
+
+    </LinearLayout>
+
+    <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/check_location"/>
+        android:text="Click"
+        android:id="@+id/btnDisplay"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Reason: "
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/mood_reason_editText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="optional"
+            android:inputType="text"
+            android:maxLength="20"/>
+
+    </LinearLayout>
 
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp">
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Options: "
+            android:textSize="20sp"
+            android:textStyle="bold" />
 
+        <CheckBox
+            android:id="@+id/location_check"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/check_location"
+            android:checked="true"/>
+
+        <CheckBox
+            android:id="@+id/date_check"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Use Custom Date"/>
+
+    </LinearLayout>
+
+<!--    <EditText-->
+<!--        android:id="@+id/mood_situation_editText"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:hint="Situation(alone, with 1, with 2, crowd):"-->
+<!--        android:inputType="text"-->
+<!--        android:maxLength="20"/>-->
+
+<!--    <EditText-->
+<!--        android:id="@+id/mood_date_editText"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:ems="10"-->
+<!--        android:hint="Mood Date: yyyy-mm-dd"-->
+<!--        android:inputType="date"/>-->
+
+<!--    <EditText-->
+<!--        android:id="@+id/mood_time_editText"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:ems="10"-->
+<!--        android:hint="Mood Time"-->
+<!--        android:inputType="time"/>-->
+
+<!--    <EditText-->
+<!--        android:id="@+id/mood_type_editText"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:ems="10"-->
+<!--        android:hint="Mood Type:"-->
+<!--        android:inputType="text" />-->
 
 </LinearLayout>
