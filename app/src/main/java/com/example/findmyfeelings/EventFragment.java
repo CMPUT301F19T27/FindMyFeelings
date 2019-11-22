@@ -13,6 +13,11 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.Switch;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -25,7 +30,9 @@ import java.lang.reflect.Array;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -37,15 +44,28 @@ import java.util.List;
 public class EventFragment extends DialogFragment  {
     private static final String ARG_MOOD = "mood";
     private static final String ARG_INDEX = "index";
-    
+
+    private ImageView happy;
+    private ImageView sad;
+    private ImageView angry;
+    private ImageView disgusted;
+    private ImageView surprised;
+    private ImageView scared;
+    private String moodSelected = "";
+    private String situationSelected = "Alone";
     private EditText moodType;
     private EditText moodDate;
     private EditText moodTime;
     private EditText moodReason;
 
+    private RadioGroup radioSituationGroup;
+    private RadioButton aloneSituationButton;
+    private RadioButton twoSituationButton;
+    private RadioButton groupSituationButton;
+
     private EditText moodSituation;
     private CheckBox checkLocation;
-
+    private CheckBox checkCustomDate;
 
     private OnFragmentInteractionListener listener;
     private Mood currentMood;
@@ -75,7 +95,7 @@ public class EventFragment extends DialogFragment  {
     }
 
     /**
-     * intializes the context for listener
+     * Initialises the context for listener
      * @param context
      */
     @Override
@@ -89,6 +109,7 @@ public class EventFragment extends DialogFragment  {
         }
     }
 
+
     /**
      * This method creates a dialog and shows a dialog
      */
@@ -97,13 +118,28 @@ public class EventFragment extends DialogFragment  {
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState){
 
         View view= LayoutInflater.from(getActivity()).inflate(R.layout.fragment_event, null);
-        moodType = view.findViewById(R.id.mood_type_editText);
-        moodDate = view.findViewById(R.id.mood_date_editText);
-        moodTime = view.findViewById(R.id.mood_time_editText);
+
+        happy = view.findViewById(R.id.happy_emoticon);
+        sad = view.findViewById(R.id.sad_emoticon);
+        angry = view.findViewById(R.id.angry_emoticon);
+        disgusted = view.findViewById(R.id.disgusted_emoticon);
+        surprised = view.findViewById(R.id.surprised_emoticon);
+        scared = view.findViewById(R.id.scared_emoticon);
         moodReason = view.findViewById(R.id.mood_reason_editText);
-        moodSituation = view.findViewById(R.id.mood_situation_editText);
 
         checkLocation = view.findViewById(R.id.location_check);
+        checkCustomDate = view.findViewById(R.id.date_check);
+
+        radioSituationGroup = view.findViewById(R.id.situation_selector);
+        aloneSituationButton = view.findViewById(R.id.radio_alone);
+        twoSituationButton = view.findViewById(R.id.radio_two);
+        groupSituationButton = view.findViewById(R.id.radio_group);
+
+
+//        moodSituation = view.findViewById(R.id.mood_situation_editText);
+//        moodType = view.findViewById(R.id.mood_type_editText);
+//        moodDate = view.findViewById(R.id.mood_date_editText);
+//        moodTime = view.findViewById(R.id.mood_time_editText);
 
         Bundle args = getArguments();
 
@@ -119,16 +155,154 @@ public class EventFragment extends DialogFragment  {
             DateFormat timeFormat = new SimpleDateFormat("HH:mm");
             String time = timeFormat.format(currentMood.getDateTime());
 
-            moodType.setText(currentMood.getMood());
-            moodDate.setText(date);
-            moodTime.setText(time);
+            // Set the selected mood
+            switch(currentMood.getMood()) {
+                case "Happy":
+                    happy.setImageResource(R.drawable.happy_face);
+                    moodSelected = "Happy";
+                    break;
+                case "Angry":
+                    angry.setImageResource(R.drawable.angry_face);
+                    moodSelected = "Angry";
+                    break;
+                case "Disgusted":
+                    disgusted.setImageResource(R.drawable.disgust_face);
+                    moodSelected = "Disgusted";
+                    break;
+                case "Scared":
+                    scared.setImageResource(R.drawable.fear_face);
+                    moodSelected = "Scared";
+                    break;
+                case "Sad":
+                    sad.setImageResource(R.drawable.sad_face);
+                    moodSelected = "Sad";
+                    break;
+                case "Surprised":
+                    surprised.setImageResource(R.drawable.surprised_face);
+                    moodSelected = "Surprised";
+                    break;
+            }
+
+            switch(currentMood.getSituation()) {
+                case "Alone":
+                    aloneSituationButton.setChecked(true);
+                    situationSelected = "Alone";
+                    break;
+                case "With Someone":
+                    twoSituationButton.setChecked(true);
+                    situationSelected = "With Someone";
+                    break;
+                case "Group":
+                    groupSituationButton.setChecked(true);
+                    situationSelected = "Group";
+                    break;
+                default:
+                    Toast.makeText(getContext(), "Failure Loading Situation", Toast.LENGTH_SHORT).show();
+                    break;
+            }
+
+//            moodDate.setText(date); //TODO make it set the custom date
+//            moodTime.setText(time); //TODO make it set the custom time
             moodReason.setText(currentMood.getReason());
-            moodSituation.setText(currentMood.getSituation());
+//            moodSituation.setText(currentMood.getSituation());
             if (currentMood.getLocation() != null) {
                 checkLocation.setChecked(true);
             }
 
+            // Hide the "Use Custom Date" checkbox and just use a custom date because you have to use a custom date
+            checkCustomDate.setVisibility(View.INVISIBLE);
+            checkCustomDate.setChecked(true);
         }
+
+        happy.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                happy.setImageResource(R.drawable.happy_face);
+                sad.setImageResource(R.drawable.sad_face_bw);
+                angry.setImageResource(R.drawable.angry_face_bw);
+                disgusted.setImageResource(R.drawable.disgust_face_bw);
+                surprised.setImageResource(R.drawable.surprised_face_bw);
+                scared.setImageResource(R.drawable.fear_face_bw);
+
+                moodSelected = "Happy";
+            }
+        });
+
+        sad.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                happy.setImageResource(R.drawable.happy_face_bw);
+                sad.setImageResource(R.drawable.sad_face);
+                angry.setImageResource(R.drawable.angry_face_bw);
+                disgusted.setImageResource(R.drawable.disgust_face_bw);
+                surprised.setImageResource(R.drawable.surprised_face_bw);
+                scared.setImageResource(R.drawable.fear_face_bw);
+
+                moodSelected = "Sad";
+            }
+        });
+
+        angry.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                happy.setImageResource(R.drawable.happy_face_bw);
+                sad.setImageResource(R.drawable.sad_face_bw);
+                angry.setImageResource(R.drawable.angry_face);
+                disgusted.setImageResource(R.drawable.disgust_face_bw);
+                surprised.setImageResource(R.drawable.surprised_face_bw);
+                scared.setImageResource(R.drawable.fear_face_bw);
+
+                moodSelected = "Angry";
+            }
+        });
+
+        disgusted.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                happy.setImageResource(R.drawable.happy_face_bw);
+                sad.setImageResource(R.drawable.sad_face_bw);
+                angry.setImageResource(R.drawable.angry_face_bw);
+                disgusted.setImageResource(R.drawable.disgust_face);
+                surprised.setImageResource(R.drawable.surprised_face_bw);
+                scared.setImageResource(R.drawable.fear_face_bw);
+
+                moodSelected = "Disgusted";
+            }
+        });
+
+        surprised.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                happy.setImageResource(R.drawable.happy_face_bw);
+                sad.setImageResource(R.drawable.sad_face_bw);
+                angry.setImageResource(R.drawable.angry_face_bw);
+                disgusted.setImageResource(R.drawable.disgust_face_bw);
+                surprised.setImageResource(R.drawable.surprised_face);
+                scared.setImageResource(R.drawable.fear_face_bw);
+
+                moodSelected = "Surprised";
+            }
+        });
+
+        scared.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                happy.setImageResource(R.drawable.happy_face_bw);
+                sad.setImageResource(R.drawable.sad_face_bw);
+                angry.setImageResource(R.drawable.angry_face_bw);
+                disgusted.setImageResource(R.drawable.disgust_face_bw);
+                surprised.setImageResource(R.drawable.surprised_face_bw);
+                scared.setImageResource(R.drawable.fear_face);
+
+                moodSelected = "Scared";
+            }
+        });
+
+        radioSituationGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                RadioButton rb = (RadioButton) group.findViewById(checkedId);
+                if (rb != null) {
+                    situationSelected = rb.getText().toString();
+                }
+
+            }
+        });
+
 
         final AlertDialog builder = new AlertDialog.Builder(getContext())
                 .setView(view)
@@ -153,62 +327,86 @@ public class EventFragment extends DialogFragment  {
                     @Override
                     public void onClick(View view) {
 
-                        boolean flag = false;
-                        String[] moods = new String[]{"Happy", "Sad", "Angry", "Disgusted", "Surprised", "Scared"};
-                        List<String> validMoods = Arrays.asList(moods);
+                        boolean incompleteData = false;
+//                        String[] moods = new String[]{"Happy", "Sad", "Angry", "Disgusted", "Surprised", "Scared"};
+//                        List<String> validMoods = Arrays.asList(moods);
 
-                        String[] situations = new String[]{"alone", "Alone", "with 1", "with 2", "With 1", "With 2", "crowd", "Crowd"};
+//                        String[] situations = new String[]{"alone", "Alone", "with 1", "with 2", "With 1", "With 2", "crowd", "Crowd"};
 
-                        List<String> validSituations = Arrays.asList(situations);
+//                        List<String> validSituations = Arrays.asList(situations);
 
-                        if (moodType.getText().toString().length() == 0) {
-                            flag = true;
-                            moodType.setError("Enter a mood!");
-                        }
-                        if (!(validMoods.contains(moodType.getText().toString()))) {
-                            flag = true;
-                            moodType.setError("Please enter a valid mood");
+                        if (moodSelected.equals("")) {
+                            incompleteData = true;
+                            moodType.setError("Select a mood!");
                         }
 
-                        if (moodDate.getText().toString().length() == 0) {
-                            flag = true;
-                            moodDate.setError("Enter a date!");
-                        }
-                        if (!isValidFormat("yyyy-MM-dd", moodDate.getText().toString())) {
-                            flag = true;
-                            moodDate.setError("Enter a valid date (yyyy-MM-dd)!");
-                        }
-                        if (moodTime.getText().toString().length() == 0) {
-                            flag = true;
-                            moodTime.setError("Enter a time!");
-                        }
-                        if (!isValidFormat("HH:mm", moodTime.getText().toString())) {
-                            flag = true;
-                            moodTime.setError("Enter a valid time (HH:mm)!");
-                        }
-                        if (moodSituation.getText().toString().length() == 0){
-                            flag = true;
-                            moodSituation.setError("Enter a situation!");
-                        }
+//                        if (moodDate.getText().toString().length() == 0) {
+//                            flag = true;
+//                            moodDate.setError("Enter a date!");
+//                        }
+//                        if (!isValidFormat("yyyy-MM-dd", moodDate.getText().toString())) {
+//                            flag = true;
+//                            moodDate.setError("Enter a valid date (yyyy-MM-dd)!");
+//                        }
 
-                        if (!(validSituations.contains(moodSituation.getText().toString()))) {
-                            flag = true;
-                            moodSituation.setError("Alone, With 1, With 2 or more, Crowd");
-                        }
+//                        if (moodTime.getText().toString().length() == 0) {
+//                            flag = true;
+//                            moodTime.setError("Enter a time!");
+//                        }
+//                        if (!isValidFormat("HH:mm", moodTime.getText().toString())) {
+//                            flag = true;
+//                            moodTime.setError("Enter a valid time (HH:mm)!");
+//                        }
 
-                        if (flag == false) {
-                            System.out.println(moodDate+" "+ moodTime);
+                        if (!incompleteData) {
+//                            System.out.println(moodDate+" "+ moodTime);
 
-                            Date dateTime = null;
-                            try {
-                                dateTime = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse(moodDate.getText().toString() + " " + moodTime.getText().toString());
-                            } catch (ParseException e) {
-                                e.printStackTrace();
-                            }
+//                            Toast.makeText(getContext(), Calendar.getInstance().getTime().toString(), Toast.LENGTH_SHORT).show();
 
-                            String newMood = moodType.getText().toString();
+                            Date dateTime = Calendar.getInstance().getTime(); //null;
 
-                            String situation = moodSituation.getText().toString();
+                            // This adapter is unnecessary can be deleted
+                            // Adapter to Feed in Current Date/Time
+//                            String dateTimeString = Calendar.getInstance().getTime().toString();
+//                            String[] dateTimeStringSplit = dateTimeString.split(" ");
+//
+//                            String dateTimeYear = dateTimeStringSplit[5];
+//
+//                            String dateTimeMonth = dateTimeStringSplit[1];
+//                            switch(dateTimeMonth) {
+//                                case "Jan": dateTimeMonth = "1"; break;
+//                                case "Feb": dateTimeMonth = "2"; break;
+//                                case "Mar": dateTimeMonth = "3"; break;
+//                                case "Apr": dateTimeMonth = "4"; break;
+//                                case "May": dateTimeMonth = "5"; break;
+//                                case "Jun": dateTimeMonth = "6"; break;
+//                                case "Jul": dateTimeMonth = "7"; break;
+//                                case "Aug": dateTimeMonth = "8"; break;
+//                                case "Sep": dateTimeMonth = "9"; break;
+//                                case "Oct": dateTimeMonth = "10"; break;
+//                                case "Nov": dateTimeMonth = "11"; break;
+//                                case "Dec": dateTimeMonth = "12"; break;
+//                            }
+//
+//                            String dateTimeDay = dateTimeStringSplit[2];
+//
+//                            String dateTimeTime = dateTimeStringSplit[3];
+//
+//                            String[] dateTimeTimeSplit = dateTimeTime.split(":");
+//                            String dateTimeTimeHour = dateTimeTimeSplit[0];
+//                            String dateTimeTimeMinute = dateTimeTimeSplit[1];
+//
+//                            String inputDate = dateTimeYear + "-" + dateTimeMonth + "-" + dateTimeDay;
+//                            String inputTime = dateTimeTimeHour + ":" + dateTimeTimeMinute;
+//
+//                            try {
+//                                dateTime = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse( inputDate + " " + inputTime);
+//                            } catch (ParseException e) {
+//                                e.printStackTrace();
+//                            }
+
+                            String situation = situationSelected;
+                            String newMood = moodSelected;
                             String reason = moodReason.getText().toString();
                             String moodId = newMood + dateTime.toString();
 
@@ -235,6 +433,7 @@ public class EventFragment extends DialogFragment  {
         });
         return builder;
     }
+
 
     /**
      * This method checks whether valid format was entered in our dialog
