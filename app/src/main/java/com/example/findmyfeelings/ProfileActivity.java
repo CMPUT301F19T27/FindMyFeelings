@@ -66,6 +66,7 @@ public class ProfileActivity extends AppCompatActivity implements FollowNewUserF
     private ImageView moodImage;
     private String moodType;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -228,6 +229,13 @@ public class ProfileActivity extends AppCompatActivity implements FollowNewUserF
                             FollowUser followingUser = new FollowUser(email, username, firstName, lastName);
                             requestDataList.add(followingUser);
                         }
+                        // Request Badge Implementation
+                        if(requestDataList.isEmpty()) {
+                            requestBadge.setVisibility(View.INVISIBLE);
+                        } else {
+                            requestBadge.setVisibility(View.VISIBLE);
+                            requestBadge.setText(String.valueOf(requestDataList.size())); // TODO move to onStart
+                        }
                     }
                 });
 
@@ -284,13 +292,7 @@ public class ProfileActivity extends AppCompatActivity implements FollowNewUserF
             }
         });
 
-        // Request Badge Implementation
-        if(requestDataList.size() > 0) {
-            requestBadge.setVisibility(View.VISIBLE);
-            requestBadge.setText(String.valueOf(requestDataList.size())); // TODO move to onStart
-        } else {
-            requestBadge.setVisibility(View.INVISIBLE);
-        }
+
     }
 
     @Override
