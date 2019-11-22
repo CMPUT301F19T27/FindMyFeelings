@@ -194,7 +194,7 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
 
                             cRef
                                     .document(currentUserEmail)
-                                    .set(recentMoodMap);
+                                    .update(recentMoodMap);
                         }
 
 

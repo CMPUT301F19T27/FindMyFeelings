@@ -135,9 +135,13 @@ public class ProfileActivity extends AppCompatActivity implements FollowNewUserF
         followerDataList = new ArrayList<>();
         requestDataList = new ArrayList<>();
 
-        // use a linear layout manager
+        // Use a linear layout manager
         followLayoutManager = new LinearLayoutManager(this);
         followList.setLayoutManager(followLayoutManager);
+
+        // Show the default data
+        followAdapter = new FollowCustomList(followingDataList);
+        followList.setAdapter(followAdapter);
 
         // Specify an adapter
         //followAdapter = new FollowCustomList(followingDataList); // Set to the default
@@ -231,7 +235,6 @@ public class ProfileActivity extends AppCompatActivity implements FollowNewUserF
 
 
 
-
         logoutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -282,13 +285,6 @@ public class ProfileActivity extends AppCompatActivity implements FollowNewUserF
             }
         });
 
-        // Request Badge Implementation
-        if(requestDataList.size() > 0) {
-            requestBadge.setVisibility(View.VISIBLE);
-            requestBadge.setText(String.valueOf(requestDataList.size())); // TODO move to onStart
-        } else {
-            requestBadge.setVisibility(View.INVISIBLE);
-        }
     }
 
     @Override
@@ -296,8 +292,6 @@ public class ProfileActivity extends AppCompatActivity implements FollowNewUserF
         super.onStart();
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
-//        usernameText.setText(firebaseUser.getEmail()); //TODO make this the current user's username
-
     }
 
     /**
