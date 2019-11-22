@@ -66,6 +66,7 @@ public class ProfileActivity extends AppCompatActivity implements FollowNewUserF
     private ImageView moodImage;
     private String moodType;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -96,18 +97,20 @@ public class ProfileActivity extends AppCompatActivity implements FollowNewUserF
                 switch (menuItem.getItemId()) {
                     case R.id.ic_map:
                         Intent intent1 = new Intent(ProfileActivity.this, MapActivity.class);
-                        //intent1.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                       // intent1.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        //intent1.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        intent1.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         //intent1.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(intent1);
+                        finish();
                         break;
 
                     case R.id.ic_feed:
                         Intent intent2 = new Intent(ProfileActivity.this, HomePageActivity.class);
-                        //intent2.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        //intent2.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        //intent2.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        intent2.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         //intent2.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(intent2);
+                        finish();
                         break;
                 }
                 return false;
@@ -226,6 +229,13 @@ public class ProfileActivity extends AppCompatActivity implements FollowNewUserF
                             FollowUser followingUser = new FollowUser(email, username, firstName, lastName);
                             requestDataList.add(followingUser);
                         }
+                        // Request Badge Implementation
+                        if(requestDataList.isEmpty()) {
+                            requestBadge.setVisibility(View.INVISIBLE);
+                        } else {
+                            requestBadge.setVisibility(View.VISIBLE);
+                            requestBadge.setText(String.valueOf(requestDataList.size())); // TODO move to onStart
+                        }
                     }
                 });
 
@@ -282,13 +292,7 @@ public class ProfileActivity extends AppCompatActivity implements FollowNewUserF
             }
         });
 
-        // Request Badge Implementation
-        if(requestDataList.size() > 0) {
-            requestBadge.setVisibility(View.VISIBLE);
-            requestBadge.setText(String.valueOf(requestDataList.size())); // TODO requestDataList.size() returns 0 regardless of how many requests you have
-        } else {
-            requestBadge.setVisibility(View.INVISIBLE);
-        }
+
     }
 
     @Override
