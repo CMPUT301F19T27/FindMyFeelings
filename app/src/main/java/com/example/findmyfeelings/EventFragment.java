@@ -363,46 +363,47 @@ public class EventFragment extends DialogFragment  {
 
 //                            Toast.makeText(getContext(), Calendar.getInstance().getTime().toString(), Toast.LENGTH_SHORT).show();
 
-                            Date dateTime = null;
+                            Date dateTime = Calendar.getInstance().getTime(); //null;
 
+                            // This adapter is unnecessary can be deleted
                             // Adapter to Feed in Current Date/Time
-                            String dateTimeString = Calendar.getInstance().getTime().toString();
-                            String[] dateTimeStringSplit = dateTimeString.split(" ");
-
-                            String dateTimeYear = dateTimeStringSplit[5];
-
-                            String dateTimeMonth = dateTimeStringSplit[1];
-                            switch(dateTimeMonth) {
-                                case "Jan": dateTimeMonth = "1"; break;
-                                case "Feb": dateTimeMonth = "2"; break;
-                                case "Mar": dateTimeMonth = "3"; break;
-                                case "Apr": dateTimeMonth = "4"; break;
-                                case "May": dateTimeMonth = "5"; break;
-                                case "Jun": dateTimeMonth = "6"; break;
-                                case "Jul": dateTimeMonth = "7"; break;
-                                case "Aug": dateTimeMonth = "8"; break;
-                                case "Sep": dateTimeMonth = "9"; break;
-                                case "Oct": dateTimeMonth = "10"; break;
-                                case "Nov": dateTimeMonth = "11"; break;
-                                case "Dec": dateTimeMonth = "12"; break;
-                            }
-
-                            String dateTimeDay = dateTimeStringSplit[2];
-
-                            String dateTimeTime = dateTimeStringSplit[3];
-
-                            String[] dateTimeTimeSplit = dateTimeTime.split(":");
-                            String dateTimeTimeHour = dateTimeTimeSplit[0];
-                            String dateTimeTimeMinute = dateTimeTimeSplit[1];
-
-                            String inputDate = dateTimeYear + "-" + dateTimeMonth + "-" + dateTimeDay;
-                            String inputTime = dateTimeTimeHour + ":" + dateTimeTimeMinute;
-
-                            try {
-                                dateTime = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse( inputDate + " " + inputTime);
-                            } catch (ParseException e) {
-                                e.printStackTrace();
-                            }
+//                            String dateTimeString = Calendar.getInstance().getTime().toString();
+//                            String[] dateTimeStringSplit = dateTimeString.split(" ");
+//
+//                            String dateTimeYear = dateTimeStringSplit[5];
+//
+//                            String dateTimeMonth = dateTimeStringSplit[1];
+//                            switch(dateTimeMonth) {
+//                                case "Jan": dateTimeMonth = "1"; break;
+//                                case "Feb": dateTimeMonth = "2"; break;
+//                                case "Mar": dateTimeMonth = "3"; break;
+//                                case "Apr": dateTimeMonth = "4"; break;
+//                                case "May": dateTimeMonth = "5"; break;
+//                                case "Jun": dateTimeMonth = "6"; break;
+//                                case "Jul": dateTimeMonth = "7"; break;
+//                                case "Aug": dateTimeMonth = "8"; break;
+//                                case "Sep": dateTimeMonth = "9"; break;
+//                                case "Oct": dateTimeMonth = "10"; break;
+//                                case "Nov": dateTimeMonth = "11"; break;
+//                                case "Dec": dateTimeMonth = "12"; break;
+//                            }
+//
+//                            String dateTimeDay = dateTimeStringSplit[2];
+//
+//                            String dateTimeTime = dateTimeStringSplit[3];
+//
+//                            String[] dateTimeTimeSplit = dateTimeTime.split(":");
+//                            String dateTimeTimeHour = dateTimeTimeSplit[0];
+//                            String dateTimeTimeMinute = dateTimeTimeSplit[1];
+//
+//                            String inputDate = dateTimeYear + "-" + dateTimeMonth + "-" + dateTimeDay;
+//                            String inputTime = dateTimeTimeHour + ":" + dateTimeTimeMinute;
+//
+//                            try {
+//                                dateTime = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse( inputDate + " " + inputTime);
+//                            } catch (ParseException e) {
+//                                e.printStackTrace();
+//                            }
 
                             String situation = situationSelected;
                             String newMood = moodSelected;
