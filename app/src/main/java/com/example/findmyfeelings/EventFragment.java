@@ -16,6 +16,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Switch;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -29,6 +30,7 @@ import java.lang.reflect.Array;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
@@ -361,14 +363,47 @@ public class EventFragment extends DialogFragment  {
 
 //                            Toast.makeText(getContext(), Calendar.getInstance().getTime().toString(), Toast.LENGTH_SHORT).show();
 
-                            Date dateTime = Calendar.getInstance().getTime();;
-//                            try {
-//                                dateTime = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2019-11-21" + " " + "16:20"); // TODO This may help with setting the custom date/time
-//                            } catch (ParseException e) {
-//                                e.printStackTrace();
-//                            }
+                            Date dateTime = null;
 
-//                            String situation = radioSituationButton.getText().toString();
+                            // Adapter to Feed in Current Date/Time
+                            String dateTimeString = Calendar.getInstance().getTime().toString();
+                            String[] dateTimeStringSplit = dateTimeString.split(" ");
+
+                            String dateTimeYear = dateTimeStringSplit[5];
+
+                            String dateTimeMonth = dateTimeStringSplit[1];
+                            switch(dateTimeMonth) {
+                                case "Jan": dateTimeMonth = "1"; break;
+                                case "Feb": dateTimeMonth = "2"; break;
+                                case "Mar": dateTimeMonth = "3"; break;
+                                case "Apr": dateTimeMonth = "4"; break;
+                                case "May": dateTimeMonth = "5"; break;
+                                case "Jun": dateTimeMonth = "6"; break;
+                                case "Jul": dateTimeMonth = "7"; break;
+                                case "Aug": dateTimeMonth = "8"; break;
+                                case "Sep": dateTimeMonth = "9"; break;
+                                case "Oct": dateTimeMonth = "10"; break;
+                                case "Nov": dateTimeMonth = "11"; break;
+                                case "Dec": dateTimeMonth = "12"; break;
+                            }
+
+                            String dateTimeDay = dateTimeStringSplit[2];
+
+                            String dateTimeTime = dateTimeStringSplit[3];
+
+                            String[] dateTimeTimeSplit = dateTimeTime.split(":");
+                            String dateTimeTimeHour = dateTimeTimeSplit[0];
+                            String dateTimeTimeMinute = dateTimeTimeSplit[1];
+
+                            String inputDate = dateTimeYear + "-" + dateTimeMonth + "-" + dateTimeDay;
+                            String inputTime = dateTimeTimeHour + ":" + dateTimeTimeMinute;
+
+                            try {
+                                dateTime = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse( inputDate + " " + inputTime);
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
+
                             String situation = situationSelected;
                             String newMood = moodSelected;
                             String reason = moodReason.getText().toString();
