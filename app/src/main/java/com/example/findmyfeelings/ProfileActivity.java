@@ -96,18 +96,20 @@ public class ProfileActivity extends AppCompatActivity implements FollowNewUserF
                 switch (menuItem.getItemId()) {
                     case R.id.ic_map:
                         Intent intent1 = new Intent(ProfileActivity.this, MapActivity.class);
-                        //intent1.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                       // intent1.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        //intent1.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        intent1.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         //intent1.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(intent1);
+                        finish();
                         break;
 
                     case R.id.ic_feed:
                         Intent intent2 = new Intent(ProfileActivity.this, HomePageActivity.class);
-                        //intent2.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        //intent2.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        //intent2.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        intent2.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         //intent2.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(intent2);
+                        finish();
                         break;
                 }
                 return false;

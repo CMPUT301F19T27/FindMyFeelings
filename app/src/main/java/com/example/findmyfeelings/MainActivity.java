@@ -64,9 +64,10 @@ public class MainActivity extends AppCompatActivity {
                             }
                             else {
                                 Intent intent = new Intent(MainActivity.this, HomePageActivity.class);
-                                //intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                 //intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                 startActivity(intent);
+                                finish();
                             }
                         }
                     });
@@ -82,10 +83,11 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent signUpIntent = new Intent(MainActivity.this, SignUpActivity.class);
-                //signUpIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                //signUpIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                //signUpIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                signUpIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 //signUpIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(signUpIntent);
+                finish();
             }
         });
     }

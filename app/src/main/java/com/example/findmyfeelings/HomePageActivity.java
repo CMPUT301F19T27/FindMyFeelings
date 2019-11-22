@@ -107,18 +107,20 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
                 switch (menuItem.getItemId()) {
                     case R.id.ic_map:
                         Intent intent1 = new Intent(HomePageActivity.this, MapActivity.class);
-                        intent1.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        //intent1.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        //intent1.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        intent1.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         //intent1.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(intent1);
+                        finish();
                         break;
 
                     case R.id.ic_profile:
                         Intent intent2 = new Intent(HomePageActivity.this, ProfileActivity.class);
-                        intent2.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        //intent2.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        //intent2.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        intent2.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         //intent2.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(intent2);
+                        finish();
                         break;
                 }
                 return false;
@@ -185,16 +187,18 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
 
                         // UPDATE RECENT MOOD
                         if(myMoodDataList.size() != 0) {
+                            HashMap<String, Object> data = moodToMap(myMoodDataList.get(0));
+
+                            HashMap<String, Object> recentMoodMap = new HashMap<>();
+                            recentMoodMap.put("recent_mood", data);
                             cRef
                                     .document(currentUserEmail)
-                                    .collection("Recent Mood")
-                                    .document("recent_mood")
-                                    .set(myMoodDataList.get(0));
+                                    .set(recentMoodMap);
                         }
 
 
                         moodAdapter.notifyDataSetChanged();
-              }
+                    }
                 });
 
         // READ FOLLOWING USERS
