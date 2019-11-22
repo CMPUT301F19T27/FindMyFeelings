@@ -287,7 +287,7 @@ public class ProfileActivity extends AppCompatActivity implements FollowNewUserF
         // Request Badge Implementation
         if(requestDataList.size() > 0) {
             requestBadge.setVisibility(View.VISIBLE);
-            requestBadge.setText(String.valueOf(requestDataList.size())); // TODO requestDataList.size() returns 0 regardless of how many requests you have
+            requestBadge.setText(String.valueOf(requestDataList.size())); // TODO move to onStart
         } else {
             requestBadge.setVisibility(View.INVISIBLE);
         }

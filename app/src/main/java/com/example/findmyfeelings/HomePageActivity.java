@@ -43,6 +43,8 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -191,6 +193,7 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
 
                             HashMap<String, Object> recentMoodMap = new HashMap<>();
                             recentMoodMap.put("recent_mood", data);
+
                             cRef
                                     .document(currentUserEmail)
                                     .set(recentMoodMap);
@@ -231,16 +234,31 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
                             if (followingDataList.contains(doc.getId())) {
                                 HashMap<String, Object> recentMoodMap = (HashMap<String, Object>) doc.getData().get("recent_mood");
 
-                                Timestamp timestamp = (Timestamp) recentMoodMap.get("dateTime");
-                                Date dateTime = timestamp.toDate();
-                                String moodId = recentMoodMap.get("moodId").toString();
-                                String mood = recentMoodMap.get("mood").toString();
-                                String uName = recentMoodMap.get("username").toString();
-                                String reason = recentMoodMap.get("reason").toString();
-                                String situation = recentMoodMap.get("situation").toString();
-                                GeoPoint location = (GeoPoint) recentMoodMap.get("location");
+                                Date dateTime = null;
+                                try {
+                                    dateTime = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse( "1970-01-01" + " " + "00:00");
+                                } catch (ParseException f) {
+                                    f.printStackTrace();
+                                }
+                                String moodId = "HappyThu Jan 1 00:00:00 UTC 1970";
+                                String mood = "Happy";
+                                String uName = "Unknown";
+                                String reason = "";
+                                String situation = "Alone";
+                                GeoPoint location = new GeoPoint(0,0);
 
-                                Mood rMood = new Mood(moodId, uName,dateTime, mood, reason, situation, location);
+                                if(recentMoodMap.get("moodId") != null) {
+                                    Timestamp timestamp = (Timestamp) recentMoodMap.get("dateTime");
+                                    dateTime = timestamp.toDate();
+                                    moodId = recentMoodMap.get("moodId").toString();
+                                    mood = recentMoodMap.get("mood").toString();
+                                    uName = recentMoodMap.get("username").toString();
+                                    reason = recentMoodMap.get("reason").toString();
+                                    situation = recentMoodMap.get("situation").toString();
+                                    location = (GeoPoint) recentMoodMap.get("location");
+                                }
+
+                                Mood rMood = new Mood(moodId, uName, dateTime, mood, reason, situation, location);
 
                                 followingMoodDataList.add(rMood);
                             }
