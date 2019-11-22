@@ -295,14 +295,11 @@ public class EventFragment extends DialogFragment  {
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 RadioButton rb = (RadioButton) group.findViewById(checkedId);
                 if (rb != null) {
-//                    Toast.makeText(getContext(), rb.getText(), Toast.LENGTH_SHORT).show();
                     situationSelected = rb.getText().toString();
                 }
 
             }
         });
-
-        addListenerOnButton();
 
 
         final AlertDialog builder = new AlertDialog.Builder(getContext())
@@ -362,17 +359,15 @@ public class EventFragment extends DialogFragment  {
                         if (!incompleteData) {
 //                            System.out.println(moodDate+" "+ moodTime);
 
-//                            Date currentTime = Calendar.getInstance().getTime();
-                            // For now just read the date from calendar and pass it into this fancy date formatter below
+//                            Toast.makeText(getContext(), Calendar.getInstance().getTime().toString(), Toast.LENGTH_SHORT).show();
 
-                            Date dateTime = null;
-                            try {
-                                dateTime = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2019-11-21" + " " + "16:20"); // Set to the live date/time
-                            } catch (ParseException e) {
-                                e.printStackTrace();
-                            }
+                            Date dateTime = Calendar.getInstance().getTime();;
+//                            try {
+//                                dateTime = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2019-11-21" + " " + "16:20"); // TODO This may help with setting the custom date/time
+//                            } catch (ParseException e) {
+//                                e.printStackTrace();
+//                            }
 
-//                            radioSituationButton = (RadioButton) view.findViewById(radioSituationGroup.getCheckedRadioButtonId());
 //                            String situation = radioSituationButton.getText().toString();
                             String situation = situationSelected;
                             String newMood = moodSelected;
@@ -403,31 +398,6 @@ public class EventFragment extends DialogFragment  {
         return builder;
     }
 
-    public void addListenerOnButton() {
-        View view= LayoutInflater.from(getActivity()).inflate(R.layout.fragment_event, null);
-
-        radioSituationGroup = view.findViewById(R.id.radio);
-//        tempButton = view.findViewById(R.id.btnDisplay);
-
-//        tempButton.setOnClickListener(new View.OnClickListener() {
-//
-//            @Override
-//            public void onClick(View v) {
-//
-//                // get selected radio button from radioGroup
-//                int selectedId = radioSituationGroup.getCheckedRadioButtonId();
-//
-//                // find the radiobutton by returned id
-//                radioSituationButton = view.findViewById(selectedId);
-//
-////                Toast.makeText(getActivity(), radioSituationButton.getText(), Toast.LENGTH_SHORT).show();
-//                Toast.makeText(getActivity(), "Hi", Toast.LENGTH_SHORT).show();
-////                tempButton.setText(radioSituationButton.getText());
-//            }
-//
-//        });
-
-    }
 
     /**
      * This method checks whether valid format was entered in our dialog
