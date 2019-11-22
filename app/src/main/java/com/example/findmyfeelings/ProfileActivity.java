@@ -13,7 +13,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,9 +28,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.google.protobuf.StringValue;
 
-import java.io.ObjectStreamException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -238,7 +235,7 @@ public class ProfileActivity extends AppCompatActivity implements FollowNewUserF
                             requestBadge.setVisibility(View.INVISIBLE);
                         } else {
                             requestBadge.setVisibility(View.VISIBLE);
-                            requestBadge.setText(String.valueOf(requestDataList.size())); // TODO move to onStart
+                            requestBadge.setText(String.valueOf(requestDataList.size()));
                         }
                     }
                 });
