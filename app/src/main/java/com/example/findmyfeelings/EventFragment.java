@@ -10,12 +10,15 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.Toast;
 
@@ -57,7 +60,9 @@ public class EventFragment extends DialogFragment  {
     private EditText moodDate;
     private EditText moodTime;
     private EditText moodReason;
+    private Spinner situation_spinner;
 
+    private LinearLayout dateTimePickerGroup;
     private RadioGroup radioSituationGroup;
     private RadioButton aloneSituationButton;
     private RadioButton twoSituationButton;
@@ -125,23 +130,31 @@ public class EventFragment extends DialogFragment  {
         disgusted = view.findViewById(R.id.disgusted_emoticon);
         surprised = view.findViewById(R.id.surprised_emoticon);
         scared = view.findViewById(R.id.scared_emoticon);
-        moodReason = view.findViewById(R.id.mood_reason_editText);
 
         checkLocation = view.findViewById(R.id.location_check);
         checkCustomDate = view.findViewById(R.id.date_check);
 
-        radioSituationGroup = view.findViewById(R.id.situation_selector);
-        aloneSituationButton = view.findViewById(R.id.radio_alone);
-        twoSituationButton = view.findViewById(R.id.radio_two);
-        groupSituationButton = view.findViewById(R.id.radio_group);
+        moodReason = view.findViewById(R.id.mood_reason_editText);
 
+        dateTimePickerGroup = view.findViewById(R.id.date_time_picker_group);
+//        radioSituationGroup = view.findViewById(R.id.situation_selector);
+//        aloneSituationButton = view.findViewById(R.id.radio_alone);
+//        twoSituationButton = view.findViewById(R.id.radio_two);
+//        groupSituationButton = view.findViewById(R.id.radio_group);
+        situation_spinner = view.findViewById(R.id.situation_selector);
 
-//        moodSituation = view.findViewById(R.id.mood_situation_editText);
-//        moodType = view.findViewById(R.id.mood_type_editText);
-//        moodDate = view.findViewById(R.id.mood_date_editText);
-//        moodTime = view.findViewById(R.id.mood_time_editText);
 
         Bundle args = getArguments();
+
+
+        ArrayAdapter<CharSequence> situation_adapter = ArrayAdapter.createFromResource(getContext(),
+                R.array.situationOptions, android.R.layout.simple_spinner_item);
+
+        situation_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        situation_spinner.setAdapter(situation_adapter);
+
+
 
         if (args != null) {
             currentMood = (Mood) args.getSerializable(ARG_MOOD);
@@ -185,15 +198,15 @@ public class EventFragment extends DialogFragment  {
 
             switch(currentMood.getSituation()) {
                 case "Alone":
-                    aloneSituationButton.setChecked(true);
+                    situation_spinner.setSelection(0);
                     situationSelected = "Alone";
                     break;
                 case "With Someone":
-                    twoSituationButton.setChecked(true);
+                    situation_spinner.setSelection(1);
                     situationSelected = "With Someone";
                     break;
                 case "Group":
-                    groupSituationButton.setChecked(true);
+                    situation_spinner.setSelection(2);
                     situationSelected = "Group";
                     break;
                 default:
@@ -211,7 +224,7 @@ public class EventFragment extends DialogFragment  {
 
             // Hide the "Use Custom Date" checkbox and just use a custom date because you have to use a custom date
             checkCustomDate.setVisibility(View.INVISIBLE);
-            checkCustomDate.setChecked(true);
+            dateTimePickerGroup.setVisibility(View.VISIBLE);
         }
 
         happy.setOnClickListener(new View.OnClickListener() {
@@ -292,16 +305,50 @@ public class EventFragment extends DialogFragment  {
             }
         });
 
-        radioSituationGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                RadioButton rb = (RadioButton) group.findViewById(checkedId);
-                if (rb != null) {
-                    situationSelected = rb.getText().toString();
-                }
+//        radioSituationGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+//            @Override
+//            public void onCheckedChanged(RadioGroup group, int checkedId) {
+//                RadioButton rb = (RadioButton) group.findViewById(checkedId);
+//                if (rb != null) {
+//                    situationSelected = rb.getText().toString();
+//                }
+//
+//            }
+//        });
 
+        checkCustomDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(checkCustomDate.isChecked()) {
+                    dateTimePickerGroup.setVisibility(View.VISIBLE);
+                }
+                else {
+                    dateTimePickerGroup.setVisibility(View.GONE);
+                }
             }
         });
+
+        // Temporary code to support the date/time spinners
+        Spinner hour_spinner = (Spinner) view.findViewById(R.id.hour_spinner);
+        Spinner minute_spinner = (Spinner) view.findViewById(R.id.minute_spinner);
+
+        // Create an ArrayAdapter using the string array and a default spinner layout
+        ArrayAdapter<CharSequence> hour_adapter = ArrayAdapter.createFromResource(getContext(),
+                R.array.hours, android.R.layout.simple_spinner_item);
+
+        ArrayAdapter<CharSequence> minute_adapter = ArrayAdapter.createFromResource(getContext(),
+                R.array.minutes, android.R.layout.simple_spinner_item);
+
+
+        // Specify the layout to use when the list of choices appears
+        hour_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        minute_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        // Apply the adapter to the spinner
+        hour_spinner.setAdapter(hour_adapter);
+        minute_spinner.setAdapter(minute_adapter);
+
+
 
 
         final AlertDialog builder = new AlertDialog.Builder(getContext())
@@ -337,7 +384,8 @@ public class EventFragment extends DialogFragment  {
 
                         if (moodSelected.equals("")) {
                             incompleteData = true;
-                            moodType.setError("Select a mood!");
+//                            moodType.setError("Select a mood!");
+                            Toast.makeText(getContext(), "Please select a mood!", Toast.LENGTH_SHORT).show();
                         }
 
 //                        if (moodDate.getText().toString().length() == 0) {
@@ -404,8 +452,7 @@ public class EventFragment extends DialogFragment  {
 //                            } catch (ParseException e) {
 //                                e.printStackTrace();
 //                            }
-
-                            String situation = situationSelected;
+                            String situation = situation_spinner.getSelectedItem().toString();
                             String newMood = moodSelected;
                             String reason = moodReason.getText().toString();
                             String moodId = newMood + dateTime.toString();

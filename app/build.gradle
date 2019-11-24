@@ -47,6 +47,7 @@ dependencies {
 
     //Libraries
     implementation 'com.google.android.gms:play-services-location:17.0.0'
+    implementation 'com.github.jjobes:slideDateTimePicker:1.0.2'
 
     //Unit Test
     androidTestImplementation 'com.jayway.android.robotium:robotium-solo:5.3.1'

@@ -60,7 +60,7 @@
                     android:layout_height="wrap_content"
                     android:text="Unknown"
                     android:textColor="@color/black"
-                    android:textSize="24sp"
+                    android:textSize="20sp"
                     android:textStyle="bold" />
 
                 <TextView
@@ -111,41 +111,6 @@
 
     </LinearLayout>
 
-<!--    <TextView-->
-<!--        android:id="@+id/mood_date_text"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:textSize="20sp"-->
-<!--        android:text="Mood Date:"-->
-<!--        android:textColor="@color/black"-->
-<!--        android:padding="5dp"/>-->
-
-<!--    <TextView-->
-<!--        android:id="@+id/mood_time_text"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:textSize="20sp"-->
-<!--        android:text="Mood Time:"-->
-<!--        android:textColor="@color/black"-->
-<!--        android:padding="5dp"/>-->
-
-<!--    <TextView-->
-<!--        android:id="@+id/mood_type_Text"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:textSize="20sp"-->
-<!--        android:text="Mood Type:"-->
-<!--        android:textColor="@color/black"-->
-<!--        android:padding="5dp"/>-->
-
-<!--    <TextView-->
-<!--        android:id="@+id/mood_reason_Text"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:textSize="20sp"-->
-<!--        android:text="Reason:"-->
-<!--        android:textColor="@color/black"-->
-<!--        android:padding="5dp"/>-->
 
     <LinearLayout
         android:layout_width="match_parent"
