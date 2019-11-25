@@ -1,13 +1,18 @@
 package com.example.findmyfeelings;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -29,6 +34,7 @@ import androidx.fragment.app.DialogFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.firestore.GeoPoint;
 
+import java.io.IOException;
 import java.lang.reflect.Array;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -39,6 +45,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import static android.app.Activity.RESULT_OK;
+
 /**
  * This class allows us to add/edit/delete our Moods
  *
@@ -47,6 +55,7 @@ import java.util.List;
 public class EventFragment extends DialogFragment  {
     private static final String ARG_MOOD = "mood";
     private static final String ARG_INDEX = "index";
+    private static final int PICK_IMAGE = 1;
 
     private ImageView happy;
     private ImageView sad;
@@ -55,12 +64,17 @@ public class EventFragment extends DialogFragment  {
     private ImageView surprised;
     private ImageView scared;
     private String moodSelected = "";
-    private String situationSelected = "Alone";
+//    private String situationSelected = "Alone";
     private EditText moodType;
     private EditText moodDate;
     private EditText moodTime;
     private EditText moodReason;
     private Spinner situation_spinner;
+
+    private ImageView previewImage;
+    private Button uploadPhotoButton;
+    private Button removePhotoButton;
+    private Uri selectedImage;
 
     private LinearLayout dateTimePickerGroup;
     private RadioGroup radioSituationGroup;
@@ -143,6 +157,10 @@ public class EventFragment extends DialogFragment  {
 //        groupSituationButton = view.findViewById(R.id.radio_group);
         situation_spinner = view.findViewById(R.id.situation_selector);
 
+        uploadPhotoButton = view.findViewById(R.id.upload_photo_button);
+        removePhotoButton = view.findViewById(R.id.remove_photo_button);
+        previewImage = view.findViewById(R.id.preview_image);
+
 
         Bundle args = getArguments();
 
@@ -199,15 +217,15 @@ public class EventFragment extends DialogFragment  {
             switch(currentMood.getSituation()) {
                 case "Alone":
                     situation_spinner.setSelection(0);
-                    situationSelected = "Alone";
+//                    situationSelected = "Alone";
                     break;
                 case "With Someone":
                     situation_spinner.setSelection(1);
-                    situationSelected = "With Someone";
+//                    situationSelected = "With Someone";
                     break;
                 case "Group":
                     situation_spinner.setSelection(2);
-                    situationSelected = "Group";
+//                    situationSelected = "Group";
                     break;
                 default:
                     Toast.makeText(getContext(), "Failure Loading Situation", Toast.LENGTH_SHORT).show();
@@ -327,6 +345,26 @@ public class EventFragment extends DialogFragment  {
                 }
             }
         });
+
+
+        uploadPhotoButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openGallery();
+            }
+        });
+
+
+        removePhotoButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                selectedImage = null;
+                previewImage.setImageURI(selectedImage);
+                previewImage.setVisibility(View.GONE);
+                removePhotoButton.setVisibility(View.INVISIBLE);
+            }
+        });
+
 
         // Temporary code to support the date/time spinners
         Spinner hour_spinner = (Spinner) view.findViewById(R.id.hour_spinner);
@@ -479,6 +517,35 @@ public class EventFragment extends DialogFragment  {
             }
         });
         return builder;
+    }
+
+
+    private void openGallery()  {
+        // Create an Intent with action as ACTION_PICK
+        Intent intent=new Intent(Intent.ACTION_PICK);
+        // Sets the type as image/*. This ensures only components of type image are selected
+        intent.setType("image/*");
+        // We pass an extra array with the accepted mime types. This will ensure only components with these MIME types as targeted.
+        String[] mimeTypes = {"image/jpeg", "image/png"};
+        intent.putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes);
+        // Launching the Intent
+        startActivityForResult(intent, PICK_IMAGE);
+
+    }
+
+
+    public void onActivityResult(int requestCode,int resultCode,Intent data){
+        // Result code is RESULT_OK only if the user selects an Image
+        if (resultCode == Activity.RESULT_OK)
+            switch(requestCode) {
+                case PICK_IMAGE:
+                    //data.getData returns the content URI for the selected Image
+                    selectedImage = data.getData();
+                    previewImage.setImageURI(selectedImage);
+                    previewImage.setVisibility(View.VISIBLE);
+                    removePhotoButton.setVisibility(View.VISIBLE);
+                    break;
+            }
     }
 
 

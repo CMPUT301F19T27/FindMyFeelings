@@ -294,6 +294,16 @@
             android:layout_height="wrap_content">
 
             <Button
+                android:id="@+id/remove_photo_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="5dp"
+                android:layout_toStartOf="@+id/upload_photo_button"
+                android:text="Remove"
+                android:visibility="invisible" />
+
+            <Button
+                android:id="@+id/upload_photo_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
@@ -303,12 +313,18 @@
 
     </LinearLayout>
 
-        <TextView
-            android:layout_width="151dp"
-            android:layout_height="94dp"
-            android:background="#696969"
-            android:gravity="center"
-            android:text="Pretend I'm a photo" />
+<!--    <TextView-->
+<!--        android:layout_width="151dp"-->
+<!--        android:layout_height="94dp"-->
+<!--        android:background="#696969"-->
+<!--        android:gravity="center"-->
+<!--        android:text="Pretend I'm a photo" />-->
+
+    <ImageView
+        android:id="@+id/preview_image"
+        android:layout_width="wrap_content"
+        android:layout_height="100dp"
+        android:visibility="gone" />
 
     <LinearLayout
         android:layout_width="wrap_content"
