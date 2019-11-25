@@ -164,20 +164,42 @@
         android:padding="5dp">
 
         <TextView
+            android:id="@+id/view_title_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Location: "
+            android:text="Photo: "
             android:textSize="20sp"
-            android:textStyle="bold"/>
+            android:textStyle="bold" />
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <Button
+                android:id="@+id/view_swap_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:text="View Map" />
+
+        </RelativeLayout>
 
     </LinearLayout>
 
     <TextView
+        android:id="@+id/display_map"
         android:layout_width="match_parent"
         android:layout_height="262dp"
+        android:background="#696969"
         android:gravity="center"
         android:text="Pretend I'm a map"
-        android:background="#696969"/>
+        android:visibility="gone" />
+
+    <ImageView
+        android:id="@+id/display_image"
+        android:layout_width="match_parent"
+        android:layout_height="262dp"
+        android:src="@color/black"/>
 
 
 </LinearLayout>

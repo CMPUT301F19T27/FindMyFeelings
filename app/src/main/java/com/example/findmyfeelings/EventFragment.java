@@ -234,10 +234,13 @@ public class EventFragment extends DialogFragment  {
 
 //            moodDate.setText(date); //TODO make it set the custom date
 //            moodTime.setText(time); //TODO make it set the custom time
+
             moodReason.setText(currentMood.getReason());
 //            moodSituation.setText(currentMood.getSituation());
             if (currentMood.getLocation() != null) {
                 checkLocation.setChecked(true);
+            } else {
+                checkLocation.setChecked(false);
             }
 
             // Hide the "Use Custom Date" checkbox and just use a custom date because you have to use a custom date
@@ -391,7 +394,7 @@ public class EventFragment extends DialogFragment  {
 
         final AlertDialog builder = new AlertDialog.Builder(getContext())
                 .setView(view)
-                .setTitle("Add or Edit Mood")
+                .setTitle("Add/Edit Mood")
                 .setNeutralButton("Cancel", null)
                 .setNegativeButton("DELETE", new DialogInterface.OnClickListener() {
                     @Override

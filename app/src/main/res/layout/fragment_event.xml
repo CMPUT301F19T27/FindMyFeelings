@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
@@ -9,9 +9,8 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:gravity="center_horizontal">
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -163,175 +162,6 @@
 
         </LinearLayout>
 
-    </LinearLayout>
-
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingTop="5dp"
-        android:paddingBottom="5dp">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Reason: "
-            android:textSize="20sp"
-            android:textStyle="bold" />
-
-        <EditText
-            android:id="@+id/mood_reason_editText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:hint="optional"
-            android:inputType="text"
-            android:maxLength="20"/>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingTop="5dp"
-        android:paddingBottom="5dp">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Situation: "
-            android:textSize="20sp"
-            android:textStyle="bold" />
-
-<!--        <RadioGroup-->
-<!--            android:id="@+id/situation_selector"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="match_parent"-->
-<!--            android:orientation="horizontal">-->
-
-<!--                <RadioButton-->
-<!--                    android:id="@+id/radio_alone"-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:checked="true"-->
-<!--                    android:text="Alone" />-->
-
-<!--                <RadioButton-->
-<!--                    android:id="@+id/radio_two"-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:text="With Someone" />-->
-
-<!--                <RadioButton-->
-<!--                    android:id="@+id/radio_group"-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:text="Group" />-->
-
-<!--        </RadioGroup>-->
-
-        <Spinner
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/situation_selector"/>
-
-    </LinearLayout>
-
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingTop="5dp"
-        android:paddingBottom="5dp">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Options: "
-            android:layout_gravity="center_vertical"
-            android:textSize="20sp"
-            android:textStyle="bold" />
-
-        <CheckBox
-            android:id="@+id/location_check"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/check_location"
-            android:checked="true"/>
-
-        <CheckBox
-            android:id="@+id/date_check"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Use Custom Date"/>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Photo: "
-            android:textSize="20sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/photo_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="optional"
-            android:textSize="16dp" />
-
-        <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-
-            <Button
-                android:id="@+id/remove_photo_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="5dp"
-                android:layout_toStartOf="@+id/upload_photo_button"
-                android:text="Remove"
-                android:visibility="invisible" />
-
-            <Button
-                android:id="@+id/upload_photo_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:text="Upload" />
-
-        </RelativeLayout>
-
-    </LinearLayout>
-
-<!--    <TextView-->
-<!--        android:layout_width="151dp"-->
-<!--        android:layout_height="94dp"-->
-<!--        android:background="#696969"-->
-<!--        android:gravity="center"-->
-<!--        android:text="Pretend I'm a photo" />-->
-
-    <ImageView
-        android:id="@+id/preview_image"
-        android:layout_width="wrap_content"
-        android:layout_height="100dp"
-        android:visibility="gone" />
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:id="@+id/date_time_picker_group"
-        android:visibility="gone">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -343,16 +173,18 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Date: "
-                android:layout_gravity="center_vertical"
+                android:text="Reason: "
                 android:textSize="20sp"
                 android:textStyle="bold" />
 
-            <DatePicker
-                android:layout_width="wrap_content"
-                android:layout_height="99dp"
-                android:calendarViewShown="false"
-                android:datePickerMode="spinner" />
+            <EditText
+                android:id="@+id/mood_reason_editText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="optional"
+                android:inputType="text"
+                android:maxLength="20"/>
 
         </LinearLayout>
 
@@ -366,33 +198,193 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Time: "
-                android:layout_gravity="center_vertical"
+                android:text="Situation: "
                 android:textSize="20sp"
                 android:textStyle="bold" />
 
+    <!--        <RadioGroup-->
+    <!--            android:id="@+id/situation_selector"-->
+    <!--            android:layout_width="match_parent"-->
+    <!--            android:layout_height="match_parent"-->
+    <!--            android:orientation="horizontal">-->
+
+    <!--                <RadioButton-->
+    <!--                    android:id="@+id/radio_alone"-->
+    <!--                    android:layout_width="wrap_content"-->
+    <!--                    android:layout_height="wrap_content"-->
+    <!--                    android:checked="true"-->
+    <!--                    android:text="Alone" />-->
+
+    <!--                <RadioButton-->
+    <!--                    android:id="@+id/radio_two"-->
+    <!--                    android:layout_width="wrap_content"-->
+    <!--                    android:layout_height="wrap_content"-->
+    <!--                    android:text="With Someone" />-->
+
+    <!--                <RadioButton-->
+    <!--                    android:id="@+id/radio_group"-->
+    <!--                    android:layout_width="wrap_content"-->
+    <!--                    android:layout_height="wrap_content"-->
+    <!--                    android:text="Group" />-->
+
+    <!--        </RadioGroup>-->
+
             <Spinner
-                android:id="@+id/hour_spinner"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:id="@+id/situation_selector"/>
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text=":"/>
+                android:text="Options: "
+                android:layout_gravity="center_vertical"
+                android:textSize="20sp"
+                android:textStyle="bold" />
 
-            <Spinner
-                android:id="@+id/minute_spinner"
+            <CheckBox
+                android:id="@+id/location_check"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:text="@string/check_location"
+                android:checked="true"/>
+
+            <CheckBox
+                android:id="@+id/date_check"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Use Custom Date"/>
 
         </LinearLayout>
 
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:id="@+id/date_time_picker_group"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Date: "
+                    android:layout_gravity="center_vertical"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+                <DatePicker
+                    android:layout_width="wrap_content"
+                    android:layout_height="99dp"
+                    android:calendarViewShown="false"
+                    android:datePickerMode="spinner" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Time: "
+                    android:layout_gravity="center_vertical"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+                <Spinner
+                    android:id="@+id/hour_spinner"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=":"/>
+
+                <Spinner
+                    android:id="@+id/minute_spinner"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Photo: "
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/photo_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="optional"
+                android:textSize="16dp" />
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <Button
+                    android:id="@+id/remove_photo_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="5dp"
+                    android:layout_toStartOf="@+id/upload_photo_button"
+                    android:text="Remove"
+                    android:visibility="invisible" />
+
+                <Button
+                    android:id="@+id/upload_photo_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:text="Upload" />
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+
+        <ImageView
+            android:id="@+id/preview_image"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:contentDescription="Your image"
+            android:scaleType="centerCrop"
+            android:visibility="gone" />
+
     </LinearLayout>
 
-<!--    <com.github.jjobes.slidedatetimepicker.CustomDatePicker-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:datePickerMode="spinner"/>-->
-
-</LinearLayout>
+</ScrollView>
