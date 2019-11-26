@@ -14,22 +14,6 @@
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
-        <!--        <ImageView-->
-        <!--            android:id="@+id/null_emoticon"-->
-        <!--            android:layout_width="100dp"-->
-        <!--            android:layout_height="100dp"-->
-        <!--            android:padding="10dp"-->
-        <!--            android:src="@drawable/null_face" />-->
-
-        <!--        <TextView-->
-        <!--            android:id="@+id/mood_type_Text"-->
-        <!--            android:layout_width="wrap_content"-->
-        <!--            android:layout_height="wrap_content"-->
-        <!--            android:text="Unknown"-->
-        <!--            android:textSize="24sp"-->
-        <!--            android:textStyle="bold"-->
-        <!--            android:textColor="@color/black"/>-->
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

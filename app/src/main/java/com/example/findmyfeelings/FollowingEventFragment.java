@@ -114,7 +114,7 @@ public class FollowingEventFragment extends DialogFragment {
                 int end = geoPoint.indexOf("}");
             }
 
-            boolean hasPhoto = false; // TODO make this the photo object from the database
+            boolean hasPhoto = true; // TODO make this the photo object from the database
 
             if(currentMood.getLocation() == null && hasPhoto) {
                 swapViewButton.setVisibility(View.GONE);
