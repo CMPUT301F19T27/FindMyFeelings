@@ -14,8 +14,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 /**
  * custom list to display user moods
@@ -123,6 +121,7 @@ public class MoodCustomList extends RecyclerView.Adapter<MoodCustomList.MoodView
 
         return moodImage;
     }
+
     public interface RecyclerViewListener {
         void onRecyclerViewClickListener(int position);
     }

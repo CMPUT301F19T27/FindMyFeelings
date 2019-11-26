@@ -13,7 +13,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,9 +28,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.google.protobuf.StringValue;
 
-import java.io.ObjectStreamException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -138,9 +135,13 @@ public class ProfileActivity extends AppCompatActivity implements FollowNewUserF
         followerDataList = new ArrayList<>();
         requestDataList = new ArrayList<>();
 
-        // use a linear layout manager
+        // Use a linear layout manager
         followLayoutManager = new LinearLayoutManager(this);
         followList.setLayoutManager(followLayoutManager);
+
+        // Show the default data
+        followAdapter = new FollowCustomList(followingDataList);
+        followList.setAdapter(followAdapter);
 
         // Specify an adapter
         //followAdapter = new FollowCustomList(followingDataList); // Set to the default
@@ -234,11 +235,10 @@ public class ProfileActivity extends AppCompatActivity implements FollowNewUserF
                             requestBadge.setVisibility(View.INVISIBLE);
                         } else {
                             requestBadge.setVisibility(View.VISIBLE);
-                            requestBadge.setText(String.valueOf(requestDataList.size())); // TODO move to onStart
+                            requestBadge.setText(String.valueOf(requestDataList.size()));
                         }
                     }
                 });
-
 
 
 
@@ -292,7 +292,6 @@ public class ProfileActivity extends AppCompatActivity implements FollowNewUserF
             }
         });
 
-
     }
 
     @Override
@@ -300,8 +299,6 @@ public class ProfileActivity extends AppCompatActivity implements FollowNewUserF
         super.onStart();
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
-//        usernameText.setText(firebaseUser.getEmail()); //TODO make this the current user's username
-
     }
 
     /**
