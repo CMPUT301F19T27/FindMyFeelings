@@ -242,9 +242,6 @@ public class EventFragment extends DialogFragment  {
             } else {
                 checkLocation.setChecked(false);
             }
-            else {
-                checkLocation.setChecked(false);
-            }
 
             // Hide the "Use Custom Date" checkbox and just use a custom date because you have to use a custom date
             checkCustomDate.setVisibility(View.INVISIBLE);
