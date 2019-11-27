@@ -1,21 +1,29 @@
 package com.example.findmyfeelings;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.Toast;
 
@@ -26,6 +34,7 @@ import androidx.fragment.app.DialogFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.firestore.GeoPoint;
 
+import java.io.IOException;
 import java.lang.reflect.Array;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -36,6 +45,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import static android.app.Activity.RESULT_OK;
+
 /**
  * This class allows us to add/edit/delete our Moods
  *
@@ -44,6 +55,7 @@ import java.util.List;
 public class EventFragment extends DialogFragment  {
     private static final String ARG_MOOD = "mood";
     private static final String ARG_INDEX = "index";
+    private static final int PICK_IMAGE = 1;
 
     private ImageView happy;
     private ImageView sad;
@@ -52,12 +64,19 @@ public class EventFragment extends DialogFragment  {
     private ImageView surprised;
     private ImageView scared;
     private String moodSelected = "";
-    private String situationSelected = "Alone";
+//    private String situationSelected = "Alone";
     private EditText moodType;
     private EditText moodDate;
     private EditText moodTime;
     private EditText moodReason;
+    private Spinner situation_spinner;
 
+    private ImageView previewImage;
+    private Button uploadPhotoButton;
+    private Button removePhotoButton;
+    private Uri selectedImage;
+
+    private LinearLayout dateTimePickerGroup;
     private RadioGroup radioSituationGroup;
     private RadioButton aloneSituationButton;
     private RadioButton twoSituationButton;
@@ -126,23 +145,35 @@ public class EventFragment extends DialogFragment  {
         disgusted = view.findViewById(R.id.disgusted_emoticon);
         surprised = view.findViewById(R.id.surprised_emoticon);
         scared = view.findViewById(R.id.scared_emoticon);
-        moodReason = view.findViewById(R.id.mood_reason_editText);
 
         checkLocation = view.findViewById(R.id.location_check);
         checkCustomDate = view.findViewById(R.id.date_check);
 
-        radioSituationGroup = view.findViewById(R.id.situation_selector);
-        aloneSituationButton = view.findViewById(R.id.radio_alone);
-        twoSituationButton = view.findViewById(R.id.radio_two);
-        groupSituationButton = view.findViewById(R.id.radio_group);
+        moodReason = view.findViewById(R.id.mood_reason_editText);
 
+        dateTimePickerGroup = view.findViewById(R.id.date_time_picker_group);
+//        radioSituationGroup = view.findViewById(R.id.situation_selector);
+//        aloneSituationButton = view.findViewById(R.id.radio_alone);
+//        twoSituationButton = view.findViewById(R.id.radio_two);
+//        groupSituationButton = view.findViewById(R.id.radio_group);
+        situation_spinner = view.findViewById(R.id.situation_selector);
 
-//        moodSituation = view.findViewById(R.id.mood_situation_editText);
-//        moodType = view.findViewById(R.id.mood_type_editText);
-//        moodDate = view.findViewById(R.id.mood_date_editText);
-//        moodTime = view.findViewById(R.id.mood_time_editText);
+        uploadPhotoButton = view.findViewById(R.id.upload_photo_button);
+        removePhotoButton = view.findViewById(R.id.remove_photo_button);
+        previewImage = view.findViewById(R.id.preview_image);
+
 
         Bundle args = getArguments();
+
+
+        ArrayAdapter<CharSequence> situation_adapter = ArrayAdapter.createFromResource(getContext(),
+                R.array.situationOptions, android.R.layout.simple_spinner_item);
+
+        situation_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        situation_spinner.setAdapter(situation_adapter);
+
+
 
         if (args != null) {
             currentMood = (Mood) args.getSerializable(ARG_MOOD);
@@ -186,16 +217,16 @@ public class EventFragment extends DialogFragment  {
 
             switch(currentMood.getSituation()) {
                 case "Alone":
-                    aloneSituationButton.setChecked(true);
-                    situationSelected = "Alone";
+                    situation_spinner.setSelection(0);
+//                    situationSelected = "Alone";
                     break;
                 case "With Someone":
-                    twoSituationButton.setChecked(true);
-                    situationSelected = "With Someone";
+                    situation_spinner.setSelection(1);
+//                    situationSelected = "With Someone";
                     break;
                 case "Group":
-                    groupSituationButton.setChecked(true);
-                    situationSelected = "Group";
+                    situation_spinner.setSelection(2);
+//                    situationSelected = "Group";
                     break;
                 default:
                     Toast.makeText(getContext(), "Failure Loading Situation", Toast.LENGTH_SHORT).show();
@@ -204,18 +235,18 @@ public class EventFragment extends DialogFragment  {
 
 //            moodDate.setText(date); //TODO make it set the custom date
 //            moodTime.setText(time); //TODO make it set the custom time
+
             moodReason.setText(currentMood.getReason());
 //            moodSituation.setText(currentMood.getSituation());
             if (currentMood.getLocation() != null) {
                 checkLocation.setChecked(true);
-            }
-            else {
+            } else {
                 checkLocation.setChecked(false);
             }
 
             // Hide the "Use Custom Date" checkbox and just use a custom date because you have to use a custom date
             checkCustomDate.setVisibility(View.INVISIBLE);
-            checkCustomDate.setChecked(true);
+            dateTimePickerGroup.setVisibility(View.VISIBLE);
         }
 
         happy.setOnClickListener(new View.OnClickListener() {
@@ -296,22 +327,71 @@ public class EventFragment extends DialogFragment  {
             }
         });
 
-        radioSituationGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                RadioButton rb = (RadioButton) group.findViewById(checkedId);
-                if (rb != null) {
-                    situationSelected = rb.getText().toString();
-                }
+//        radioSituationGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+//            @Override
+//            public void onCheckedChanged(RadioGroup group, int checkedId) {
+//                RadioButton rb = (RadioButton) group.findViewById(checkedId);
+//                if (rb != null) {
+//                    situationSelected = rb.getText().toString();
+//                }
+//
+//            }
+//        });
 
+        checkCustomDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(checkCustomDate.isChecked()) {
+                    dateTimePickerGroup.setVisibility(View.VISIBLE);
+                }
+                else {
+                    dateTimePickerGroup.setVisibility(View.GONE);
+                }
             }
         });
 
 
+        uploadPhotoButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openGallery();
+            }
+        });
+
+
+        removePhotoButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                selectedImage = null;
+                previewImage.setImageURI(selectedImage);
+                previewImage.setVisibility(View.GONE);
+                removePhotoButton.setVisibility(View.INVISIBLE);
+            }
+        });
+
+        // Temporary code to support the date/time spinners
+        Spinner hour_spinner = (Spinner) view.findViewById(R.id.hour_spinner);
+        Spinner minute_spinner = (Spinner) view.findViewById(R.id.minute_spinner);
+
+        // Create an ArrayAdapter using the string array and a default spinner layout
+        ArrayAdapter<CharSequence> hour_adapter = ArrayAdapter.createFromResource(getContext(),
+                R.array.hours, android.R.layout.simple_spinner_item);
+
+        ArrayAdapter<CharSequence> minute_adapter = ArrayAdapter.createFromResource(getContext(),
+                R.array.minutes, android.R.layout.simple_spinner_item);
+
+
+        // Specify the layout to use when the list of choices appears
+        hour_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        minute_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        // Apply the adapter to the spinner
+        hour_spinner.setAdapter(hour_adapter);
+        minute_spinner.setAdapter(minute_adapter);
 
         final AlertDialog builder = new AlertDialog.Builder(getContext())
                 .setView(view)
-                .setTitle("Add or Edit Mood")
+                .setTitle("Add/Edit Mood")
                 .setNeutralButton("Cancel", null)
                 .setNegativeButton("DELETE", new DialogInterface.OnClickListener() {
                     @Override
@@ -342,7 +422,8 @@ public class EventFragment extends DialogFragment  {
 
                         if (moodSelected.equals("")) {
                             incompleteData = true;
-                            moodType.setError("Select a mood!");
+//                            moodType.setError("Select a mood!");
+                            Toast.makeText(getContext(), "Please select a mood!", Toast.LENGTH_SHORT).show();
                         }
 
 //                        if (moodDate.getText().toString().length() == 0) {
@@ -410,9 +491,7 @@ public class EventFragment extends DialogFragment  {
 //                                e.printStackTrace();
 //                            }
 
-
-
-                            String situation = situationSelected;
+                            String situation = situation_spinner.getSelectedItem().toString();
                             String newMood = moodSelected;
                             String reason = moodReason.getText().toString();
                             String moodId = newMood + dateTime.toString();
@@ -439,6 +518,35 @@ public class EventFragment extends DialogFragment  {
             }
         });
         return builder;
+    }
+
+
+    private void openGallery()  {
+        // Create an Intent with action as ACTION_PICK
+        Intent intent=new Intent(Intent.ACTION_PICK);
+        // Sets the type as image/*. This ensures only components of type image are selected
+        intent.setType("image/*");
+        // We pass an extra array with the accepted mime types. This will ensure only components with these MIME types as targeted.
+        String[] mimeTypes = {"image/jpeg", "image/png"};
+        intent.putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes);
+        // Launching the Intent
+        startActivityForResult(intent, PICK_IMAGE);
+
+    }
+
+
+    public void onActivityResult(int requestCode,int resultCode,Intent data){
+        // Result code is RESULT_OK only if the user selects an Image
+        if (resultCode == Activity.RESULT_OK)
+            switch(requestCode) {
+                case PICK_IMAGE:
+                    //data.getData returns the content URI for the selected Image
+                    selectedImage = data.getData();
+                    previewImage.setImageURI(selectedImage);
+                    previewImage.setVisibility(View.VISIBLE);
+                    removePhotoButton.setVisibility(View.VISIBLE);
+                    break;
+            }
     }
 
 

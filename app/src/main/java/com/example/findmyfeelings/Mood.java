@@ -91,6 +91,7 @@ public class Mood implements Serializable {
 
     }
 
-
-
+    public void setMoodId(String moodId) {
+        this.moodId = moodId;
+    }
 }
