@@ -94,6 +94,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
                         intent1.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         // intent1.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(intent1);
+                        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                         finish();
                         break;
 
@@ -103,6 +104,8 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
                         intent2.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         //intent2.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(intent2);
+
+                        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                         finish();
                         break;
                 }

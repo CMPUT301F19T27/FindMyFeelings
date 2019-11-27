@@ -81,6 +81,7 @@ public class EventFragment extends DialogFragment  {
         void onEventDeleted(Mood deletedMood);
     }
 
+
     /**
      * This method creates an Instance of EventFragment
      */
@@ -307,6 +308,7 @@ public class EventFragment extends DialogFragment  {
         });
 
 
+
         final AlertDialog builder = new AlertDialog.Builder(getContext())
                 .setView(view)
                 .setTitle("Add or Edit Mood")
@@ -407,6 +409,8 @@ public class EventFragment extends DialogFragment  {
 //                            } catch (ParseException e) {
 //                                e.printStackTrace();
 //                            }
+
+
 
                             String situation = situationSelected;
                             String newMood = moodSelected;

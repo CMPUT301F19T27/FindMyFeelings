@@ -113,7 +113,8 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
                         intent1.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         //intent1.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(intent1);
-                        finish();
+                        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+                        //finish();
                         break;
 
                     case R.id.ic_profile:
@@ -122,6 +123,8 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
                         intent2.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         //intent2.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(intent2);
+                        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+
                         finish();
                         break;
                 }
@@ -196,7 +199,7 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
 
                             cRef
                                     .document(currentUserEmail)
-                                    .update("recent_mood", recentMoodMap);
+                                    .update(recentMoodMap);
                         }
 
 

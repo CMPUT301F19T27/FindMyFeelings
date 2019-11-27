@@ -264,6 +264,27 @@
 
     </LinearLayout>
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <DatePicker
+            android:id="@+id/date_picker"
+            android:layout_width="411dp"
+            android:layout_height="185dp"
+            android:datePickerMode="spinner"
+            android:calendarViewShown="false"
+            android:layout_centerHorizontal="true"
+            />
+        <TimePicker
+            android:id="@+id/time_picker"
+            android:layout_width="match_parent"
+            android:layout_height="171dp"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/date_picker"
+            android:timePickerMode="spinner"/>
+
+
+    </RelativeLayout>
 <!--    <EditText-->
 <!--        android:id="@+id/mood_situation_editText"-->
 <!--        android:layout_width="match_parent"-->
