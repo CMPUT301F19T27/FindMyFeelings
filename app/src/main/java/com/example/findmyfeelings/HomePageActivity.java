@@ -72,7 +72,7 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
     private ArrayList<Mood> filteredMyMoodDataList;
     private ArrayList<Mood> filteredFollowingMoodDataList;
     private boolean onMyMoodList;
-    private String username;
+    private String username = "Error";
     BottomNavigationView bottomNavigationView;
     private GPSTracker mGPS = new GPSTracker(this);
   
@@ -100,8 +100,8 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
         firebaseAuth = FirebaseAuth.getInstance();
         currentUserEmail = firebaseAuth.getCurrentUser().getEmail();
 
-        int indexEnd = currentUserEmail.indexOf("@");
-        username = currentUserEmail.substring(0 , indexEnd);
+//        int indexEnd = currentUserEmail.indexOf("@");
+//        username = currentUserEmail.substring(0 , indexEnd);
 
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -142,6 +142,17 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
         /* ** Firebase Linkage ** */
         db = FirebaseFirestore.getInstance();
         final CollectionReference cRef = db.collection("Users");
+
+        // Set the current user's username
+        cRef
+                .document(currentUserEmail)
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot document) {
+                        username = (String) document.getData().get("username");
+                    }
+                });
       
         /* Custom List Implementation */
         moodList = findViewById(R.id.my_mood_list);
@@ -152,8 +163,6 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
         filteredMyMoodDataList = new ArrayList<>();
         filteredFollowingMoodDataList = new ArrayList<>();
 
-
-        /* ** Custom List Implementation ** */
         // Use a linear layout manager
         moodLayoutManager = new LinearLayoutManager(this);
         moodList.setLayoutManager(moodLayoutManager);
@@ -177,6 +186,7 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
                             Date dateTime = timestamp.toDate();
                             String moodId = doc.getId();
                             String mood = doc.getData().get("mood").toString();
+                            String username = doc.getData().get("username").toString();
                             String reason = doc.getData().get("reason").toString();
                             String situation = doc.getData().get("situation").toString();
                             GeoPoint location = (GeoPoint) doc.getData().get("location");
@@ -334,6 +344,8 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
         db = FirebaseFirestore.getInstance();
         final DocumentReference docRef = db.collection("Users").document(currentUserEmail);
 
+        newMood.setUsername(username);
+
         if (checked) {
             mGPS.getLocation();
             GeoPoint currentLoc = new GeoPoint(mGPS.getLatitude(), mGPS.getLongitude());
@@ -377,6 +389,7 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
         db = FirebaseFirestore.getInstance();
         final DocumentReference docRef = db.collection("Users").document(currentUserEmail);
 
+        editedMood.setUsername(username);
 
         if (checked) {
             mGPS.getLocation();
@@ -448,7 +461,7 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
       public HashMap<String, Object> moodToMap(Mood mood) {
         HashMap<String, Object> moodMap = new HashMap<>();
 
-        mood.setUsername(username);
+//        mood.setUsername(username);
 
         moodMap.put("moodId", mood.getMoodId());
         moodMap.put("username", mood.getUsername());
@@ -463,7 +476,7 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
 
 
     /**
-     * This method filters out a selected mood (NOT WORKING)
+     * This method filters out a selected mood
      * @param newFilter
      */
 
@@ -509,7 +522,7 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
 
     @Override
     public void onRecyclerViewClickListener(int position) {
-        if (onMyMoodList==true) {
+        if (onMyMoodList) {
             Mood selectedMood = myMoodDataList.get(position);
             EventFragment.newInstance(selectedMood, position).show(getSupportFragmentManager(), "EDIT_EVENT");
         }

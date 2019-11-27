@@ -102,11 +102,18 @@ public class FollowingEventFragment extends DialogFragment {
             moodType.setText(currentMood.getMood());
             moodDate.setText(date);
             moodTime.setText(time);
-            moodReason.setText(currentMood.getReason());
             moodSituation.setText(currentMood.getSituation());
-            moodUsername.setText(currentMood.getUsername());
-
             moodImage.setImageResource(getEmoji(currentMood));
+
+            if(currentMood.getUsername().length() > 10) {
+                moodUsername.setText(currentMood.getUsername().substring(0,10) + "...");
+            } else {
+                moodUsername.setText(currentMood.getUsername());
+            }
+
+            if(!currentMood.getReason().equals("")) {
+                moodReason.setText(currentMood.getReason());
+            }
 
             if(currentMood.getLocation() != null) {
                 String geoPoint = currentMood.getLocation().toString();
