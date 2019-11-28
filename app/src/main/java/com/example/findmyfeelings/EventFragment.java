@@ -18,6 +18,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -25,6 +26,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.Switch;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -33,7 +35,9 @@ import androidx.fragment.app.DialogFragment;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.firestore.GeoPoint;
+import com.squareup.picasso.Picasso;
 
+import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Array;
 import java.text.DateFormat;
@@ -44,6 +48,8 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+
+import io.grpc.Compressor;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -86,6 +92,10 @@ public class EventFragment extends DialogFragment  {
     private CheckBox checkLocation;
     private CheckBox checkCustomDate;
 
+
+    private DatePicker datePicker;
+    private TimePicker timePicker;
+
     private OnFragmentInteractionListener listener;
     private Mood currentMood;
     private int index;
@@ -95,8 +105,8 @@ public class EventFragment extends DialogFragment  {
      *
      */
     public interface OnFragmentInteractionListener {
-        void onEventAdded(Mood newMood, boolean checked);
-        void onEventEdited(Mood editedMood, int index, boolean checked);
+        void onEventAdded(Mood newMood, boolean checked, Uri image);
+        void onEventEdited(Mood editedMood, int index, boolean checked, Uri image);
         void onEventDeleted(Mood deletedMood);
     }
 
@@ -151,6 +161,10 @@ public class EventFragment extends DialogFragment  {
 
         moodReason = view.findViewById(R.id.mood_reason_editText);
 
+        datePicker = view.findViewById(R.id.date_picker);
+        timePicker = view.findViewById(R.id.time_picker);
+
+
         dateTimePickerGroup = view.findViewById(R.id.date_time_picker_group);
 //        radioSituationGroup = view.findViewById(R.id.situation_selector);
 //        aloneSituationButton = view.findViewById(R.id.radio_alone);
@@ -162,6 +176,8 @@ public class EventFragment extends DialogFragment  {
         removePhotoButton = view.findViewById(R.id.remove_photo_button);
         previewImage = view.findViewById(R.id.preview_image);
 
+
+        timePicker.setIs24HourView(true);
 
         Bundle args = getArguments();
 
@@ -176,16 +192,9 @@ public class EventFragment extends DialogFragment  {
 
 
         if (args != null) {
+
             currentMood = (Mood) args.getSerializable(ARG_MOOD);
             index = args.getInt(ARG_INDEX);
-
-            @SuppressLint("SimpleDateFormat")
-            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-            String date = dateFormat.format(currentMood.getDateTime());
-
-            @SuppressLint("SimpleDateFormat")
-            DateFormat timeFormat = new SimpleDateFormat("HH:mm");
-            String time = timeFormat.format(currentMood.getDateTime());
 
             // Set the selected mood
             switch(currentMood.getMood()) {
@@ -218,37 +227,36 @@ public class EventFragment extends DialogFragment  {
             switch(currentMood.getSituation()) {
                 case "Alone":
                     situation_spinner.setSelection(0);
-//                    situationSelected = "Alone";
                     break;
                 case "With Someone":
                     situation_spinner.setSelection(1);
-//                    situationSelected = "With Someone";
                     break;
                 case "Group":
                     situation_spinner.setSelection(2);
-//                    situationSelected = "Group";
                     break;
                 default:
                     Toast.makeText(getContext(), "Failure Loading Situation", Toast.LENGTH_SHORT).show();
                     break;
             }
 
-//            moodDate.setText(date); //TODO make it set the custom date
-//            moodTime.setText(time); //TODO make it set the custom time
-
             moodReason.setText(currentMood.getReason());
-//            moodSituation.setText(currentMood.getSituation());
+
             if (currentMood.getLocation() != null) {
                 checkLocation.setChecked(true);
             } else {
                 checkLocation.setChecked(false);
             }
 
+            if (currentMood.getImageURL() != null) {
+                previewImage.setVisibility(View.VISIBLE);
+                Picasso.get().load(currentMood.getImageURL()).into(previewImage);
+            }
+
             // Hide the "Use Custom Date" checkbox and just use a custom date because you have to use a custom date
             checkCustomDate.setVisibility(View.INVISIBLE);
-            dateTimePickerGroup.setVisibility(View.VISIBLE);
+            dateTimePickerGroup.setVisibility(View.GONE);
         }
-
+        
         happy.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 happy.setImageResource(R.drawable.happy_face);
@@ -327,17 +335,6 @@ public class EventFragment extends DialogFragment  {
             }
         });
 
-//        radioSituationGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-//            @Override
-//            public void onCheckedChanged(RadioGroup group, int checkedId) {
-//                RadioButton rb = (RadioButton) group.findViewById(checkedId);
-//                if (rb != null) {
-//                    situationSelected = rb.getText().toString();
-//                }
-//
-//            }
-//        });
-
         checkCustomDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -350,14 +347,12 @@ public class EventFragment extends DialogFragment  {
             }
         });
 
-
         uploadPhotoButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 openGallery();
             }
         });
-
 
         removePhotoButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -368,26 +363,6 @@ public class EventFragment extends DialogFragment  {
                 removePhotoButton.setVisibility(View.INVISIBLE);
             }
         });
-
-        // Temporary code to support the date/time spinners
-        Spinner hour_spinner = (Spinner) view.findViewById(R.id.hour_spinner);
-        Spinner minute_spinner = (Spinner) view.findViewById(R.id.minute_spinner);
-
-        // Create an ArrayAdapter using the string array and a default spinner layout
-        ArrayAdapter<CharSequence> hour_adapter = ArrayAdapter.createFromResource(getContext(),
-                R.array.hours, android.R.layout.simple_spinner_item);
-
-        ArrayAdapter<CharSequence> minute_adapter = ArrayAdapter.createFromResource(getContext(),
-                R.array.minutes, android.R.layout.simple_spinner_item);
-
-
-        // Specify the layout to use when the list of choices appears
-        hour_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        minute_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-        // Apply the adapter to the spinner
-        hour_spinner.setAdapter(hour_adapter);
-        minute_spinner.setAdapter(minute_adapter);
 
         final AlertDialog builder = new AlertDialog.Builder(getContext())
                 .setView(view)
@@ -413,88 +388,46 @@ public class EventFragment extends DialogFragment  {
                     public void onClick(View view) {
 
                         boolean incompleteData = false;
-//                        String[] moods = new String[]{"Happy", "Sad", "Angry", "Disgusted", "Surprised", "Scared"};
-//                        List<String> validMoods = Arrays.asList(moods);
-
-//                        String[] situations = new String[]{"alone", "Alone", "with 1", "with 2", "With 1", "With 2", "crowd", "Crowd"};
-
-//                        List<String> validSituations = Arrays.asList(situations);
 
                         if (moodSelected.equals("")) {
                             incompleteData = true;
-//                            moodType.setError("Select a mood!");
                             Toast.makeText(getContext(), "Please select a mood!", Toast.LENGTH_SHORT).show();
                         }
-
-//                        if (moodDate.getText().toString().length() == 0) {
-//                            flag = true;
-//                            moodDate.setError("Enter a date!");
-//                        }
-//                        if (!isValidFormat("yyyy-MM-dd", moodDate.getText().toString())) {
-//                            flag = true;
-//                            moodDate.setError("Enter a valid date (yyyy-MM-dd)!");
-//                        }
-
-//                        if (moodTime.getText().toString().length() == 0) {
-//                            flag = true;
-//                            moodTime.setError("Enter a time!");
-//                        }
-//                        if (!isValidFormat("HH:mm", moodTime.getText().toString())) {
-//                            flag = true;
-//                            moodTime.setError("Enter a valid time (HH:mm)!");
-//                        }
-
                         if (!incompleteData) {
-//                            System.out.println(moodDate+" "+ moodTime);
 
-//                            Toast.makeText(getContext(), Calendar.getInstance().getTime().toString(), Toast.LENGTH_SHORT).show();
+                            Date dateTime = null;
 
-                            Date dateTime = Calendar.getInstance().getTime(); //null;
+                            int year = 0;
+                            int month = 0;
+                            int day = 0;
+                            int hour = 0;
+                            int minute = 0;
+                            String dateTimeString = null;
 
-                            // This adapter is unnecessary can be deleted
-                            // Adapter to Feed in Current Date/Time
-//                            String dateTimeString = Calendar.getInstance().getTime().toString();
-//                            String[] dateTimeStringSplit = dateTimeString.split(" ");
-//
-//                            String dateTimeYear = dateTimeStringSplit[5];
-//
-//                            String dateTimeMonth = dateTimeStringSplit[1];
-//                            switch(dateTimeMonth) {
-//                                case "Jan": dateTimeMonth = "1"; break;
-//                                case "Feb": dateTimeMonth = "2"; break;
-//                                case "Mar": dateTimeMonth = "3"; break;
-//                                case "Apr": dateTimeMonth = "4"; break;
-//                                case "May": dateTimeMonth = "5"; break;
-//                                case "Jun": dateTimeMonth = "6"; break;
-//                                case "Jul": dateTimeMonth = "7"; break;
-//                                case "Aug": dateTimeMonth = "8"; break;
-//                                case "Sep": dateTimeMonth = "9"; break;
-//                                case "Oct": dateTimeMonth = "10"; break;
-//                                case "Nov": dateTimeMonth = "11"; break;
-//                                case "Dec": dateTimeMonth = "12"; break;
-//                            }
-//
-//                            String dateTimeDay = dateTimeStringSplit[2];
-//
-//                            String dateTimeTime = dateTimeStringSplit[3];
-//
-//                            String[] dateTimeTimeSplit = dateTimeTime.split(":");
-//                            String dateTimeTimeHour = dateTimeTimeSplit[0];
-//                            String dateTimeTimeMinute = dateTimeTimeSplit[1];
-//
-//                            String inputDate = dateTimeYear + "-" + dateTimeMonth + "-" + dateTimeDay;
-//                            String inputTime = dateTimeTimeHour + ":" + dateTimeTimeMinute;
-//
-//                            try {
-//                                dateTime = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse( inputDate + " " + inputTime);
-//                            } catch (ParseException e) {
-//                                e.printStackTrace();
-//                            }
+                            if (!(checkCustomDate.isChecked())) {
+                                dateTime = Calendar.getInstance().getTime();
+                            }
+                            else {
+                                year = datePicker.getYear();
+                                month = datePicker.getMonth();
+                                day = datePicker.getDayOfMonth();
+
+                                hour = timePicker.getHour();
+                                minute = timePicker.getMinute();
+
+                                dateTimeString = year +"-"+month+"-"+day+" "+hour+":"+minute;
+
+                                try {
+                                    dateTime = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse(dateTimeString);
+                                } catch (ParseException e) {
+                                    e.printStackTrace();
+                                }
+                            }
 
                             String situation = situation_spinner.getSelectedItem().toString();
                             String newMood = moodSelected;
                             String reason = moodReason.getText().toString();
-                            String moodId = newMood + dateTime.toString();
+                            String moodId = newMood + System.currentTimeMillis();
 
                             GeoPoint location = null;
                             boolean checked = false;
@@ -503,13 +436,12 @@ public class EventFragment extends DialogFragment  {
                                 checked = true;
                             }
 
-                            Mood mood = new Mood(moodId,"" ,dateTime, newMood, reason, situation, location);
-
+                            Mood mood = new Mood(moodId,"" ,dateTime, newMood, reason, situation, location, null);
 
                             if (currentMood != null) {
-                                listener.onEventEdited(mood, index, checked);
+                                listener.onEventEdited(mood, index, checked, selectedImage);
                             } else {
-                                listener.onEventAdded(mood, checked);
+                                listener.onEventAdded(mood, checked, selectedImage);
                             }
                             builder.hide();
                         }
@@ -523,7 +455,7 @@ public class EventFragment extends DialogFragment  {
 
     private void openGallery()  {
         // Create an Intent with action as ACTION_PICK
-        Intent intent=new Intent(Intent.ACTION_PICK);
+        Intent intent=new Intent(Intent.ACTION_GET_CONTENT);
         // Sets the type as image/*. This ensures only components of type image are selected
         intent.setType("image/*");
         // We pass an extra array with the accepted mime types. This will ensure only components with these MIME types as targeted.
