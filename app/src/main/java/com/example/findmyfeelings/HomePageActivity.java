@@ -72,7 +72,7 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
     private ArrayList<Mood> filteredMyMoodDataList;
     private ArrayList<Mood> filteredFollowingMoodDataList;
     private boolean onMyMoodList;
-    private String username = "Error";
+    private String username = "Unknown";
     BottomNavigationView bottomNavigationView;
     private GPSTracker mGPS = new GPSTracker(this);
   

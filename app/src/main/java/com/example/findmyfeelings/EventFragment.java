@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -15,6 +16,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.webkit.MimeTypeMap;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.Button;
@@ -32,7 +34,13 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.GeoPoint;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.io.IOException;
 import java.lang.reflect.Array;
@@ -56,6 +64,7 @@ public class EventFragment extends DialogFragment  {
     private static final String ARG_MOOD = "mood";
     private static final String ARG_INDEX = "index";
     private static final int PICK_IMAGE = 1;
+    private StorageReference mStorageRef;
 
     private ImageView happy;
     private ImageView sad;
@@ -70,7 +79,6 @@ public class EventFragment extends DialogFragment  {
     private ImageView previewImage;
     private Button uploadPhotoButton;
     private Button removePhotoButton;
-    private Uri selectedImage;
 
     private LinearLayout dateTimePickerGroup;
     private CheckBox checkLocation;
@@ -323,27 +331,25 @@ public class EventFragment extends DialogFragment  {
             }
         });
 
-
         uploadPhotoButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                openGallery();
+
             }
         });
-
 
         removePhotoButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                selectedImage = null;
-                previewImage.setImageURI(selectedImage);
+//                selectedImage = null;
+//                previewImage.setImageURI(selectedImage);
                 previewImage.setVisibility(View.GONE);
                 removePhotoButton.setVisibility(View.INVISIBLE);
             }
         });
 
 
-        // Temporary code to support the date/time spinners
+        // Temporary code to support the time spinners
         Spinner hour_spinner = (Spinner) view.findViewById(R.id.hour_spinner);
         Spinner minute_spinner = (Spinner) view.findViewById(R.id.minute_spinner);
 
@@ -398,14 +404,13 @@ public class EventFragment extends DialogFragment  {
                         }
 
                         if (!incompleteData) {
-
-                            Date dateTime = Calendar.getInstance().getTime(); //null;
+                            Date dateTime = Calendar.getInstance().getTime();
 
                             String situation = situation_spinner.getSelectedItem().toString();
                             String newMood = moodSelected;
                             String reason = moodReason.getText().toString();
                             String moodId = newMood + dateTime.toString();
-                            String username = "Temporary Username";
+                            String username = "Unknown"; // username is added to the mood in the "onEventEdited" or "onEventAdded" methods
 
                             GeoPoint location = null;
                             boolean checked = false;
@@ -429,35 +434,6 @@ public class EventFragment extends DialogFragment  {
             }
         });
         return builder;
-    }
-
-
-    private void openGallery()  {
-        // Create an Intent with action as ACTION_PICK
-        Intent intent=new Intent(Intent.ACTION_PICK);
-        // Sets the type as image/*. This ensures only components of type image are selected
-        intent.setType("image/*");
-        // We pass an extra array with the accepted mime types. This will ensure only components with these MIME types as targeted.
-        String[] mimeTypes = {"image/jpeg", "image/png"};
-        intent.putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes);
-        // Launching the Intent
-        startActivityForResult(intent, PICK_IMAGE);
-
-    }
-
-
-    public void onActivityResult(int requestCode,int resultCode,Intent data){
-        // Result code is RESULT_OK only if the user selects an Image
-        if (resultCode == Activity.RESULT_OK)
-            switch(requestCode) {
-                case PICK_IMAGE:
-                    //data.getData returns the content URI for the selected Image
-                    selectedImage = data.getData();
-                    previewImage.setImageURI(selectedImage);
-                    previewImage.setVisibility(View.VISIBLE);
-                    removePhotoButton.setVisibility(View.VISIBLE);
-                    break;
-            }
     }
 
 

@@ -50,6 +50,7 @@ dependencies {
     implementation 'com.github.jjobes:slideDateTimePicker:1.0.2'
 
     //Unit Test
+    implementation 'com.google.firebase:firebase-storage:16.0.4'
     androidTestImplementation 'com.jayway.android.robotium:robotium-solo:5.3.1'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.2.0'
