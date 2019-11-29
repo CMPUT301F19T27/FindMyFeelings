@@ -77,18 +77,6 @@ public class MainActivityTest {
 
     }
 
-    /**
-     * Enable Wifi
-     */
-
-    @Test
-    public void setWifiEnabled(){
-        solo.setWiFiData(true);
-
-
-
-
-    }
 
 
 
@@ -97,7 +85,7 @@ public class MainActivityTest {
      * Add a mood to the MoodCustomList and check the mood name using assertTrue
      * Delete the mood from the MoodCustomList and check again with assertFalse
      */
-
+/*
     @Test
     public void checkMoodCustomList(){
         // Check if Login Page Starts
@@ -109,11 +97,14 @@ public class MainActivityTest {
 
         //perform adding a Mood
         solo.clickOnView(solo.getView(R.id.add_mood_button));
-        solo.enterText((EditText)solo.getView(R.id.mood_date_editText), "2012-06-14");
-        solo.enterText((EditText)solo.getView(R.id.mood_time_editText), "11:34");
-        solo.enterText((EditText)solo.getView(R.id.mood_type_editText), "Happy");
-        solo.enterText((EditText)solo.getView(R.id.mood_reason_editText), "Testing");
-        solo.enterText((EditText)solo.getView(R.id.mood_situation_editText), "Alone");
+        solo.clickOnView(solo.getView(R.id.happy_emoticon));
+        solo.enterText((EditText)solo.getView(R.id.mood_reason_editText), "Mood Test");
+
+        View situation = solo.getView(R.id.situation_selector, 1);
+        solo.clickOnView(situation);
+        solo.clickOnCheckBox(R.id.location_check);
+        solo.clickOnCheckBox(R.id.date_check);
+
 
         //solo.clickOnCheckBox(R.id.location_check);
         solo.clickOnButton("OK");
@@ -130,11 +121,12 @@ public class MainActivityTest {
 
     }
 
-
+*/
     /**
      * Check if activity switches upon clicking bottom navigation bar
      * We are checking if the bottom bar cycles through map, home, & profile.
      */
+
 
     @Test
     public void checkActivitySwitch(){
@@ -163,7 +155,7 @@ public class MainActivityTest {
         solo.assertCurrentActivity("Should be HomePageActivity", HomePageActivity.class);
 
     }
-
+/*
     @Test
     public void checkMoodFilter() {
         // Check if Login Page Starts
@@ -366,7 +358,7 @@ public class MainActivityTest {
         solo.clickOnButton("DELETE");
     }
 
-
+**/
     /**
      * Closes the activity after each test
      */

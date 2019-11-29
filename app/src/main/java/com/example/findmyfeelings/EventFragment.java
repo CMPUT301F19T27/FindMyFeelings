@@ -8,6 +8,7 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
@@ -34,6 +35,8 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
 
 import com.google.android.gms.maps.model.LatLng;
@@ -114,6 +117,7 @@ public class EventFragment extends DialogFragment  {
 
     private String url;
     private Boolean imageEdited = false;
+    private boolean mLocationPermissionGranted;
 
 
     /**
@@ -206,6 +210,8 @@ public class EventFragment extends DialogFragment  {
         situation_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         situation_spinner.setAdapter(situation_adapter);
+
+        getLocationPermission();
 
 
 
@@ -635,5 +641,22 @@ public class EventFragment extends DialogFragment  {
             ex.printStackTrace();
         }
         return date != null;
+    }
+
+    private void getLocationPermission() {
+        /*
+         * Request location permission, so that we can get the location of the
+         * device. The result of the permission request is handled by a callback,
+         * onRequestPermissionsResult.
+         */
+        if (ContextCompat.checkSelfPermission(getActivity().getApplicationContext(),
+                android.Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED) {
+            mLocationPermissionGranted = true;
+        } else {
+            ActivityCompat.requestPermissions(getActivity(),
+                    new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
+                    1);
+        }
     }
 }

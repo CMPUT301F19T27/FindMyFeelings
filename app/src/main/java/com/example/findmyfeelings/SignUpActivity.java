@@ -28,7 +28,7 @@ import java.util.HashMap;
 /**
  * this class helps user to sign up to the app
  */
-public class SignUpActivity extends AppCompatActivity {
+public class    SignUpActivity extends AppCompatActivity {
 
     private String TAG = "Display";
     private EditText firstNameEditText, lastNameEditText, emailEditText, passwordEditText, usernameEditText;

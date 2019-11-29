@@ -32,7 +32,7 @@ public class UserTest {
 
     private User mockUser(){
         User mockUser = new User("mock@gmail.com", "mock", "mockFirst", "mockLast");
-        Mood mood = new Mood("1", "test", new Date(2012/12/15), "Happy", "none", "alone", new GeoPoint(24,2));
+        Mood mood = new Mood("1", "test", new Date(2012/12/15), "Happy", "none", "alone", new GeoPoint(24,2), "img.png");
         mockUser.setRecentMood(mood);
         return mockUser;
 
@@ -52,7 +52,7 @@ public class UserTest {
 
         assertEquals(2, userList.size());
 
-        assertTrue(userList.get(1).getUsername().contains("mock2@gmail.com")); // Test if new user was added
+        assertTrue(userList.get(1).getUsername().contains("mock2")); // Test if new user was added
 
     }
 
@@ -68,7 +68,7 @@ public class UserTest {
         assertTrue(userList.get(0).getFirstName().contains("mockFirst"));
         assertTrue(userList.get(0).getLastName().contains("mockLast"));
 
-        Mood mockMood = new Mood("1", "test", new Date(2012/12/15), "Happy", "none", "alone", new GeoPoint(24,2));
+        Mood mockMood = new Mood("1", "test", new Date(2012/12/15), "Happy", "none", "alone", new GeoPoint(24,2), "img.png");
 
         Mood mood = userList.get(0).getRecentMood();
 

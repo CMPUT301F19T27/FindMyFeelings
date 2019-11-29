@@ -617,6 +617,10 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
         MimeTypeMap mime = MimeTypeMap.getSingleton();
         return mime.getExtensionFromMimeType(cR.getType(uri));
     }
+
+
+
+
 }
 
 //        if (image != null) {
