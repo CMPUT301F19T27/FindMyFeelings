@@ -4,6 +4,8 @@ package com.example.findmyfeelings;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -20,6 +22,7 @@ public class SearchCustomList extends RecyclerView.Adapter<SearchCustomList.Sear
 
     private List<FollowUser> users;
     private RecyclerViewListener mRecyclerViewListener;
+    private int lastPosition = -1;
     
     // Provide a suitable constructor (depends on the kind of dataset)
     public SearchCustomList(List<FollowUser> inputUserDataset, RecyclerViewListener recyclerViewListener) {
@@ -70,6 +73,10 @@ public class SearchCustomList extends RecyclerView.Adapter<SearchCustomList.Sear
         timeValue.setText(fUser.getLastName());
         moodString.setText(fUser.getUsername());
 
+//        Animation animation = AnimationUtils.loadAnimation(getContext(),
+//                (position > lastPosition) ? R.anim.fade_scale_animation : R.anim.fade_scale_animation_reverse);
+//        holder.itemView.startAnimation(animation);
+//        lastPosition = position;
     }
 
     public interface RecyclerViewListener {
