@@ -116,6 +116,10 @@ public class FollowingEventFragment extends DialogFragment implements OnMapReady
             currentMood = (Mood) args.getSerializable(ARG_MOOD);
             index = args.getInt(ARG_INDEX);
 
+            if (currentMood.getImageURL() != null) {
+                Picasso.get().load(currentMood.getImageURL()).into(display_image);
+            }
+
             @SuppressLint("SimpleDateFormat")
             DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
             String date = dateFormat.format(currentMood.getDateTime());

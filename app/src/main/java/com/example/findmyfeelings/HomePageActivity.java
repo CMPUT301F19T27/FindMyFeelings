@@ -7,18 +7,12 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.ContentResolver;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.location.Location;
-import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -26,13 +20,11 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
-import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -52,11 +44,6 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
-import com.google.firebase.storage.UploadTask;
-
-import java.io.File;
-import java.io.IOException;
-import java.io.OutputStream;
 import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -64,8 +51,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 
-import io.grpc.Compressor;
-import io.grpc.Context;
 
 /**
  * This class keeps track of events happening on the homepage
@@ -95,7 +80,6 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
     private String username = "Unknown";
     BottomNavigationView bottomNavigationView;
 
-    private StorageTask storageTask;
     private GPSTracker mGPS = new GPSTracker(this);
   
     @Override
@@ -122,9 +106,6 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
         storageReference = FirebaseStorage.getInstance().getReference();
         firebaseAuth = FirebaseAuth.getInstance();
         currentUserEmail = firebaseAuth.getCurrentUser().getEmail();
-
-//        int indexEnd = currentUserEmail.indexOf("@");
-//        username = currentUserEmail.substring(0 , indexEnd);
 
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -159,7 +140,6 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
         filterButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                new FilterFragment().show(getSupportFragmentManager(), "ADD_EVENT");
                 FilterFragment.newInstance(filter).show(getSupportFragmentManager(), "EDIT_EVENT");
             }
         });
@@ -195,7 +175,7 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
 
         // Specify an adapter
         onMyMoodList = true;
-        moodAdapter = new MoodCustomList(myMoodDataList, this); // Set to default list
+        moodAdapter = new MoodCustomList(this, myMoodDataList, this); // Set to default list
         moodList.setAdapter(moodAdapter);
 
         System.out.println("*************************************** TEST 1*********************");
@@ -315,9 +295,9 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
 
                 // Apply filters
                 if(filter.equals("")) {
-                    moodAdapter = new MoodCustomList(myMoodDataList, HomePageActivity.this);
+                    moodAdapter = new MoodCustomList(HomePageActivity.this, myMoodDataList, HomePageActivity.this);
                 } else {
-                    moodAdapter = new MoodCustomList(filteredMyMoodDataList, HomePageActivity.this);
+                    moodAdapter = new MoodCustomList(HomePageActivity.this,filteredMyMoodDataList, HomePageActivity.this);
                 }
                 moodList.setAdapter(moodAdapter);
 
@@ -338,9 +318,9 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
 
                 // Apply filters
                 if(filter.equals("")) {
-                    moodAdapter = new MoodCustomList(followingMoodDataList, HomePageActivity.this);
+                    moodAdapter = new MoodCustomList(HomePageActivity.this,followingMoodDataList, HomePageActivity.this);
                 } else {
-                    moodAdapter = new MoodCustomList(filteredFollowingMoodDataList, HomePageActivity.this);
+                    moodAdapter = new MoodCustomList(HomePageActivity.this,filteredFollowingMoodDataList, HomePageActivity.this);
                 }
                 moodList.setAdapter(moodAdapter);
 
@@ -601,15 +581,15 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
 
         if(filter.equals("")) {
             if(onMyMoodList) {
-                moodAdapter = new MoodCustomList(myMoodDataList, HomePageActivity.this);
+                moodAdapter = new MoodCustomList(HomePageActivity.this,myMoodDataList, HomePageActivity.this);
             } else {
-                moodAdapter = new MoodCustomList(followingMoodDataList, HomePageActivity.this);
+                moodAdapter = new MoodCustomList(HomePageActivity.this,followingMoodDataList, HomePageActivity.this);
             }
         } else {
             if(onMyMoodList) {
-                moodAdapter = new MoodCustomList(filteredMyMoodDataList, HomePageActivity.this);
+                moodAdapter = new MoodCustomList(HomePageActivity.this,filteredMyMoodDataList, HomePageActivity.this);
             } else {
-                moodAdapter = new MoodCustomList(filteredFollowingMoodDataList, HomePageActivity.this);
+                moodAdapter = new MoodCustomList(HomePageActivity.this,filteredFollowingMoodDataList, HomePageActivity.this);
             }
         }
         moodList.setAdapter(moodAdapter);
