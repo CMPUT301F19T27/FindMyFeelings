@@ -191,7 +191,7 @@ public class FollowingEventFragment extends DialogFragment implements OnMapReady
                 swapViewButton.setVisibility(View.GONE);
                 titleViewText.setVisibility(View.GONE);
             }
-            
+
         }
 
 
