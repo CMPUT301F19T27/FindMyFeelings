@@ -28,7 +28,18 @@ public class Mood implements Serializable, Parcelable {
     private GeoPoint location; // Not serializable, causes app to crash when adding a photo to an existing mood (try adding a photo to a non-location mood)
 
     public Mood() {
+       // Empty Constructor Required
+    }
 
+    public Mood(String moodId, String username, Date dateTime, String mood, String reason, String situation, GeoPoint location) {
+        this.moodId = moodId;
+        this.username = username;
+        this.dateTime = dateTime;
+        this.mood = mood;
+        this.reason = reason;
+        this.situation = situation;
+        this.location = location;
+        this.imageURL = "";
     }
 
     public Mood(String moodId, String username, Date dateTime, String mood, String reason, String situation, GeoPoint location, String imageURL) {

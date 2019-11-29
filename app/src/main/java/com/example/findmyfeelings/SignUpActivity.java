@@ -109,6 +109,9 @@ public class    SignUpActivity extends AppCompatActivity {
                                             @Override
                                             public void onSuccess(Void aVoid) {
                                                 Log.d(TAG,"Data addition to firestore successful");
+                                                //FirebaseAuth.getInstance().signOut();
+                                                Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
+                                                startActivity(intent);
                                             }
                                         })
                                         .addOnFailureListener(new OnFailureListener() {
@@ -117,9 +120,7 @@ public class    SignUpActivity extends AppCompatActivity {
                                                 Log.d(TAG, "Data addition to firestore failed");
                                             }
                                         });
-                                //FirebaseAuth.getInstance().signOut();
-                                Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
-                                startActivity(intent);
+
                             }
                         }
                     });

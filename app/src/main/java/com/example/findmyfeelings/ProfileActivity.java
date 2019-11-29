@@ -149,6 +149,10 @@ public class ProfileActivity extends AppCompatActivity implements FollowNewUserF
         followAdapter = new FollowCustomList(followingDataList);
         followList.setAdapter(followAdapter);
 
+        // Specify an adapter
+        //followAdapter = new FollowCustomList(followingDataList); // Set to the default
+        //followList.setAdapter(followAdapter);
+
         collectionRef
                 .document(currentUserEmail)
                 .get()
