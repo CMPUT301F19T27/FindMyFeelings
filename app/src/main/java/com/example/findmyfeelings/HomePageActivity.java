@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
@@ -23,6 +24,8 @@ import android.view.View;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 
+import android.view.animation.AnimationUtils;
+import android.view.animation.LayoutAnimationController;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.Toast;
@@ -218,6 +221,7 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
 
 
                         moodAdapter.notifyDataSetChanged();
+                        runLayoutAnimation(moodList);
                     }
                 });
 
@@ -306,6 +310,8 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
                 myMoodListButton.setTextColor(Color.parseColor("#FFFFFF"));
                 followingMoodListButton.setBackgroundResource(R.drawable.unselected_bar_right);
                 followingMoodListButton.setTextColor(Color.parseColor("#000000"));
+
+                runLayoutAnimation(moodList);
             }
         });
 
@@ -329,6 +335,8 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
                 myMoodListButton.setTextColor(Color.parseColor("#000000"));
                 followingMoodListButton.setBackgroundResource(R.drawable.selected_bar_right);
                 followingMoodListButton.setTextColor(Color.parseColor("#FFFFFF"));
+
+                runLayoutAnimation(moodList);
             }
         });
 
@@ -395,6 +403,8 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
             onFilterAdded(filter);
             Toast.makeText(this, "Make sure to remove the filter to view recently added moods", Toast.LENGTH_LONG).show();
         }
+
+        runLayoutAnimation(moodList);
     }
 
 
@@ -455,6 +465,8 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
             onFilterAdded(filter);
             Toast.makeText(this, "Make sure to remove the filter to view recently added moods", Toast.LENGTH_LONG).show();
         }
+
+        runLayoutAnimation(moodList);
     }
 
 //    /**
@@ -530,6 +542,8 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
             onFilterAdded(filter);
             Toast.makeText(this, "Make sure to remove the filter to view recently added moods", Toast.LENGTH_LONG).show();
         }
+
+        runLayoutAnimation(moodList);
     }
 
     /**
@@ -593,6 +607,7 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
             }
         }
         moodList.setAdapter(moodAdapter);
+        runLayoutAnimation(moodList);
     }
 
     /**
@@ -615,6 +630,16 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
         ContentResolver cR = getContentResolver();
         MimeTypeMap mime = MimeTypeMap.getSingleton();
         return mime.getExtensionFromMimeType(cR.getType(uri));
+    }
+
+    private void runLayoutAnimation(final RecyclerView recyclerView) {
+        final Context context = recyclerView.getContext();
+        final LayoutAnimationController controller =
+                AnimationUtils.loadLayoutAnimation(context, R.anim.layout_fade_scale_animation);
+
+        recyclerView.setLayoutAnimation(controller);
+        recyclerView.getAdapter().notifyDataSetChanged();
+        recyclerView.scheduleLayoutAnimation();
     }
 }
 

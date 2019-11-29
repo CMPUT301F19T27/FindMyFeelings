@@ -8,6 +8,8 @@ import android.view.ViewGroup;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.LinearLayout;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -31,6 +33,7 @@ public class SearchCustomList extends RecyclerView.Adapter<SearchCustomList.Sear
     private RecyclerViewListener mRecyclerViewListener;
     private ValueFilter valueFilter;
     int index = -1;
+
     
     // Provide a suitable constructor (depends on the kind of dataset)
     public SearchCustomList(ArrayList<FollowUser> inputUserDataset, RecyclerViewListener recyclerViewListener) {
@@ -105,6 +108,7 @@ public class SearchCustomList extends RecyclerView.Adapter<SearchCustomList.Sear
             holder.container.setBackgroundColor(Color.parseColor("#FFFFFF"));
 //            holder.country.setTextColor(Color.parseColor("#000000"));
         }
+
     }
 
 

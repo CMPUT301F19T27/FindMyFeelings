@@ -81,9 +81,9 @@ public class MoodCustomList extends RecyclerView.Adapter<MoodCustomList.MoodView
         TextView moodString = holder.view.findViewById(R.id.mood_name_text);
         TextView usernameString = holder.view.findViewById(R.id.username_text);
 
-        holder.moodImage.setAnimation(AnimationUtils.loadAnimation(context, R.anim.fade_transition_animation));
-
-        holder.container.setAnimation(AnimationUtils.loadAnimation(context,R.anim.fade_scale_animation));
+//        holder.moodImage.setAnimation(AnimationUtils.loadAnimation(context, R.anim.fade_transition_animation));
+//
+//        holder.container.setAnimation(AnimationUtils.loadAnimation(context,R.anim.fade_scale_animation));
 
         holder.moodImage.setImageResource(getEmoji(moods.get(position)));
 

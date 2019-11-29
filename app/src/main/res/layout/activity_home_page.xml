@@ -118,7 +118,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_alignParentTop="true"
-                android:layout_alignParentEnd="true" />
+                android:layout_alignParentEnd="true"
+                android:layoutAnimation="@anim/layout_fade_scale_animation"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
             <FrameLayout
                 android:layout_width="match_parent"
