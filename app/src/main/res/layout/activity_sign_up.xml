@@ -56,7 +56,7 @@
         app:layout_constraintTop_toBottomOf="@+id/sign_up_firstname_editText" />
 
     <EditText
-        android:id="@+id/sign_up_username_editText"
+        android:id="@+id/username_editText"
         android:layout_width="317dp"
         android:layout_height="42dp"
         android:layout_marginTop="12dp"
@@ -85,7 +85,8 @@
         android:textSize="23dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/sign_up_username_editText" />
+        app:layout_constraintTop_toBottomOf="@id/username_editText"
+        tools:ignore="UnknownId" />
 
     <EditText
         android:id="@+id/sign_up_password_editText"

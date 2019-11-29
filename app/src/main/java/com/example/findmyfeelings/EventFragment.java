@@ -20,6 +20,7 @@ import android.webkit.MimeTypeMap;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -27,6 +28,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.Switch;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -36,12 +38,16 @@ import androidx.fragment.app.DialogFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.StorageTask;
 import com.google.firebase.storage.UploadTask;
+import com.squareup.picasso.Picasso;
+import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Array;
 import java.text.DateFormat;
@@ -52,6 +58,8 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+
+import io.grpc.Compressor;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -80,13 +88,29 @@ public class EventFragment extends DialogFragment  {
     private Button uploadPhotoButton;
     private Button removePhotoButton;
 
+    private Uri selectedImage = null;
     private LinearLayout dateTimePickerGroup;
     private CheckBox checkLocation;
     private CheckBox checkCustomDate;
 
+
+    private DatePicker datePicker;
+    private TimePicker timePicker;
+
     private OnFragmentInteractionListener listener;
     private Mood currentMood;
     private int index;
+
+    private StorageReference storageReference;
+    private FirebaseAuth firebaseAuth;
+    private String currentUserEmail;
+    private String username;
+    private StorageTask storageTask;
+    private Mood mood;
+
+    private String url;
+    private Boolean imageEdited = false;
+
 
     /**
      * This interface allows us to use the methods add, edit, & delete
@@ -97,6 +121,7 @@ public class EventFragment extends DialogFragment  {
         void onEventEdited(Mood editedMood, int index, boolean checked);
         void onEventDeleted(Mood deletedMood);
     }
+
 
     /**
      * This method creates an Instance of EventFragment
@@ -148,12 +173,25 @@ public class EventFragment extends DialogFragment  {
 
         moodReason = view.findViewById(R.id.mood_reason_editText);
 
+        datePicker = view.findViewById(R.id.date_picker);
+        timePicker = view.findViewById(R.id.time_picker);
+
+        storageReference = FirebaseStorage.getInstance().getReference();
+        firebaseAuth = FirebaseAuth.getInstance();
+        currentUserEmail = firebaseAuth.getCurrentUser().getEmail();
+
+
+
+
+
         dateTimePickerGroup = view.findViewById(R.id.date_time_picker_group);
         situation_spinner = view.findViewById(R.id.situation_selector);
 
         uploadPhotoButton = view.findViewById(R.id.upload_photo_button);
         removePhotoButton = view.findViewById(R.id.remove_photo_button);
         previewImage = view.findViewById(R.id.preview_image);
+
+        timePicker.setIs24HourView(true);
 
         Bundle args = getArguments();
 
@@ -168,16 +206,9 @@ public class EventFragment extends DialogFragment  {
 
 
         if (args != null) {
+
             currentMood = (Mood) args.getSerializable(ARG_MOOD);
             index = args.getInt(ARG_INDEX);
-
-            @SuppressLint("SimpleDateFormat")
-            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-            String date = dateFormat.format(currentMood.getDateTime());
-
-            @SuppressLint("SimpleDateFormat")
-            DateFormat timeFormat = new SimpleDateFormat("HH:mm");
-            String time = timeFormat.format(currentMood.getDateTime());
 
             // Set the selected mood
             switch(currentMood.getMood()) {
@@ -210,35 +241,45 @@ public class EventFragment extends DialogFragment  {
             switch(currentMood.getSituation()) {
                 case "Alone":
                     situation_spinner.setSelection(0);
-//                    situationSelected = "Alone";
                     break;
                 case "With Someone":
                     situation_spinner.setSelection(1);
-//                    situationSelected = "With Someone";
                     break;
                 case "Group":
                     situation_spinner.setSelection(2);
-//                    situationSelected = "Group";
                     break;
                 default:
                     Toast.makeText(getContext(), "Failure Loading Situation", Toast.LENGTH_SHORT).show();
                     break;
             }
 
-//            moodDate.setText(date); //TODO make it set the custom date
-//            moodTime.setText(time); //TODO make it set the custom time
-
             moodReason.setText(currentMood.getReason());
-//            moodSituation.setText(currentMood.getSituation());
+
             if (currentMood.getLocation() != null) {
                 checkLocation.setChecked(true);
             } else {
                 checkLocation.setChecked(false);
             }
 
+            if (currentMood.getImageURL() != null) {
+                selectedImage = null;
+                imageEdited = false;
+
+                uploadPhotoButton.setVisibility(View.GONE);
+                previewImage.setVisibility(View.VISIBLE);
+
+                Picasso.get().load(currentMood.getImageURL()).into(previewImage);
+    
+                removePhotoButton.setVisibility(View.VISIBLE);
+            }
+            else {
+
+            }
+
+
             // Hide the "Use Custom Date" checkbox and just use a custom date because you have to use a custom date
             checkCustomDate.setVisibility(View.INVISIBLE);
-            dateTimePickerGroup.setVisibility(View.VISIBLE);
+            dateTimePickerGroup.setVisibility(View.GONE);
         }
 
         happy.setOnClickListener(new View.OnClickListener() {
@@ -331,45 +372,20 @@ public class EventFragment extends DialogFragment  {
             }
         });
 
-        uploadPhotoButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
 
-            }
-        });
 
         removePhotoButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                selectedImage = null;
-//                previewImage.setImageURI(selectedImage);
+                selectedImage = null;
+                imageEdited = true;
+                previewImage.setImageURI(selectedImage);
+
                 previewImage.setVisibility(View.GONE);
                 removePhotoButton.setVisibility(View.INVISIBLE);
+                uploadPhotoButton.setVisibility(View.VISIBLE);
             }
         });
-
-
-        // Temporary code to support the time spinners
-        Spinner hour_spinner = (Spinner) view.findViewById(R.id.hour_spinner);
-        Spinner minute_spinner = (Spinner) view.findViewById(R.id.minute_spinner);
-
-        // Create an ArrayAdapter using the string array and a default spinner layout
-        ArrayAdapter<CharSequence> hour_adapter = ArrayAdapter.createFromResource(getContext(),
-                R.array.hours, android.R.layout.simple_spinner_item);
-
-        ArrayAdapter<CharSequence> minute_adapter = ArrayAdapter.createFromResource(getContext(),
-                R.array.minutes, android.R.layout.simple_spinner_item);
-
-
-        // Specify the layout to use when the list of choices appears
-        hour_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        minute_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-        // Apply the adapter to the spinner
-        hour_spinner.setAdapter(hour_adapter);
-        minute_spinner.setAdapter(minute_adapter);
-
-
 
 
         final AlertDialog builder = new AlertDialog.Builder(getContext())
@@ -387,6 +403,13 @@ public class EventFragment extends DialogFragment  {
                 .setPositiveButton("OK", null)
                 .create();
 
+        uploadPhotoButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openGallery();
+            }
+        });
+
         builder.setOnShowListener(new DialogInterface.OnShowListener() {
             @Override
             public void onShow(DialogInterface dialogInterface) {
@@ -402,40 +425,161 @@ public class EventFragment extends DialogFragment  {
                             incompleteData = true;
                             Toast.makeText(getContext(), "Please select a mood!", Toast.LENGTH_SHORT).show();
                         }
-
                         if (!incompleteData) {
-                            Date dateTime = Calendar.getInstance().getTime();
 
-                            String situation = situation_spinner.getSelectedItem().toString();
-                            String newMood = moodSelected;
-                            String reason = moodReason.getText().toString();
-                            String moodId = newMood + dateTime.toString();
-                            String username = "Unknown"; // username is added to the mood in the "onEventEdited" or "onEventAdded" methods
+                            if (selectedImage != null && imageEdited == true) {
 
-                            GeoPoint location = null;
-                            boolean checked = false;
+                                StorageReference fileRef = storageReference.child(currentUserEmail).child(System.currentTimeMillis()+"."+getMimeType(getContext(), selectedImage));
 
-                            if (checkLocation.isChecked()) {
-                                checked = true;
+                                storageTask = fileRef.putFile(selectedImage)
+                                        .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                            @Override
+                                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+
+                                                fileRef.getDownloadUrl()
+                                                        .addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                                            @Override
+                                                            public void onSuccess(Uri uri) {
+                                                                url = uri.toString();
+                                                                Data(args);
+
+                                                                System.out.println("111^^^^^^^^^^^^^^^^^^^         ^^^^^^^^^"+url);
+                                                            }
+                                                        });
+
+                                            }
+                                        })
+                                        .addOnFailureListener(new OnFailureListener() {
+                                            @Override
+                                            public void onFailure(@NonNull Exception e) {
+                                            }
+                                        });
                             }
-
-                            Mood mood = new Mood(moodId, username, dateTime, newMood, reason, situation, location);
-
-
-                            if (currentMood != null) {
-                                listener.onEventEdited(mood, index, checked);
-                            } else {
-                                listener.onEventAdded(mood, checked);
+                            else if (args != null && imageEdited == false) {
+                                url = currentMood.getImageURL();
+                                Data(args);
+                            }
+                            else {
+                                url = null;
+                                Data(args);
                             }
                             builder.hide();
+                            builder.cancel();
                         }
                     }
                 });
             }
         });
+
         return builder;
     }
 
+    public void Data (Bundle args) {
+        Date dateTime = null;
+
+        int year = 0;
+        int month = 0;
+        int day = 0;
+        int hour = 0;
+        int minute = 0;
+        String dateTimeString = null;
+
+        if (args != null) {
+            dateTime = currentMood.getDateTime();
+        }
+        else{
+            if (!(checkCustomDate.isChecked())) {
+                dateTime = Calendar.getInstance().getTime();
+            }
+            else {
+                year = datePicker.getYear();
+                month = datePicker.getMonth();
+                day = datePicker.getDayOfMonth();
+
+                hour = timePicker.getHour();
+                minute = timePicker.getMinute();
+
+                dateTimeString = year +"-"+month+"-"+day+" "+hour+":"+minute;
+
+                try {
+                    dateTime = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse(dateTimeString);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        String situation = situation_spinner.getSelectedItem().toString();
+        String newMood = moodSelected;
+        String reason = moodReason.getText().toString();
+        String moodId = newMood + System.currentTimeMillis();
+
+        GeoPoint location = null;
+        boolean checked = false;
+
+        if (checkLocation.isChecked()) {
+            checked = true;
+        }
+
+        mood = new Mood(moodId,"" ,dateTime, newMood, reason, situation, location, url);
+        if (currentMood != null) {
+
+
+            listener.onEventEdited(mood, index, checked);
+        } else {
+//            mood = new Mood(moodId,"" ,dateTime, newMood, reason, situation, location, url);
+
+            listener.onEventAdded(mood, checked);
+        }
+    }
+
+
+    private void openGallery()  {
+        // Create an Intent with action as ACTION_PICK
+        Intent intent=new Intent(Intent.ACTION_GET_CONTENT);
+        // Sets the type as image/*. This ensures only components of type image are selected
+        intent.setType("image/*");
+        // We pass an extra array with the accepted mime types. This will ensure only components with these MIME types as targeted.
+        String[] mimeTypes = {"image/jpeg", "image/png"};
+        intent.putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes);
+        // Launching the Intent
+        startActivityForResult(intent, PICK_IMAGE);
+
+    }
+
+
+    public void onActivityResult(int requestCode,int resultCode,Intent data){
+        // Result code is RESULT_OK only if the user selects an Image
+        if (resultCode == Activity.RESULT_OK)
+            switch(requestCode) {
+                case PICK_IMAGE:
+                    //data.getData returns the content URI for the selected Image
+                    selectedImage = data.getData();
+                    imageEdited = true;
+                    previewImage.setImageURI(selectedImage);
+                    previewImage.setVisibility(View.VISIBLE);
+                    removePhotoButton.setVisibility(View.VISIBLE);
+                    break;
+            }
+    }
+
+    public static String getMimeType(Context context, Uri uri) {
+        String extension;
+
+        //Check uri format to avoid null
+        if (uri.getScheme().equals(ContentResolver.SCHEME_CONTENT)) {
+            //If scheme is a content
+            final MimeTypeMap mime = MimeTypeMap.getSingleton();
+            extension = mime.getExtensionFromMimeType(context.getContentResolver().getType(uri));
+        } else {
+            //If scheme is a File
+            //This will replace white spaces with %20 and also other special characters. This will avoid returning null values on file name with spaces and special characters.
+            extension = MimeTypeMap.getFileExtensionFromUrl(Uri.fromFile(new File(uri.getPath())).toString());
+
+        }
+
+        return extension;
+    }
 
     /**
      * This method checks whether valid format was entered in our dialog

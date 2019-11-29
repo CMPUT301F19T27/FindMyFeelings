@@ -236,7 +236,6 @@
 
         </LinearLayout>
 
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -291,6 +290,7 @@
                     android:textStyle="bold" />
 
                 <DatePicker
+                    android:id="@+id/date_picker"
                     android:layout_width="wrap_content"
                     android:layout_height="99dp"
                     android:calendarViewShown="false"
@@ -313,10 +313,11 @@
                     android:textSize="20sp"
                     android:textStyle="bold" />
 
-                <Spinner
-                    android:id="@+id/hour_spinner"
+                <TimePicker
+                    android:id="@+id/time_picker"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content"
+                    android:timePickerMode="spinner"/>
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -386,5 +387,6 @@
             android:visibility="gone" />
 
     </LinearLayout>
+
 
 </ScrollView>
