@@ -57,6 +57,7 @@ import com.google.firebase.storage.UploadTask;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -71,7 +72,7 @@ import io.grpc.Context;
  *
  */
 
-public class HomePageActivity extends AppCompatActivity implements EventFragment.OnFragmentInteractionListener, MoodCustomList.RecyclerViewListener, FilterFragment.OnFragmentInteractionListener {
+public class HomePageActivity extends AppCompatActivity implements EventFragment.OnFragmentInteractionListener, MoodCustomList.RecyclerViewListener, FilterFragment.OnFragmentInteractionListener, Serializable {
     private String currentUserEmail;
     private ArrayList<Mood> myMoodDataList;
     private ArrayList<String> followingDataList;
@@ -360,9 +361,9 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
      */
 
     @Override
-    public void onEventAdded(Mood newMood, boolean checked, Uri image) {
-//        db = FirebaseFirestore.getInstance();
-//        final DocumentReference docRef = db.collection("Users").document(currentUserEmail);
+    public void onEventAdded(Mood newMood, boolean checked) {
+        db = FirebaseFirestore.getInstance();
+        final DocumentReference docRef = db.collection("Users").document(currentUserEmail);
 
         newMood.setMoodId(username + newMood.getMoodId());
 
@@ -371,41 +372,30 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
             GeoPoint currentLoc = new GeoPoint(mGPS.getLatitude(), mGPS.getLongitude());
             newMood.setLocation(currentLoc);
         }
+        else {
+            newMood.setLocation(null);
+        }
 
         HashMap<String, Object> moodData = moodToMap(newMood);
-        if (image != null) {
-            StorageReference fileReference = storageReference.child(username).child(System.currentTimeMillis()+"."+getFileExtension(image));
 
-            storageTask =  fileReference.putFile(image)
-                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                        @Override
-                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+        docRef
+                .collection("My Moods")
+                .document(newMood.getMoodId())
+                .set(moodData)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d("Sample", "Data addition successfull");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d("Sample", "Data addition failed");
+                    }
+                });
 
-                            fileReference.getDownloadUrl()
-                                    .addOnSuccessListener(new OnSuccessListener<Uri>() {
-                                        @Override
-                                        public void onSuccess(Uri uri) {
-                                            String url = uri.toString();
-                                            moodData.put("imageURL", url);
 
-                                            addData(newMood, moodData);
-                                        }
-                                    });
-                        }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(HomePageActivity.this, "Image Upload failed", Toast.LENGTH_SHORT).show();
-
-                        }
-                    });
-        }
-        else {
-            moodData.put("imageURL", null);
-            addData(newMood, moodData);
-
-        }
         myMoodDataList.add(newMood);
         moodAdapter.notifyDataSetChanged();
     }
@@ -420,54 +410,49 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
 
     // RECENT MOOD UPDATED ON ADDITION. ASSUMES IT IS THE MOST RECENT MOOD
     @Override
-    public void onEventEdited(Mood editedMood, int index, boolean checked, Uri image) {
+    public void onEventEdited(Mood editedMood, int index, boolean checked) {
         db = FirebaseFirestore.getInstance();
         final DocumentReference docRef = db.collection("Users").document(currentUserEmail);
 
         editedMood.setMoodId(username + editedMood.getMoodId());
-
+        System.out.println("EDITTTTTTTTTTTTTTTTTTTTTTTTTTTTT111111111111111111111111111111111111111");
         if (checked) {
             mGPS.getLocation();
             GeoPoint currentLoc = new GeoPoint(mGPS.getLatitude(), mGPS.getLongitude());
             editedMood.setLocation(currentLoc);
         }
+        else {
+            editedMood.setLocation(null);
+        }
 
+        System.out.println("EDITTTTTTTTTTTTTTTTTTTTTTTTTTTTT222222222222222222222222222222222222222222222222");
         HashMap<String, Object> moodData = moodToMap(editedMood);
 
+        System.out.println("EDITTTTTTTTTTTTTTTTTTTTTTTTTTTTT3333333333333333333333333333333333333");
         docRef
                 .collection("My Moods")
                 .document(myMoodDataList.get(index).getMoodId())
                 .delete();
 
-        if (image != null) {
-            StorageReference fileReference = storageReference.child(username).child(System.currentTimeMillis()+"."+getFileExtension(image));
+        System.out.println("EDITTTTTTTTTTTTTTTTTTTTTTTTTTTTT111111144444444444444444444444444444444444444");
+        docRef
+                .collection("My Moods")
+                .document(editedMood.getMoodId())
+                .set(moodData)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d("Sample", "Data addition successfull");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d("Sample", "Data addition failed");
+                    }
+                });
 
-            storageTask = fileReference.putFile(image)
-                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                        @Override
-                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                            fileReference.getDownloadUrl()
-                                    .addOnSuccessListener(new OnSuccessListener<Uri>() {
-                                        @Override
-                                        public void onSuccess(Uri uri) {
-                                            String url = null;
-                                            url = uri.toString();
-
-                                            moodData.put("imageURL", url);
-
-                                            addData(editedMood, moodData);
-                                        }
-                                    });
-                        }
-                    });
-
-        }
-        else {
-            moodData.put("imageURL", null);
-
-            addData(editedMood, moodData);
-        }
-
+        System.out.println("EDITTTTTTTTTTTTTTTTTTTTTTTTTTTTT15555555555555555555555555555555555555555555555555");
         myMoodDataList.set(index, editedMood);
         moodAdapter.notifyDataSetChanged();
     }
@@ -530,6 +515,15 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
 
         myMoodDataList.remove(deletedMood);
         moodAdapter.notifyDataSetChanged();
+
+        if (myMoodDataList.isEmpty()) {
+            Mood mood = new Mood(null, null, null, null, null, null, null, null);
+
+            HashMap<String, Object> recentMoodMap = moodToMap(mood);
+
+            docRef
+                    .update("recent_mood", recentMoodMap);
+        }
     }
 
     /**
@@ -549,6 +543,7 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
         moodMap.put("reason", mood.getReason());
         moodMap.put("situation", mood.getSituation());
         moodMap.put("location", mood.getLocation());
+        moodMap.put("imageURL", mood.getImageURL());
 
         return moodMap;
     }
@@ -616,3 +611,82 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
         return mime.getExtensionFromMimeType(cR.getType(uri));
     }
 }
+
+//        if (image != null) {
+//            StorageReference fileReference = storageReference.child(username).child(System.currentTimeMillis()+"."+getFileExtension(image));
+//
+//            storageTask = fileReference.putFile(image)
+//                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+//                        @Override
+//                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+//                            fileReference.getDownloadUrl()
+//                                    .addOnSuccessListener(new OnSuccessListener<Uri>() {
+//                                        @Override
+//                                        public void onSuccess(Uri uri) {
+//                                            String url = null;
+//                                            url = uri.toString();
+//
+//                                            System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!             " +url);
+//
+//                                            moodData.put("imageURL", url);
+//
+//                                            addData(editedMood, moodData);
+//                                        }
+//                                    });
+//                        }
+//                    });
+//
+//        }
+//        else {
+//            System.out.println("image is NULLLLLLLLLLLLLLLLLLL");
+//            moodData.put("imageURL", null);
+//            addData(editedMood, moodData);
+//        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//        if (image != null) {
+//            StorageReference fileReference = storageReference.child(username).child(System.currentTimeMillis()+"."+getFileExtension(image));
+//
+//            storageTask =  fileReference.putFile(image)
+//                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+//                        @Override
+//                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+//
+//                            fileReference.getDownloadUrl()
+//                                    .addOnSuccessListener(new OnSuccessListener<Uri>() {
+//                                        @Override
+//                                        public void onSuccess(Uri uri) {
+//                                            String url = uri.toString();
+//                                            moodData.put("imageURL", url);
+//
+//                                            addData(newMood, moodData);
+//                                        }
+//                                    });
+//                        }
+//                    })
+//                    .addOnFailureListener(new OnFailureListener() {
+//                        @Override
+//                        public void onFailure(@NonNull Exception e) {
+//                            Toast.makeText(HomePageActivity.this, "Image Upload failed", Toast.LENGTH_SHORT).show();
+//
+//                        }
+//                    });
+//        }
+//        else {
+//            moodData.put("imageURL", null);
+//            addData(newMood, moodData);
+//
+//        }

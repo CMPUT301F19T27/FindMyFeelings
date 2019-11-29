@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -15,6 +16,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.webkit.MimeTypeMap;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.Button;
@@ -34,7 +36,14 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.GeoPoint;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.StorageTask;
+import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
@@ -80,7 +89,7 @@ public class EventFragment extends DialogFragment  {
     private ImageView previewImage;
     private Button uploadPhotoButton;
     private Button removePhotoButton;
-    private Uri selectedImage;
+    private Uri selectedImage = null;
 
     private LinearLayout dateTimePickerGroup;
     private RadioGroup radioSituationGroup;
@@ -100,13 +109,24 @@ public class EventFragment extends DialogFragment  {
     private Mood currentMood;
     private int index;
 
+    private StorageReference storageReference;
+    private FirebaseAuth firebaseAuth;
+    private String currentUserEmail;
+    private String username;
+    private StorageTask storageTask;
+    private Mood mood;
+
+    private String url;
+    private Boolean imageEdited = false;
+
+
     /**
      * This interface allows us to use the methods add, edit, & delete
      *
      */
     public interface OnFragmentInteractionListener {
-        void onEventAdded(Mood newMood, boolean checked, Uri image);
-        void onEventEdited(Mood editedMood, int index, boolean checked, Uri image);
+        void onEventAdded(Mood newMood, boolean checked);
+        void onEventEdited(Mood editedMood, int index, boolean checked);
         void onEventDeleted(Mood deletedMood);
     }
 
@@ -163,6 +183,13 @@ public class EventFragment extends DialogFragment  {
 
         datePicker = view.findViewById(R.id.date_picker);
         timePicker = view.findViewById(R.id.time_picker);
+
+        storageReference = FirebaseStorage.getInstance().getReference();
+        firebaseAuth = FirebaseAuth.getInstance();
+        currentUserEmail = firebaseAuth.getCurrentUser().getEmail();
+
+        int indexEnd = currentUserEmail.indexOf("@");
+        username = currentUserEmail.substring(0 , indexEnd);
 
 
         dateTimePickerGroup = view.findViewById(R.id.date_time_picker_group);
@@ -248,15 +275,26 @@ public class EventFragment extends DialogFragment  {
             }
 
             if (currentMood.getImageURL() != null) {
+                selectedImage = null;
+                imageEdited = false;
+
+                uploadPhotoButton.setVisibility(View.GONE);
                 previewImage.setVisibility(View.VISIBLE);
+
                 Picasso.get().load(currentMood.getImageURL()).into(previewImage);
+    
+                removePhotoButton.setVisibility(View.VISIBLE);
             }
+            else {
+
+            }
+
 
             // Hide the "Use Custom Date" checkbox and just use a custom date because you have to use a custom date
             checkCustomDate.setVisibility(View.INVISIBLE);
             dateTimePickerGroup.setVisibility(View.GONE);
         }
-        
+
         happy.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 happy.setImageResource(R.drawable.happy_face);
@@ -347,20 +385,16 @@ public class EventFragment extends DialogFragment  {
             }
         });
 
-        uploadPhotoButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                openGallery();
-            }
-        });
 
         removePhotoButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 selectedImage = null;
+                imageEdited = true;
                 previewImage.setImageURI(selectedImage);
                 previewImage.setVisibility(View.GONE);
                 removePhotoButton.setVisibility(View.INVISIBLE);
+                uploadPhotoButton.setVisibility(View.VISIBLE);
             }
         });
 
@@ -379,6 +413,13 @@ public class EventFragment extends DialogFragment  {
                 .setPositiveButton("OK", null)
                 .create();
 
+        uploadPhotoButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openGallery();
+            }
+        });
+
         builder.setOnShowListener(new DialogInterface.OnShowListener() {
             @Override
             public void onShow(DialogInterface dialogInterface) {
@@ -395,61 +436,122 @@ public class EventFragment extends DialogFragment  {
                         }
                         if (!incompleteData) {
 
-                            Date dateTime = null;
+                            if (selectedImage != null && imageEdited == true) {
 
-                            int year = 0;
-                            int month = 0;
-                            int day = 0;
-                            int hour = 0;
-                            int minute = 0;
-                            String dateTimeString = null;
+                                StorageReference fileRef = storageReference.child(username).child(System.currentTimeMillis()+"."+getMimeType(getContext(), selectedImage));
 
-                            if (!(checkCustomDate.isChecked())) {
-                                dateTime = Calendar.getInstance().getTime();
+                                storageTask = fileRef.putFile(selectedImage)
+                                        .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                            @Override
+                                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+
+                                                fileRef.getDownloadUrl()
+                                                        .addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                                            @Override
+                                                            public void onSuccess(Uri uri) {
+                                                                url = uri.toString();
+                                                                Data(args);
+
+                                                                System.out.println("111^^^^^^^^^^^^^^^^^^^         ^^^^^^^^^"+url);
+                                                            }
+                                                        });
+
+                                            }
+                                        })
+                                        .addOnFailureListener(new OnFailureListener() {
+                                            @Override
+                                            public void onFailure(@NonNull Exception e) {
+                                                System.out.println("FAILEEEDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD");
+                                            }
+                                        });
+                            }
+                            else if (args != null && imageEdited == false) {
+                                url = currentMood.getImageURL();
+                                Data(args);
                             }
                             else {
-                                year = datePicker.getYear();
-                                month = datePicker.getMonth();
-                                day = datePicker.getDayOfMonth();
-
-                                hour = timePicker.getHour();
-                                minute = timePicker.getMinute();
-
-                                dateTimeString = year +"-"+month+"-"+day+" "+hour+":"+minute;
-
-                                try {
-                                    dateTime = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse(dateTimeString);
-                                } catch (ParseException e) {
-                                    e.printStackTrace();
-                                }
+                                url = null;
+                                Data(args);
                             }
 
-                            String situation = situation_spinner.getSelectedItem().toString();
-                            String newMood = moodSelected;
-                            String reason = moodReason.getText().toString();
-                            String moodId = newMood + System.currentTimeMillis();
 
-                            GeoPoint location = null;
-                            boolean checked = false;
-
-                            if (checkLocation.isChecked()) {
-                                checked = true;
-                            }
-
-                            Mood mood = new Mood(moodId,"" ,dateTime, newMood, reason, situation, location, null);
-
-                            if (currentMood != null) {
-                                listener.onEventEdited(mood, index, checked, selectedImage);
-                            } else {
-                                listener.onEventAdded(mood, checked, selectedImage);
-                            }
+                            System.out.println("HIDEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE");
                             builder.hide();
+                            builder.cancel();
                         }
                     }
                 });
             }
         });
+
         return builder;
+    }
+
+    public void Data (Bundle args) {
+        System.out.println("222^^^^^^^^^^^^^^^^^^^         ^^^^^^^^^"+url);
+        Date dateTime = null;
+
+        int year = 0;
+        int month = 0;
+        int day = 0;
+        int hour = 0;
+        int minute = 0;
+        String dateTimeString = null;
+
+        if (args != null) {
+            dateTime = currentMood.getDateTime();
+        }
+        else{
+            if (!(checkCustomDate.isChecked())) {
+                dateTime = Calendar.getInstance().getTime();
+            }
+            else {
+                year = datePicker.getYear();
+                month = datePicker.getMonth();
+                day = datePicker.getDayOfMonth();
+
+                hour = timePicker.getHour();
+                minute = timePicker.getMinute();
+
+                dateTimeString = year +"-"+month+"-"+day+" "+hour+":"+minute;
+
+                try {
+                    dateTime = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse(dateTimeString);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        String situation = situation_spinner.getSelectedItem().toString();
+        String newMood = moodSelected;
+        String reason = moodReason.getText().toString();
+        String moodId = newMood + System.currentTimeMillis();
+
+        GeoPoint location = null;
+        boolean checked = false;
+
+        if (checkLocation.isChecked()) {
+            checked = true;
+        }
+
+
+        System.out.println("333^^^^^^^^^^^^^^^^^^^         ^^^^^^^^^"+url);
+
+
+
+        mood = new Mood(moodId,"" ,dateTime, newMood, reason, situation, location, url);
+        if (currentMood != null) {
+
+            System.out.println("444^^^^^^^^^^^^^^^^^^^         ^^^^^^^^^"+url);
+
+            listener.onEventEdited(mood, index, checked);
+        } else {
+//            mood = new Mood(moodId,"" ,dateTime, newMood, reason, situation, location, url);
+            System.out.println("555^^^^^^^^^^^^^^^^^^^         ^^^^^^^^^"+url);
+
+            listener.onEventAdded(mood, checked);
+        }
     }
 
 
@@ -474,6 +576,7 @@ public class EventFragment extends DialogFragment  {
                 case PICK_IMAGE:
                     //data.getData returns the content URI for the selected Image
                     selectedImage = data.getData();
+                    imageEdited = true;
                     previewImage.setImageURI(selectedImage);
                     previewImage.setVisibility(View.VISIBLE);
                     removePhotoButton.setVisibility(View.VISIBLE);
@@ -481,6 +584,23 @@ public class EventFragment extends DialogFragment  {
             }
     }
 
+    public static String getMimeType(Context context, Uri uri) {
+        String extension;
+
+        //Check uri format to avoid null
+        if (uri.getScheme().equals(ContentResolver.SCHEME_CONTENT)) {
+            //If scheme is a content
+            final MimeTypeMap mime = MimeTypeMap.getSingleton();
+            extension = mime.getExtensionFromMimeType(context.getContentResolver().getType(uri));
+        } else {
+            //If scheme is a File
+            //This will replace white spaces with %20 and also other special characters. This will avoid returning null values on file name with spaces and special characters.
+            extension = MimeTypeMap.getFileExtensionFromUrl(Uri.fromFile(new File(uri.getPath())).toString());
+
+        }
+
+        return extension;
+    }
 
     /**
      * This method checks whether valid format was entered in our dialog
