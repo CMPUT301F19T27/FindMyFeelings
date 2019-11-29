@@ -47,6 +47,36 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
+            <TextView
+                android:id="@+id/Happy_text"
+                android:layout_width="100dp"
+                android:layout_height="31dp"
+                android:text="Happy"
+                android:textAlignment="center"/>
+
+            <TextView
+                android:id="@+id/Sad_text"
+                android:layout_width="100dp"
+                android:layout_height="31dp"
+                android:layout_weight="1"
+                android:text="Sad"
+                android:textAlignment="center" />
+
+            <TextView
+                android:id="@+id/Angry_text"
+                android:layout_width="100dp"
+                android:layout_height="31dp"
+                android:layout_weight="1"
+                android:text="Angry"
+                android:textAlignment="center" />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
             <ImageView
                 android:id="@+id/disgusted_emoticon"
                 android:layout_width="100dp"
@@ -68,6 +98,35 @@
                 android:padding="10dp"
                 android:src="@drawable/fear_face_bw" />
 
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/Disgusted_text"
+                android:layout_width="100dp"
+                android:layout_height="31dp"
+                android:text="Disgusted"
+                android:textAlignment="center"/>
+
+            <TextView
+                android:id="@+id/Surprised_text"
+                android:layout_width="100dp"
+                android:layout_height="31dp"
+                android:layout_weight="1"
+                android:text="Surprised"
+                android:textAlignment="center" />
+
+            <TextView
+                android:id="@+id/Scared_text"
+                android:layout_width="100dp"
+                android:layout_height="31dp"
+                android:layout_weight="1"
+                android:text="Scared"
+                android:textAlignment="center" />
         </LinearLayout>
 
         <Button
