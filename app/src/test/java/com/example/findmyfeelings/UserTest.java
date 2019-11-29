@@ -52,7 +52,7 @@ public class UserTest {
 
         assertEquals(2, userList.size());
 
-        assertTrue(userList.get(1).getUsername().contains("mock2@gmail.com")); // Test if new user was added
+        assertTrue(userList.get(1).getUsername().contains("mock2")); // Test if new user was added
 
     }
 
