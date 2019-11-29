@@ -175,7 +175,6 @@ public class FollowNewUserFragment extends DialogFragment implements SearchCusto
             }
         });
 
-
         // CAMERON: SEARCH LIST IMPLEMENTATION
         /* ** Search Bar Implementation ** */
         searchButton.setOnClickListener(new View.OnClickListener() {
