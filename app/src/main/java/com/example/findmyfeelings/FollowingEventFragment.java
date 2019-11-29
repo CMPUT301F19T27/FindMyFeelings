@@ -4,6 +4,8 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,13 +16,34 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.FragmentTransaction;
+
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.Timestamp;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.GeoPoint;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import org.w3c.dom.Text;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
 
-public class FollowingEventFragment extends DialogFragment {
+public class FollowingEventFragment extends DialogFragment implements OnMapReadyCallback {
     private static final String ARG_MOOD = "mood";
     private static final String ARG_INDEX = "index";
 
@@ -35,7 +58,7 @@ public class FollowingEventFragment extends DialogFragment {
     private TextView moodLocation;
 
     private Button swapViewButton;
-    private TextView display_map;
+    private GoogleMap gMap;
     private ImageView display_image;
     private TextView titleViewText;
     private boolean showingImage = true;
@@ -79,11 +102,12 @@ public class FollowingEventFragment extends DialogFragment {
         moodImage = view.findViewById(R.id.mood_emoticon);
 
         swapViewButton = view.findViewById(R.id.view_swap_button);
-        display_map = view.findViewById(R.id.display_map);
         display_image = view.findViewById(R.id.display_image);
         titleViewText = view.findViewById(R.id.view_title_text);
 
-//        moodLocation = view.findViewById(R.id.mood_location_Text);
+        SupportMapFragment mapFragment = (SupportMapFragment) getFragmentManager().findFragmentById(R.id.following_event_view_map);
+        mapFragment.getMapAsync(this);
+        //onMapReady(gMap);
 
         Bundle args = getArguments();
 
@@ -123,39 +147,87 @@ public class FollowingEventFragment extends DialogFragment {
 
             boolean hasPhoto = true; // TODO make this the photo object from the database
 
+            // Set the default data display mode
+            try {
+                FragmentTransaction ft = getFragmentManager().beginTransaction();
+                ft.hide(mapFragment).commit();
+            }
+            catch (Exception e) {
+                e.printStackTrace ();
+            }
+            display_image.setVisibility(View.VISIBLE);
+
+
+            // Determine what data we have to display and how to display it
             if(currentMood.getLocation() == null && hasPhoto) {
                 swapViewButton.setVisibility(View.GONE);
-            } else if(currentMood.getLocation() != null && !hasPhoto) {
-                display_map.setVisibility(View.VISIBLE);
+            }
+            else if(currentMood.getLocation() != null && !hasPhoto) {
+//                display_map.setVisibility(View.VISIBLE);
+                try {
+                    FragmentTransaction ft = getFragmentManager().beginTransaction();
+                    ft.show(mapFragment).commit();
+                }
+                catch (Exception e) {
+                    e.printStackTrace ();
+                }
+
                 display_image.setVisibility(View.GONE);
                 titleViewText.setText("Location: ");
                 swapViewButton.setVisibility(View.GONE);
                 showingImage = false;
-            } else if(currentMood.getLocation() == null && !hasPhoto) {
-                display_map.setVisibility(View.GONE);
+            }
+            else if(currentMood.getLocation() == null && !hasPhoto) {
+//                display_map.setVisibility(View.GONE);
+                try {
+                    FragmentTransaction ft = getFragmentManager().beginTransaction();
+                    ft.hide(mapFragment).commit();
+                }
+                catch (Exception e) {
+                    e.printStackTrace ();
+                }
+
                 display_image.setVisibility(View.GONE);
                 swapViewButton.setVisibility(View.GONE);
                 titleViewText.setVisibility(View.GONE);
             }
-
-
-
-
-//            moodLocation.setText(geoPoint.substring(start+2, end));
+            
         }
 
 
         swapViewButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                // Swap to map because image is showing
                 if(showingImage) {
-                    display_map.setVisibility(View.VISIBLE);
+//                    display_map.setVisibility(View.VISIBLE);
+                    try {
+                        FragmentTransaction ft = getFragmentManager().beginTransaction();
+                        ft.show(mapFragment).commit();
+                    }
+                    catch (Exception e) {
+                        e.printStackTrace ();
+                    }
+
                     display_image.setVisibility(View.GONE);
                     titleViewText.setText("Location: ");
                     swapViewButton.setText("View Photo");
                     showingImage = false;
-                } else {
-                    display_map.setVisibility(View.GONE);
+
+                    onMapReady(gMap);
+                }
+
+                // Swap to image because map is showing
+                else {
+//                    display_map.setVisibility(View.GONE);
+                    try {
+                        FragmentTransaction ft = getFragmentManager().beginTransaction();
+                        ft.hide(mapFragment).commit();
+                    }
+                    catch (Exception e) {
+                        e.printStackTrace ();
+                    }
+
                     display_image.setVisibility(View.VISIBLE);
                     titleViewText.setText("Photo: ");
                     swapViewButton.setText("View Map");
@@ -204,5 +276,73 @@ public class FollowingEventFragment extends DialogFragment {
         }
 
         return moodImage;
+    }
+
+
+
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        gMap = googleMap;
+
+        if(gMap == null) {
+            return;
+        }
+
+        // disable map toolbar on the bottom right corner
+        gMap.getUiSettings().setMapToolbarEnabled(false);
+
+
+        GeoPoint location = currentMood.getLocation();
+        if (location != null) {
+            gMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 100));
+
+            Bitmap bitmap;
+            switch (currentMood.getMood()) {
+                case "Happy":
+                    bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.happy_face);
+                    break;
+                case "Angry":
+                    bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.angry_face);
+                    break;
+                case "Disgusted":
+                    bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.disgust_face);
+                    break;
+                case "Scared":
+                    bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.fear_face);
+                    break;
+                case "Sad":
+                    bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.sad_face);
+                    break;
+                case "Surprised":
+                    bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.surprised_face);
+                    break;
+                default:
+                    bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.null_face);
+            }
+
+            //BitmapDescriptor icon = BitmapDescriptorFactory.fromResource(R.drawable.angry_face);
+            //Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.sad_face);
+
+            Bitmap bitmapRescale = Bitmap.createScaledBitmap(bitmap, 100, 100, false);
+            BitmapDescriptor aw = BitmapDescriptorFactory.fromBitmap(bitmapRescale);
+            MarkerOptions marker = new MarkerOptions()
+                    .position(new LatLng((location.getLatitude()), (location.getLongitude())))
+                    .title(currentMood.getUsername())
+                    .icon(aw)
+                    .flat(false);
+
+            //Set the default zoom
+            gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 14.0f));
+            gMap.addMarker(marker);
+        }
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        SupportMapFragment mapFragment = (SupportMapFragment) getFragmentManager().findFragmentById(R.id.following_event_view_map);
+        if (mapFragment != null)
+            getFragmentManager().beginTransaction().remove(mapFragment).commit();
     }
 }
