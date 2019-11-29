@@ -73,7 +73,7 @@
                     android:padding="10dp"
                     android:text="hh:mm"
                     android:textAlignment="viewEnd"
-                    android:textSize="20sp"
+                    android:textSize="14sp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     tools:ignore="RtlCompat" />
@@ -85,7 +85,7 @@
                     android:gravity="center_horizontal"
                     android:padding="10dp"
                     android:text="dd/mm/yy"
-                    android:textSize="20sp"
+                    android:textSize="14sp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent" />
 
@@ -170,20 +170,32 @@
 
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/display_map"
+<!--    <TextView-->
+<!--        android:id="@+id/display_map"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="262dp"-->
+<!--        android:background="#696969"-->
+<!--        android:gravity="center"-->
+<!--        android:text="Pretend I'm a map"-->
+<!--        android:visibility="gone" />-->
+
+    <fragment
+        xmlns:map="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/following_event_view_map"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
         android:layout_height="262dp"
-        android:background="#696969"
-        android:gravity="center"
-        android:text="Pretend I'm a map"
-        android:visibility="gone" />
+        tools:context=".MapActivity"
+        android:gravity="center" />
+
 
     <ImageView
         android:id="@+id/display_image"
         android:layout_width="match_parent"
         android:layout_height="262dp"
-        android:src="@color/black"/>
+        android:src="@color/black"
+        android:visibility="gone" />
 
 
 </LinearLayout>

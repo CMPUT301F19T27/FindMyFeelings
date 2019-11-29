@@ -91,9 +91,8 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
     private ArrayList<Mood> filteredMyMoodDataList;
     private ArrayList<Mood> filteredFollowingMoodDataList;
     private boolean onMyMoodList;
-    private String username;
 
-    private Compressor compressed;
+    private String username = "Unknown";
     BottomNavigationView bottomNavigationView;
 
     private StorageTask storageTask;
@@ -124,8 +123,8 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
         firebaseAuth = FirebaseAuth.getInstance();
         currentUserEmail = firebaseAuth.getCurrentUser().getEmail();
 
-        int indexEnd = currentUserEmail.indexOf("@");
-        username = currentUserEmail.substring(0 , indexEnd);
+//        int indexEnd = currentUserEmail.indexOf("@");
+//        username = currentUserEmail.substring(0 , indexEnd);
 
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -169,6 +168,17 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
         /* ** Firebase Linkage ** */
         db = FirebaseFirestore.getInstance();
         final CollectionReference cRef = db.collection("Users");
+
+        // Set the current user's username
+        cRef
+                .document(currentUserEmail)
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot document) {
+                        username = (String) document.getData().get("username");
+                    }
+                });
       
         /* Custom List Implementation */
         moodList = findViewById(R.id.my_mood_list);
@@ -179,8 +189,6 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
         filteredMyMoodDataList = new ArrayList<>();
         filteredFollowingMoodDataList = new ArrayList<>();
 
-
-        /* ** Custom List Implementation ** */
         // Use a linear layout manager
         moodLayoutManager = new LinearLayoutManager(this);
         moodList.setLayoutManager(moodLayoutManager);
@@ -204,6 +212,7 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
                             Date dateTime = timestamp.toDate();
                             String moodId = doc.getId();
                             String mood = doc.getData().get("mood").toString();
+                            String username = doc.getData().get("username").toString();
                             String reason = doc.getData().get("reason").toString();
                             String situation = doc.getData().get("situation").toString();
                             GeoPoint location = (GeoPoint) doc.getData().get("location");
@@ -366,6 +375,8 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
         final DocumentReference docRef = db.collection("Users").document(currentUserEmail);
 
         newMood.setMoodId(username + newMood.getMoodId());
+        newMood.setUsername(username);
+
 
         if (checked) {
             mGPS.getLocation();
@@ -415,7 +426,8 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
         final DocumentReference docRef = db.collection("Users").document(currentUserEmail);
 
         editedMood.setMoodId(username + editedMood.getMoodId());
-        System.out.println("EDITTTTTTTTTTTTTTTTTTTTTTTTTTTTT111111111111111111111111111111111111111");
+        editedMood.setUsername(username);
+
         if (checked) {
             mGPS.getLocation();
             GeoPoint currentLoc = new GeoPoint(mGPS.getLatitude(), mGPS.getLongitude());
@@ -425,16 +437,13 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
             editedMood.setLocation(null);
         }
 
-        System.out.println("EDITTTTTTTTTTTTTTTTTTTTTTTTTTTTT222222222222222222222222222222222222222222222222");
         HashMap<String, Object> moodData = moodToMap(editedMood);
 
-        System.out.println("EDITTTTTTTTTTTTTTTTTTTTTTTTTTTTT3333333333333333333333333333333333333");
         docRef
                 .collection("My Moods")
                 .document(myMoodDataList.get(index).getMoodId())
                 .delete();
 
-        System.out.println("EDITTTTTTTTTTTTTTTTTTTTTTTTTTTTT111111144444444444444444444444444444444444444");
         docRef
                 .collection("My Moods")
                 .document(editedMood.getMoodId())
@@ -452,37 +461,36 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
                     }
                 });
 
-        System.out.println("EDITTTTTTTTTTTTTTTTTTTTTTTTTTTTT15555555555555555555555555555555555555555555555555");
         myMoodDataList.set(index, editedMood);
         moodAdapter.notifyDataSetChanged();
     }
 
-    /**
-     * this function adds mood data to the database
-     * @param mood
-     * @param moodData
-     */
-    public void addData (Mood mood, HashMap<String, Object> moodData) {
-        final DocumentReference docRef = db.collection("Users").document(currentUserEmail);
-
-        docRef
-                .collection("My Moods")
-                .document(mood.getMoodId())
-                .set(moodData)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Log.d("Sample", "Data addition successfull");
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.d("Sample", "Data addition failed");
-                    }
-                });
-
-    }
+//    /**
+//     * this function adds mood data to the database
+//     * @param mood
+//     * @param moodData
+//     */
+//    public void addData (Mood mood, HashMap<String, Object> moodData) {
+//        final DocumentReference docRef = db.collection("Users").document(currentUserEmail);
+//
+//        docRef
+//                .collection("My Moods")
+//                .document(mood.getMoodId())
+//                .set(moodData)
+//                .addOnSuccessListener(new OnSuccessListener<Void>() {
+//                    @Override
+//                    public void onSuccess(Void aVoid) {
+//                        Log.d("Sample", "Data addition successfull");
+//                    }
+//                })
+//                .addOnFailureListener(new OnFailureListener() {
+//                    @Override
+//                    public void onFailure(@NonNull Exception e) {
+//                        Log.d("Sample", "Data addition failed");
+//                    }
+//                });
+//
+//    }
 
     /**
      * This method deletes a Mood from MoodCustomList
@@ -534,7 +542,7 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
     public HashMap<String, Object> moodToMap(Mood mood) {
         HashMap<String, Object> moodMap = new HashMap<>();
 
-        mood.setUsername(username);
+//        mood.setUsername(username);
 
         moodMap.put("moodId", mood.getMoodId());
         moodMap.put("username", mood.getUsername());
@@ -550,7 +558,7 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
 
 
     /**
-     * This method filters out a selected mood (NOT WORKING)
+     * This method filters out a selected mood
      * @param newFilter
      */
 
@@ -596,7 +604,7 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
 
     @Override
     public void onRecyclerViewClickListener(int position) {
-        if (onMyMoodList==true) {
+        if (onMyMoodList) {
             Mood selectedMood = myMoodDataList.get(position);
             EventFragment.newInstance(selectedMood, position).show(getSupportFragmentManager(), "EDIT_EVENT");
         }

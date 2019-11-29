@@ -45,6 +45,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.io.File;
 import java.io.IOException;
@@ -71,6 +72,7 @@ public class EventFragment extends DialogFragment  {
     private static final String ARG_MOOD = "mood";
     private static final String ARG_INDEX = "index";
     private static final int PICK_IMAGE = 1;
+    private StorageReference mStorageRef;
 
     private ImageView happy;
     private ImageView sad;
@@ -79,25 +81,15 @@ public class EventFragment extends DialogFragment  {
     private ImageView surprised;
     private ImageView scared;
     private String moodSelected = "";
-//    private String situationSelected = "Alone";
-    private EditText moodType;
-    private EditText moodDate;
-    private EditText moodTime;
     private EditText moodReason;
     private Spinner situation_spinner;
 
     private ImageView previewImage;
     private Button uploadPhotoButton;
     private Button removePhotoButton;
+
     private Uri selectedImage = null;
-
     private LinearLayout dateTimePickerGroup;
-    private RadioGroup radioSituationGroup;
-    private RadioButton aloneSituationButton;
-    private RadioButton twoSituationButton;
-    private RadioButton groupSituationButton;
-
-    private EditText moodSituation;
     private CheckBox checkLocation;
     private CheckBox checkCustomDate;
 
@@ -188,21 +180,16 @@ public class EventFragment extends DialogFragment  {
         firebaseAuth = FirebaseAuth.getInstance();
         currentUserEmail = firebaseAuth.getCurrentUser().getEmail();
 
-        int indexEnd = currentUserEmail.indexOf("@");
-        username = currentUserEmail.substring(0 , indexEnd);
+
+
 
 
         dateTimePickerGroup = view.findViewById(R.id.date_time_picker_group);
-//        radioSituationGroup = view.findViewById(R.id.situation_selector);
-//        aloneSituationButton = view.findViewById(R.id.radio_alone);
-//        twoSituationButton = view.findViewById(R.id.radio_two);
-//        groupSituationButton = view.findViewById(R.id.radio_group);
         situation_spinner = view.findViewById(R.id.situation_selector);
 
         uploadPhotoButton = view.findViewById(R.id.upload_photo_button);
         removePhotoButton = view.findViewById(R.id.remove_photo_button);
         previewImage = view.findViewById(R.id.preview_image);
-
 
         timePicker.setIs24HourView(true);
 
@@ -386,17 +373,20 @@ public class EventFragment extends DialogFragment  {
         });
 
 
+
         removePhotoButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 selectedImage = null;
                 imageEdited = true;
                 previewImage.setImageURI(selectedImage);
+
                 previewImage.setVisibility(View.GONE);
                 removePhotoButton.setVisibility(View.INVISIBLE);
                 uploadPhotoButton.setVisibility(View.VISIBLE);
             }
         });
+
 
         final AlertDialog builder = new AlertDialog.Builder(getContext())
                 .setView(view)
@@ -430,6 +420,7 @@ public class EventFragment extends DialogFragment  {
 
                         boolean incompleteData = false;
 
+                        // Checks to ensure that bad data aren't added to the database
                         if (moodSelected.equals("")) {
                             incompleteData = true;
                             Toast.makeText(getContext(), "Please select a mood!", Toast.LENGTH_SHORT).show();
@@ -438,7 +429,7 @@ public class EventFragment extends DialogFragment  {
 
                             if (selectedImage != null && imageEdited == true) {
 
-                                StorageReference fileRef = storageReference.child(username).child(System.currentTimeMillis()+"."+getMimeType(getContext(), selectedImage));
+                                StorageReference fileRef = storageReference.child(currentUserEmail).child(System.currentTimeMillis()+"."+getMimeType(getContext(), selectedImage));
 
                                 storageTask = fileRef.putFile(selectedImage)
                                         .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
@@ -461,7 +452,6 @@ public class EventFragment extends DialogFragment  {
                                         .addOnFailureListener(new OnFailureListener() {
                                             @Override
                                             public void onFailure(@NonNull Exception e) {
-                                                System.out.println("FAILEEEDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD");
                                             }
                                         });
                             }
@@ -473,9 +463,6 @@ public class EventFragment extends DialogFragment  {
                                 url = null;
                                 Data(args);
                             }
-
-
-                            System.out.println("HIDEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE");
                             builder.hide();
                             builder.cancel();
                         }
@@ -488,7 +475,6 @@ public class EventFragment extends DialogFragment  {
     }
 
     public void Data (Bundle args) {
-        System.out.println("222^^^^^^^^^^^^^^^^^^^         ^^^^^^^^^"+url);
         Date dateTime = null;
 
         int year = 0;
@@ -535,20 +521,13 @@ public class EventFragment extends DialogFragment  {
             checked = true;
         }
 
-
-        System.out.println("333^^^^^^^^^^^^^^^^^^^         ^^^^^^^^^"+url);
-
-
-
         mood = new Mood(moodId,"" ,dateTime, newMood, reason, situation, location, url);
         if (currentMood != null) {
 
-            System.out.println("444^^^^^^^^^^^^^^^^^^^         ^^^^^^^^^"+url);
 
             listener.onEventEdited(mood, index, checked);
         } else {
 //            mood = new Mood(moodId,"" ,dateTime, newMood, reason, situation, location, url);
-            System.out.println("555^^^^^^^^^^^^^^^^^^^         ^^^^^^^^^"+url);
 
             listener.onEventAdded(mood, checked);
         }

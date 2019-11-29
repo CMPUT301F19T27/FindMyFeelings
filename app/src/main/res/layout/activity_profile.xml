@@ -177,7 +177,8 @@
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center">
+                        android:layout_gravity="center_vertical"
+                        android:gravity="end">
 
                         <RelativeLayout
                             android:layout_width="wrap_content"
@@ -214,6 +215,7 @@
                                 android:textSize="10sp" />
                         </RelativeLayout>
 
+
                     </RelativeLayout>
 
                 </LinearLayout>
@@ -232,6 +234,16 @@
                     android:text="Users you are following:"
                     android:textSize="20sp"
                     android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/follow_hint_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:padding="5dp"
+                    android:text="You are not following anyone! \n Tap on the '+' button below to search for someone to follow!"
+                    android:textAlignment="center"
+                    android:textSize="20sp" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/follow_list"
