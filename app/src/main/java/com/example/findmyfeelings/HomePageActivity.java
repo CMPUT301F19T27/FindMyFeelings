@@ -221,6 +221,7 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
 
 
                         moodAdapter.notifyDataSetChanged();
+                        runLayoutAnimation(moodList);
                     }
                 });
 
@@ -310,7 +311,7 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
                 followingMoodListButton.setBackgroundResource(R.drawable.unselected_bar_right);
                 followingMoodListButton.setTextColor(Color.parseColor("#000000"));
 
-
+                runLayoutAnimation(moodList);
             }
         });
 
@@ -335,7 +336,7 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
                 followingMoodListButton.setBackgroundResource(R.drawable.selected_bar_right);
                 followingMoodListButton.setTextColor(Color.parseColor("#FFFFFF"));
 
-
+                runLayoutAnimation(moodList);
             }
         });
 
@@ -403,6 +404,7 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
             Toast.makeText(this, "Make sure to remove the filter to view recently added moods", Toast.LENGTH_LONG).show();
         }
 
+        runLayoutAnimation(moodList);
     }
 
 
@@ -464,35 +466,8 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
             Toast.makeText(this, "Make sure to remove the filter to view recently added moods", Toast.LENGTH_LONG).show();
         }
 
-
+        runLayoutAnimation(moodList);
     }
-
-//    /**
-//     * this function adds mood data to the database
-//     * @param mood
-//     * @param moodData
-//     */
-//    public void addData (Mood mood, HashMap<String, Object> moodData) {
-//        final DocumentReference docRef = db.collection("Users").document(currentUserEmail);
-//
-//        docRef
-//                .collection("My Moods")
-//                .document(mood.getMoodId())
-//                .set(moodData)
-//                .addOnSuccessListener(new OnSuccessListener<Void>() {
-//                    @Override
-//                    public void onSuccess(Void aVoid) {
-//                        Log.d("Sample", "Data addition successfull");
-//                    }
-//                })
-//                .addOnFailureListener(new OnFailureListener() {
-//                    @Override
-//                    public void onFailure(@NonNull Exception e) {
-//                        Log.d("Sample", "Data addition failed");
-//                    }
-//                });
-//
-//    }
 
     /**
      * This method deletes a Mood from MoodCustomList
@@ -541,6 +516,7 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
             Toast.makeText(this, "Make sure to remove the filter to view recently added moods", Toast.LENGTH_LONG).show();
         }
 
+        runLayoutAnimation(moodList);
     }
 
     /**
@@ -604,7 +580,7 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
             }
         }
         moodList.setAdapter(moodAdapter);
-
+        runLayoutAnimation(moodList);
     }
 
     /**
@@ -623,90 +599,14 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
             FollowingEventFragment.newInstance(selectedMood, position).show(getSupportFragmentManager(), "VIEW_EVENT");
         }
     }
-    private String getFileExtension(Uri uri) {
-        ContentResolver cR = getContentResolver();
-        MimeTypeMap mime = MimeTypeMap.getSingleton();
-        return mime.getExtensionFromMimeType(cR.getType(uri));
+
+    private void runLayoutAnimation(final RecyclerView recyclerView) {
+        final Context context = recyclerView.getContext();
+        final LayoutAnimationController controller =
+                AnimationUtils.loadLayoutAnimation(context, R.anim.layout_fade_scale_animation);
+
+        recyclerView.setLayoutAnimation(controller);
+        recyclerView.getAdapter().notifyDataSetChanged();
+        recyclerView.scheduleLayoutAnimation();
     }
-
-
 }
-
-//        if (image != null) {
-//            StorageReference fileReference = storageReference.child(username).child(System.currentTimeMillis()+"."+getFileExtension(image));
-//
-//            storageTask = fileReference.putFile(image)
-//                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-//                        @Override
-//                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-//                            fileReference.getDownloadUrl()
-//                                    .addOnSuccessListener(new OnSuccessListener<Uri>() {
-//                                        @Override
-//                                        public void onSuccess(Uri uri) {
-//                                            String url = null;
-//                                            url = uri.toString();
-//
-//                                            System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!             " +url);
-//
-//                                            moodData.put("imageURL", url);
-//
-//                                            addData(editedMood, moodData);
-//                                        }
-//                                    });
-//                        }
-//                    });
-//
-//        }
-//        else {
-//            System.out.println("image is NULLLLLLLLLLLLLLLLLLL");
-//            moodData.put("imageURL", null);
-//            addData(editedMood, moodData);
-//        }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//        if (image != null) {
-//            StorageReference fileReference = storageReference.child(username).child(System.currentTimeMillis()+"."+getFileExtension(image));
-//
-//            storageTask =  fileReference.putFile(image)
-//                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-//                        @Override
-//                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-//
-//                            fileReference.getDownloadUrl()
-//                                    .addOnSuccessListener(new OnSuccessListener<Uri>() {
-//                                        @Override
-//                                        public void onSuccess(Uri uri) {
-//                                            String url = uri.toString();
-//                                            moodData.put("imageURL", url);
-//
-//                                            addData(newMood, moodData);
-//                                        }
-//                                    });
-//                        }
-//                    })
-//                    .addOnFailureListener(new OnFailureListener() {
-//                        @Override
-//                        public void onFailure(@NonNull Exception e) {
-//                            Toast.makeText(HomePageActivity.this, "Image Upload failed", Toast.LENGTH_SHORT).show();
-//
-//                        }
-//                    });
-//        }
-//        else {
-//            moodData.put("imageURL", null);
-//            addData(newMood, moodData);
-//
-//        }
