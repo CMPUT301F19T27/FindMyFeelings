@@ -66,6 +66,15 @@ public class MainActivityTest {
     public void setUp(){
         solo = new Solo(InstrumentationRegistry.getInstrumentation(), rule.getActivity());
 
+        // Check if Login Page Starts
+        solo.assertCurrentActivity("Should be MainActivity", MainActivity.class);
+
+        solo.enterText((EditText)solo.getView(R.id.username_editText), "test@gmail.com");
+
+        solo.enterText((EditText)solo.getView(R.id.password_editText), "test123");
+
+        solo.clickOnButton("Login");
+
 
     }
 
@@ -76,6 +85,9 @@ public class MainActivityTest {
     @Test
     public void start(){
         Activity activity = rule.getActivity();
+
+
+
 
     }
 
@@ -412,6 +424,15 @@ public class MainActivityTest {
 
     @After
     public void tearDown(){
+
+        // Goto Profile
+        solo.clickOnView(solo.getView(R.id.ic_profile));
+        // Wait for Home Page to Load
+        solo.waitForActivity(HomePageActivity.class, 3000);
+
+        solo.clickOnButton("logout"); //logout
+
+
         solo.finishOpenedActivities();
 
 

@@ -418,6 +418,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
                                             .icon(aw)
                                             .flat(false);
 
+
                                     mMap.addMarker(marker);
                                     clusterIndex++; // Increment clusterIndex for Offset
 
