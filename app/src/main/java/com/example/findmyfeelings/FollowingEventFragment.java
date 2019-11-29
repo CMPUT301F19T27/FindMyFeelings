@@ -160,7 +160,7 @@ public class FollowingEventFragment extends DialogFragment implements OnMapReady
             }
             display_image.setVisibility(View.VISIBLE);
 
-            boolean hasPhoto = true; // TODO make this the photo object from the database
+            boolean hasPhoto = currentMood.getImageURL() != null;
 
             // Determine what data we have to display and how to display it
             if(currentMood.getLocation() == null && hasPhoto) {
