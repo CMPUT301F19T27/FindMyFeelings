@@ -144,7 +144,6 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
             }
         });
 
-
         /* ** Firebase Linkage ** */
         db = FirebaseFirestore.getInstance();
         final CollectionReference cRef = db.collection("Users");
