@@ -1,5 +1,7 @@
 package com.example.findmyfeelings;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.widget.ImageView;
 import android.location.Location;
 
@@ -11,7 +13,7 @@ import java.util.Date;
 /**
  * contains user moods
  */
-public class Mood implements Serializable {
+public class Mood implements Serializable, Parcelable {
     private String moodId;
     private String username;
     private Date dateTime;
@@ -40,6 +42,25 @@ public class Mood implements Serializable {
         this.imageURL = imageURL;
     }
 
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i)
+    {
+        parcel.writeDouble(location.getLatitude());
+        parcel.writeDouble(location.getLongitude());
+    }
+
+    public Mood(Parcel in)
+    {
+        Double lat = in.readDouble();
+        Double lng = in.readDouble();
+        location = new GeoPoint(lat, lng);
+    }
 
     public String getMoodId() {
         return moodId;
