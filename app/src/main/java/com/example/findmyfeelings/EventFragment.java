@@ -10,6 +10,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
@@ -36,8 +37,11 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.tasks.Continuation;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.storage.FirebaseStorage;
@@ -47,6 +51,7 @@ import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Array;
@@ -72,7 +77,6 @@ public class EventFragment extends DialogFragment  {
     private static final String ARG_MOOD = "mood";
     private static final String ARG_INDEX = "index";
     private static final int PICK_IMAGE = 1;
-    private StorageReference mStorageRef;
 
     private ImageView happy;
     private ImageView sad;
@@ -431,29 +435,64 @@ public class EventFragment extends DialogFragment  {
 
                                 StorageReference fileRef = storageReference.child(currentUserEmail).child(System.currentTimeMillis()+"."+getMimeType(getContext(), selectedImage));
 
-                                storageTask = fileRef.putFile(selectedImage)
-                                        .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                                            @Override
-                                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
 
-                                                fileRef.getDownloadUrl()
-                                                        .addOnSuccessListener(new OnSuccessListener<Uri>() {
-                                                            @Override
-                                                            public void onSuccess(Uri uri) {
-                                                                url = uri.toString();
-                                                                Data(args);
+                                previewImage.setDrawingCacheEnabled(true);
+                                previewImage.buildDrawingCache();
+                                Bitmap bitmap = ((BitmapDrawable) previewImage.getDrawable()).getBitmap();
+                                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+                                byte[] data = baos.toByteArray();
 
-                                                                System.out.println("111^^^^^^^^^^^^^^^^^^^         ^^^^^^^^^"+url);
-                                                            }
-                                                        });
+                                UploadTask uploadTask = fileRef.putBytes(data);
 
-                                            }
-                                        })
-                                        .addOnFailureListener(new OnFailureListener() {
-                                            @Override
-                                            public void onFailure(@NonNull Exception e) {
-                                            }
-                                        });
+                                Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+                                    @Override
+                                    public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                                        if (!task.isSuccessful()) {
+                                            throw task.getException();
+                                        }
+
+                                        // Continue with the task to get the download URL
+                                        return fileRef.getDownloadUrl();
+                                    }
+                                }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Uri> task) {
+                                        if (task.isSuccessful()) {
+                                            url = task.getResult().toString();
+                                            Data(args);
+                                        } else {
+                                            // Handle failures
+                                            // ...
+                                        }
+                                    }
+                                });
+
+
+
+
+//                                storageTask = fileRef.putFile(selectedImage)
+//                                        .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+//                                            @Override
+//                                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+//
+//                                                fileRef.getDownloadUrl()
+//                                                        .addOnSuccessListener(new OnSuccessListener<Uri>() {
+//                                                            @Override
+//                                                            public void onSuccess(Uri uri) {
+//                                                                url = uri.toString();
+//                                                                Data(args);
+//
+//                                                            }
+//                                                        });
+//
+//                                            }
+//                                        })
+//                                        .addOnFailureListener(new OnFailureListener() {
+//                                            @Override
+//                                            public void onFailure(@NonNull Exception e) {
+//                                            }
+//                                        });
                             }
                             else if (args != null && imageEdited == false) {
                                 url = currentMood.getImageURL();
