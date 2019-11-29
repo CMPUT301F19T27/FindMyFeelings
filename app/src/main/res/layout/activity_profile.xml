@@ -35,6 +35,9 @@
                 android:layout_alignParentRight="true"
                 android:layout_marginTop="5dp"
                 android:layout_marginRight="10dp"
+                android:text="logout"
+                android:textColor="@color/white"
+                android:textSize="0.1dp"
                 android:background="@drawable/back_icon" />
 
 
