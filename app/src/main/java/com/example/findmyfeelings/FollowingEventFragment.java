@@ -338,6 +338,7 @@ public class FollowingEventFragment extends DialogFragment implements OnMapReady
 
             //Set the default zoom
             gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 14.0f));
+
             gMap.addMarker(marker);
         }
     }
