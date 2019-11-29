@@ -409,6 +409,12 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
 
         myMoodDataList.add(newMood);
         moodAdapter.notifyDataSetChanged();
+
+        // If the view is filtered then make sure to update the filtered view
+        if(!filter.equals("")) {
+            onFilterAdded(filter);
+            Toast.makeText(this, "Make sure to remove the filter to view recently added moods", Toast.LENGTH_LONG).show();
+        }
     }
 
 
@@ -463,6 +469,12 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
 
         myMoodDataList.set(index, editedMood);
         moodAdapter.notifyDataSetChanged();
+
+        // If the view is filtered then make sure to update the filtered view
+        if(!filter.equals("")) {
+            onFilterAdded(filter);
+            Toast.makeText(this, "Make sure to remove the filter to view recently added moods", Toast.LENGTH_LONG).show();
+        }
     }
 
 //    /**
@@ -531,6 +543,12 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
 
             docRef
                     .update("recent_mood", recentMoodMap);
+        }
+
+        // If the view is filtered then make sure to update the filtered view
+        if(!filter.equals("")) {
+            onFilterAdded(filter);
+            Toast.makeText(this, "Make sure to remove the filter to view recently added moods", Toast.LENGTH_LONG).show();
         }
     }
 
