@@ -1,11 +1,15 @@
 package com.example.findmyfeelings;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -22,9 +26,11 @@ public class MoodCustomList extends RecyclerView.Adapter<MoodCustomList.MoodView
 
     private ArrayList<Mood> moods;
     private RecyclerViewListener mRecyclerViewListener;
+    private Context context;
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public MoodCustomList(ArrayList<Mood> inputMoodDataset, RecyclerViewListener recyclerViewListener) {
+    public MoodCustomList(Context context, ArrayList<Mood> inputMoodDataset, RecyclerViewListener recyclerViewListener) {
+        this.context = context;
         this.moods = inputMoodDataset;
         this.mRecyclerViewListener = recyclerViewListener;
     }
@@ -32,11 +38,16 @@ public class MoodCustomList extends RecyclerView.Adapter<MoodCustomList.MoodView
     public static class MoodViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         private View view;
         RecyclerViewListener recyclerViewListener;
+
+        ImageView moodImage;
+        LinearLayout container;
         private MoodViewHolder(@NonNull View v, RecyclerViewListener recyclerViewListener) {
             super(v);
             this.view = v;
             this.recyclerViewListener = recyclerViewListener;
 
+            moodImage = v.findViewById(R.id.mood_emoticon);
+            container = v.findViewById(R.id.mood_container);
             v.setOnClickListener(this);
         }
 
@@ -64,11 +75,18 @@ public class MoodCustomList extends RecyclerView.Adapter<MoodCustomList.MoodView
     public void onBindViewHolder(MoodViewHolder holder, int position) {
         Mood mood = moods.get(position);
 
-        ImageView moodImage = holder.view.findViewById(R.id.mood_emoticon);
+//        ImageView moodImage = holder.view.findViewById(R.id.mood_emoticon);
         TextView dateValue = holder.view.findViewById(R.id.date_text);
         TextView timeValue = holder.view.findViewById(R.id.time_text);
         TextView moodString = holder.view.findViewById(R.id.mood_name_text);
         TextView usernameString = holder.view.findViewById(R.id.username_text);
+
+        holder.moodImage.setAnimation(AnimationUtils.loadAnimation(context, R.anim.fade_transition_animation));
+
+        holder.container.setAnimation(AnimationUtils.loadAnimation(context,R.anim.fade_scale_animation));
+
+        holder.moodImage.setImageResource(getEmoji(moods.get(position)));
+
 
         @SuppressLint("SimpleDateFormat")
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -81,7 +99,7 @@ public class MoodCustomList extends RecyclerView.Adapter<MoodCustomList.MoodView
         dateValue.setText(date);
         timeValue.setText(time);
         moodString.setText(mood.getMood());
-        moodImage.setImageResource(getEmoji(mood));
+        //moodImage.setImageResource(getEmoji(mood));
 
         String username = mood.getUsername();
 
