@@ -35,6 +35,7 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.squareup.picasso.Picasso;
 
 import org.w3c.dom.Text;
 
@@ -114,6 +115,10 @@ public class FollowingEventFragment extends DialogFragment implements OnMapReady
         if (args != null) {
             currentMood = (Mood) args.getSerializable(ARG_MOOD);
             index = args.getInt(ARG_INDEX);
+
+            if (currentMood.getImageURL() != null) {
+                Picasso.get().load(currentMood.getImageURL()).into(display_image);
+            }
 
             @SuppressLint("SimpleDateFormat")
             DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
