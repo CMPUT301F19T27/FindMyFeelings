@@ -71,7 +71,7 @@ public class SearchCustomList extends RecyclerView.Adapter<SearchCustomList.Sear
         TextView dateValue = holder.view.findViewById(R.id.first_name_text);
         TextView timeValue = holder.view.findViewById(R.id.last_name_text);
         TextView moodString = holder.view.findViewById(R.id.username_text);
-//        LinearLayout container = holder.view.findViewById(R.id.search_list_content_background);
+        LinearLayout container = holder.view.findViewById(R.id.search_list_content_background);
 
         dateValue.setText(fUser.getFirstName());
         timeValue.setText(fUser.getLastName());
