@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -273,6 +274,9 @@ public class ProfileActivity extends AppCompatActivity implements FollowNewUserF
                 followList.setAdapter(followAdapter);
                 listHintText.setText("Users you are following:");
 
+                followingButton.setTextColor(Color.parseColor("#000000"));
+                followerButton.setTextColor(Color.parseColor("#9B9B9B"));
+
                 // Control the hint
                 if(followingDataList.size() > 0) {
                     followHintText.setVisibility(View.GONE);
@@ -290,6 +294,9 @@ public class ProfileActivity extends AppCompatActivity implements FollowNewUserF
                 followAdapter = new FollowCustomList(followerDataList);
                 followList.setAdapter(followAdapter);
                 listHintText.setText("Users who are following you:");
+
+                followingButton.setTextColor(Color.parseColor("#9B9B9B"));
+                followerButton.setTextColor(Color.parseColor("#000000"));
 
                 // Control the hint
                 if(followerDataList.size() > 0) {
