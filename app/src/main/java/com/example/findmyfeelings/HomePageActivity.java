@@ -626,11 +626,6 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
             FollowingEventFragment.newInstance(selectedMood, position).show(getSupportFragmentManager(), "VIEW_EVENT");
         }
     }
-    private String getFileExtension(Uri uri) {
-        ContentResolver cR = getContentResolver();
-        MimeTypeMap mime = MimeTypeMap.getSingleton();
-        return mime.getExtensionFromMimeType(cR.getType(uri));
-    }
 
     private void runLayoutAnimation(final RecyclerView recyclerView) {
         final Context context = recyclerView.getContext();
@@ -642,82 +637,3 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
         recyclerView.scheduleLayoutAnimation();
     }
 }
-
-//        if (image != null) {
-//            StorageReference fileReference = storageReference.child(username).child(System.currentTimeMillis()+"."+getFileExtension(image));
-//
-//            storageTask = fileReference.putFile(image)
-//                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-//                        @Override
-//                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-//                            fileReference.getDownloadUrl()
-//                                    .addOnSuccessListener(new OnSuccessListener<Uri>() {
-//                                        @Override
-//                                        public void onSuccess(Uri uri) {
-//                                            String url = null;
-//                                            url = uri.toString();
-//
-//                                            System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!             " +url);
-//
-//                                            moodData.put("imageURL", url);
-//
-//                                            addData(editedMood, moodData);
-//                                        }
-//                                    });
-//                        }
-//                    });
-//
-//        }
-//        else {
-//            System.out.println("image is NULLLLLLLLLLLLLLLLLLL");
-//            moodData.put("imageURL", null);
-//            addData(editedMood, moodData);
-//        }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//        if (image != null) {
-//            StorageReference fileReference = storageReference.child(username).child(System.currentTimeMillis()+"."+getFileExtension(image));
-//
-//            storageTask =  fileReference.putFile(image)
-//                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-//                        @Override
-//                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-//
-//                            fileReference.getDownloadUrl()
-//                                    .addOnSuccessListener(new OnSuccessListener<Uri>() {
-//                                        @Override
-//                                        public void onSuccess(Uri uri) {
-//                                            String url = uri.toString();
-//                                            moodData.put("imageURL", url);
-//
-//                                            addData(newMood, moodData);
-//                                        }
-//                                    });
-//                        }
-//                    })
-//                    .addOnFailureListener(new OnFailureListener() {
-//                        @Override
-//                        public void onFailure(@NonNull Exception e) {
-//                            Toast.makeText(HomePageActivity.this, "Image Upload failed", Toast.LENGTH_SHORT).show();
-//
-//                        }
-//                    });
-//        }
-//        else {
-//            moodData.put("imageURL", null);
-//            addData(newMood, moodData);
-//
-//        }
