@@ -35,6 +35,7 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.squareup.picasso.Picasso;
 
 import org.w3c.dom.Text;
 
@@ -145,8 +146,6 @@ public class FollowingEventFragment extends DialogFragment implements OnMapReady
                 int end = geoPoint.indexOf("}");
             }
 
-            boolean hasPhoto = true; // TODO make this the photo object from the database
-
             // Set the default data display mode
             try {
                 FragmentTransaction ft = getFragmentManager().beginTransaction();
@@ -157,6 +156,7 @@ public class FollowingEventFragment extends DialogFragment implements OnMapReady
             }
             display_image.setVisibility(View.VISIBLE);
 
+            boolean hasPhoto = true; // TODO make this the photo object from the database
 
             // Determine what data we have to display and how to display it
             if(currentMood.getLocation() == null && hasPhoto) {
