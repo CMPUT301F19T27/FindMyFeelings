@@ -469,33 +469,6 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
         runLayoutAnimation(moodList);
     }
 
-//    /**
-//     * this function adds mood data to the database
-//     * @param mood
-//     * @param moodData
-//     */
-//    public void addData (Mood mood, HashMap<String, Object> moodData) {
-//        final DocumentReference docRef = db.collection("Users").document(currentUserEmail);
-//
-//        docRef
-//                .collection("My Moods")
-//                .document(mood.getMoodId())
-//                .set(moodData)
-//                .addOnSuccessListener(new OnSuccessListener<Void>() {
-//                    @Override
-//                    public void onSuccess(Void aVoid) {
-//                        Log.d("Sample", "Data addition successfull");
-//                    }
-//                })
-//                .addOnFailureListener(new OnFailureListener() {
-//                    @Override
-//                    public void onFailure(@NonNull Exception e) {
-//                        Log.d("Sample", "Data addition failed");
-//                    }
-//                });
-//
-//    }
-
     /**
      * This method deletes a Mood from MoodCustomList
      * @param deletedMood

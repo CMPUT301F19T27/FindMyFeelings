@@ -21,6 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 public class MoodTest {
 
+
     private ArrayList<Mood> mockMoodList(){
         ArrayList<Mood> moodList = new ArrayList<>();
         moodList.add(mockMood());
@@ -30,7 +31,7 @@ public class MoodTest {
     }
 
     private Mood mockMood(){
-        return new Mood("1", "test", new Date(2012/12/15), "Happy", "none", "alone", new GeoPoint(24,2));
+        return new Mood("1", "test", new Date(2012/12/15), "Happy", "none", "alone" ,new GeoPoint(24,2), "Dog.png");
 
 
     }
@@ -42,7 +43,7 @@ public class MoodTest {
         assertEquals(1, moodList.size()); // Should have 1 mood
         assertTrue(moodList.get(0).getMood().contains("Happy")); // Test if Sad is in list
 
-        Mood mood = new Mood("2", "test1", new Date(2012/12/15), "Sad", "none", "alone", new GeoPoint(24,2));
+        Mood mood = new Mood("1", "test", new Date(2012/12/15), "Sad", "none", "alone" ,new GeoPoint(24,2), "Dog.png");
         moodList.add(mood); // List is size 2
 
         assertEquals(2, moodList.size());
