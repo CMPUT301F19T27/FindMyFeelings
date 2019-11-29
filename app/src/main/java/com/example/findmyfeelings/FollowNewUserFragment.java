@@ -45,7 +45,8 @@ public class FollowNewUserFragment extends DialogFragment implements SearchCusto
 
     private ArrayList<FollowUser> searchResultsList;
     private RecyclerView searchList;
-   // private RecyclerView.Adapter searchAdapter;
+//    private RecyclerView.Adapter searchAdapter;
+    private SearchCustomList searchAdapter;
     private RecyclerView.LayoutManager searchLayoutManager;
 
     private FirebaseFirestore db;
@@ -55,6 +56,7 @@ public class FollowNewUserFragment extends DialogFragment implements SearchCusto
 
     private String currentUserEmail;
     private ArrayList<String> followingDataList;
+    private LinearLayout searchContent;
 
     public FollowNewUserFragment(String currentUserEmail) {
         this.currentUserEmail = currentUserEmail;
@@ -91,6 +93,7 @@ public class FollowNewUserFragment extends DialogFragment implements SearchCusto
         hintText = view.findViewById(R.id.hint_text);
         errorText = view.findViewById(R.id.error_text);
         searchEditText = view.findViewById(R.id.search_editText);
+        searchContent = view.findViewById(R.id.search_content);
         allUsersList = new ArrayList<>();
 
         searchList.setVisibility(View.INVISIBLE);
@@ -131,13 +134,13 @@ public class FollowNewUserFragment extends DialogFragment implements SearchCusto
         searchResultsList = new ArrayList<>();
 
         // Use a linear layout manager
-        searchLayoutManager = new LinearLayoutManager(this.getContext());
-        searchList.setLayoutManager(searchLayoutManager);
 
         // Specify an adapter
-        SearchCustomList searchAdapter = new SearchCustomList(this.searchResultsList, this);
+        searchAdapter = new SearchCustomList(searchResultsList, this);
 
         searchList.setAdapter(searchAdapter);
+        searchLayoutManager = new LinearLayoutManager(this.getContext());
+        searchList.setLayoutManager(searchLayoutManager);
 
         cRef
                 .document(currentUserEmail)
@@ -171,6 +174,10 @@ public class FollowNewUserFragment extends DialogFragment implements SearchCusto
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 searchAdapter.getFilter().filter(charSequence);
+                searchList.setVisibility(View.VISIBLE);
+                hintText.setVisibility(View.INVISIBLE);
+
+
             }
 
             @Override
@@ -243,6 +250,8 @@ public class FollowNewUserFragment extends DialogFragment implements SearchCusto
 
     @Override
     public void onRecyclerViewClickListener(int position) {
+
+
         Toast.makeText(getContext(), "Selected " + searchResultsList.get(position).getUsername(), Toast.LENGTH_SHORT).show();
         selectedUserToFollow = searchResultsList.get(position);
         index = position;
