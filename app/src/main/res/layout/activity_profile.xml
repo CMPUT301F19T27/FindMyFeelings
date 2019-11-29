@@ -136,6 +136,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
+                            android:textColor="#9B9B9B"
                             android:textSize="20sp" />
 
                     </LinearLayout>
@@ -168,6 +169,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
+                            android:textColor="#000000"
                             android:textSize="20sp" />
 
                     </LinearLayout>
@@ -269,7 +271,7 @@
                     android:layout_margin="15dp"
                     android:clickable="true"
                     android:focusable="true"
-                    app:srcCompat="@drawable/ic_search_icon" />
+                    app:srcCompat="@drawable/search_icon" />
             </FrameLayout>
 
         </RelativeLayout>
