@@ -48,6 +48,7 @@ dependencies {
     //Libraries
     implementation 'com.google.android.gms:play-services-location:17.0.0'
     implementation 'com.github.jjobes:slideDateTimePicker:1.0.2'
+    implementation 'com.squareup.picasso:picasso:2.71828'
 
     //Unit Test
     implementation 'com.google.firebase:firebase-storage:16.0.4'
