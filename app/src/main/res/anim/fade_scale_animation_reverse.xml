@@ -15,7 +15,7 @@
         android:fillBefore="false"/>
 
     <translate
-        android:fromYDelta="-20%"
+        android:fromYDelta="20%"
         android:fromXDelta="25%"
         android:toYDelta="0%"
         android:toXDelta="0%"
