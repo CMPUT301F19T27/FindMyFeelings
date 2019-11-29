@@ -178,17 +178,18 @@
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center">
+                        android:layout_gravity="center_vertical"
+                        android:gravity="end">
 
                         <Button
                             android:id="@+id/requests_button"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="end"
-                            android:layout_marginEnd="12dp"
                             android:layout_marginStart="5dp"
-                            android:text="Requests"
+                            android:layout_marginEnd="12dp"
                             android:elevation="0dp"
+                            android:text="Requests"
                             android:textAllCaps="false"
                             android:textSize="20sp" />
 
@@ -200,9 +201,9 @@
                             android:layout_marginTop="0dp"
                             android:layout_marginEnd="11dp"
                             android:background="@drawable/badge_background"
+                            android:elevation="10dp"
                             android:gravity="center"
                             android:padding="3dp"
-                            android:elevation="10dp"
                             android:text="0"
                             android:textColor="@android:color/white"
                             android:textSize="10sp" />
@@ -225,6 +226,16 @@
                     android:text="Users you are following:"
                     android:textSize="20sp"
                     android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/follow_hint_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:padding="5dp"
+                    android:text="You are not following anyone! \n Tap on the '+' button below to search for someone to follow!"
+                    android:textAlignment="center"
+                    android:textSize="20sp" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/follow_list"

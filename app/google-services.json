@@ -15,13 +15,21 @@
       },
       "oauth_client": [
         {
+          "client_id": "792520716701-m25qt2r0mo0rakp9hcjmb09540848lme.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.findmyfeelings",
+            "certificate_hash": "44e2fb362cbcfbceac9d9167eb1c8d6c4d638e04"
+          }
+        },
+        {
           "client_id": "792520716701-k4ddgntupqu2g6ub8qefdg8lo4aq2oua.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBLEMMbPQFY0kwYHp9-i3p8lxYCHIeZOKE"
+          "current_key": "AIzaSyBu4u43uaQ0z25AnRVTu3x1dc7aOTj9UJs"
         }
       ],
       "services": {

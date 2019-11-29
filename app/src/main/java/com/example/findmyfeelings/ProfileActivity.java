@@ -45,6 +45,7 @@ public class ProfileActivity extends AppCompatActivity implements FollowNewUserF
     private Button followingButton;
     private Button requestButton;
     private TextView requestBadge;
+    private TextView followHintText;
 
     private FirebaseFirestore db;
     private FirebaseUser firebaseUser;
@@ -60,6 +61,7 @@ public class ProfileActivity extends AppCompatActivity implements FollowNewUserF
     private RecyclerView.LayoutManager followLayoutManager;
     private FollowUser currentUser;
     private String currentUserEmail;
+    private String username;
     private ImageView moodImage;
     private String moodType;
 
@@ -71,9 +73,10 @@ public class ProfileActivity extends AppCompatActivity implements FollowNewUserF
 
         bottomNavigationView = findViewById(R.id.bottom_nav_bar);
         logoutButton = findViewById(R.id.logout_button);
-        followerButton = findViewById(R.id.follower_tab_button); //TODO make this not just a button, but a clickable listview
+        followerButton = findViewById(R.id.follower_tab_button);
         followingButton = findViewById(R.id.following_tab_button);
         listHintText = findViewById(R.id.list_hint_text);
+        followHintText = findViewById(R.id.follow_hint_text);
         usernameText = findViewById(R.id.username_text);
         floatingFollowButton = findViewById(R.id.follow_floating_button);
         requestButton = findViewById(R.id.requests_button);
@@ -118,15 +121,14 @@ public class ProfileActivity extends AppCompatActivity implements FollowNewUserF
 
         firebaseAuth = FirebaseAuth.getInstance();
         currentUserEmail = firebaseAuth.getCurrentUser().getEmail();
-
-        int indexEnd = currentUserEmail.indexOf("@");
-        String username = currentUserEmail.substring(0 , indexEnd);
-
-        usernameText.setText(username);
+//
+//        int indexEnd = currentUserEmail.indexOf("@");
+//        String username = currentUserEmail.substring(0 , indexEnd);
+//
+//        usernameText.setText(username);
 
         db = FirebaseFirestore.getInstance();
         final CollectionReference collectionRef = db.collection("Users");
-
 
         /* ** Custom List Implementation ** */
         followList = findViewById(R.id.follow_list);
@@ -155,10 +157,13 @@ public class ProfileActivity extends AppCompatActivity implements FollowNewUserF
                     public void onSuccess(DocumentSnapshot document) {
                         String email = document.getId();
                         String username = (String) document.getData().get("username");
+                        usernameText.setText(username);
                         String firstName = (String) document.getData().get("first_name");
                         String lastName = (String) document.getData().get("last_name");
 
                         HashMap<String, Object> userMap = (HashMap<String, Object>) document.getData().get("recent_mood");
+
+//                        usernameText.setText(username);
 
                         moodType = (String) userMap.get("mood");
 
@@ -169,7 +174,6 @@ public class ProfileActivity extends AppCompatActivity implements FollowNewUserF
                 });
 
         // RETRIEVES FOLLOWER USER DATA
-
         collectionRef
                 .document(currentUserEmail)
                 .collection("Follower")
@@ -190,8 +194,8 @@ public class ProfileActivity extends AppCompatActivity implements FollowNewUserF
                         followerButton.setText(String.valueOf(followerDataList.size()));
                     }
                 });
-        // RETRIEVES FOLLOWING USERS DATA
 
+        // RETRIEVES FOLLOWING USERS DATA
         collectionRef
                 .document(currentUserEmail)
                 .collection("Following")
@@ -210,6 +214,11 @@ public class ProfileActivity extends AppCompatActivity implements FollowNewUserF
                             followingDataList.add(followingUser);
                         }
                         followingButton.setText(String.valueOf(followingDataList.size()));
+
+                        // Hide the hint
+                        if(followingDataList.size() > 0) {
+                            followHintText.setVisibility(View.GONE);
+                        }
                     }
                 });
 
@@ -241,7 +250,6 @@ public class ProfileActivity extends AppCompatActivity implements FollowNewUserF
                 });
 
 
-
         logoutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -261,6 +269,14 @@ public class ProfileActivity extends AppCompatActivity implements FollowNewUserF
                 followList.setAdapter(followAdapter);
                 listHintText.setText("Users you are following:");
 
+                // Control the hint
+                if(followingDataList.size() > 0) {
+                    followHintText.setVisibility(View.GONE);
+                } else {
+                    followHintText.setText("You are not following anyone! \n Tap on the '+' button below to search for someone to follow!");
+                    followHintText.setVisibility(View.VISIBLE);
+                }
+
             }
         });
 
@@ -270,6 +286,14 @@ public class ProfileActivity extends AppCompatActivity implements FollowNewUserF
                 followAdapter = new FollowCustomList(followerDataList);
                 followList.setAdapter(followAdapter);
                 listHintText.setText("Users who are following you:");
+
+                // Control the hint
+                if(followerDataList.size() > 0) {
+                    followHintText.setVisibility(View.GONE);
+                } else {
+                    followHintText.setText("No one is following you yet!");
+                    followHintText.setVisibility(View.VISIBLE);
+                }
 
             }
         });

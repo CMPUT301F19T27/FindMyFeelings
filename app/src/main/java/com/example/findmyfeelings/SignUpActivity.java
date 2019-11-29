@@ -31,7 +31,7 @@ import java.util.HashMap;
 public class SignUpActivity extends AppCompatActivity {
 
     private String TAG = "Display";
-    private EditText firstNameEditText, lastNameEditText, emailEditText, passwordEditText;
+    private EditText firstNameEditText, lastNameEditText, emailEditText, passwordEditText, usernameEditText;
     private TextView loginTextView;
     private Button signUpButton;
     private FirebaseAuth firebaseAuth;
@@ -45,6 +45,7 @@ public class SignUpActivity extends AppCompatActivity {
         loginTextView = findViewById(R.id.login_textView);
         firstNameEditText = findViewById(R.id.sign_up_firstname_editText);
         lastNameEditText  = findViewById(R.id.sign_up_lastname_editText);
+        usernameEditText = findViewById(R.id.sign_up_username_editText);
         emailEditText = findViewById(R.id.sign_up_email_editText);
         passwordEditText = findViewById(R.id.sign_up_password_editText);
         signUpButton = findViewById(R.id.sign_up_button);
@@ -58,26 +59,31 @@ public class SignUpActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 final String email = emailEditText.getText().toString();
-                String password = passwordEditText.getText().toString();
+                final String password = passwordEditText.getText().toString();
                 final String firstName = firstNameEditText.getText().toString();
                 final String lastName = lastNameEditText.getText().toString();
+                final String username = usernameEditText.getText().toString();
 
                 if (email.isEmpty()) {
-                    emailEditText.setError("Enter an email id");
+                    emailEditText.setError("Enter your email!");
                     emailEditText.requestFocus();
                 }
                 if (password.isEmpty()) {
-                    passwordEditText.setError("Enter a password");
+                    passwordEditText.setError("Enter a password!");
                     passwordEditText.requestFocus();
                 }
 
                 if (firstName.isEmpty()) {
-                    firstNameEditText.setError("Enter your first name");
+                    firstNameEditText.setError("Enter your first name!");
                     firstNameEditText.requestFocus();
                 }
                 if (lastName.isEmpty()) {
-                    lastNameEditText.setError("Enter your last name");
+                    lastNameEditText.setError("Enter your last name!");
                     lastNameEditText.requestFocus();
+                }
+                if (username.isEmpty()) {
+                    usernameEditText.setError("Enter a username!");
+                    usernameEditText.requestFocus();
                 }
                 if (email.isEmpty() || password.isEmpty() || firstName.isEmpty() || lastName.isEmpty()) {
                     Toast.makeText(SignUpActivity.this, "Empty fields!", Toast.LENGTH_SHORT).show();
@@ -90,9 +96,6 @@ public class SignUpActivity extends AppCompatActivity {
                                 Toast.makeText(SignUpActivity.this, "Sign Up failed. Please try again", Toast.LENGTH_SHORT).show();
                             }
                             else {
-                                int indexEnd = email.indexOf("@");
-                                String username = email.substring(0 , indexEnd);
-
                                 User newUser = new User(email, username, firstName, lastName);
 
                                 HashMap<String, Object> newUserData;

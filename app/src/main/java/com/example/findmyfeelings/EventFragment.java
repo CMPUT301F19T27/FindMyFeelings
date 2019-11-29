@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -15,6 +16,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.webkit.MimeTypeMap;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.Button;
@@ -32,7 +34,13 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.GeoPoint;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.io.IOException;
 import java.lang.reflect.Array;
@@ -56,6 +64,7 @@ public class EventFragment extends DialogFragment  {
     private static final String ARG_MOOD = "mood";
     private static final String ARG_INDEX = "index";
     private static final int PICK_IMAGE = 1;
+    private StorageReference mStorageRef;
 
     private ImageView happy;
     private ImageView sad;
@@ -64,25 +73,14 @@ public class EventFragment extends DialogFragment  {
     private ImageView surprised;
     private ImageView scared;
     private String moodSelected = "";
-//    private String situationSelected = "Alone";
-    private EditText moodType;
-    private EditText moodDate;
-    private EditText moodTime;
     private EditText moodReason;
     private Spinner situation_spinner;
 
     private ImageView previewImage;
     private Button uploadPhotoButton;
     private Button removePhotoButton;
-    private Uri selectedImage;
 
     private LinearLayout dateTimePickerGroup;
-    private RadioGroup radioSituationGroup;
-    private RadioButton aloneSituationButton;
-    private RadioButton twoSituationButton;
-    private RadioButton groupSituationButton;
-
-    private EditText moodSituation;
     private CheckBox checkLocation;
     private CheckBox checkCustomDate;
 
@@ -151,16 +149,11 @@ public class EventFragment extends DialogFragment  {
         moodReason = view.findViewById(R.id.mood_reason_editText);
 
         dateTimePickerGroup = view.findViewById(R.id.date_time_picker_group);
-//        radioSituationGroup = view.findViewById(R.id.situation_selector);
-//        aloneSituationButton = view.findViewById(R.id.radio_alone);
-//        twoSituationButton = view.findViewById(R.id.radio_two);
-//        groupSituationButton = view.findViewById(R.id.radio_group);
         situation_spinner = view.findViewById(R.id.situation_selector);
 
         uploadPhotoButton = view.findViewById(R.id.upload_photo_button);
         removePhotoButton = view.findViewById(R.id.remove_photo_button);
         previewImage = view.findViewById(R.id.preview_image);
-
 
         Bundle args = getArguments();
 
@@ -326,17 +319,6 @@ public class EventFragment extends DialogFragment  {
             }
         });
 
-//        radioSituationGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-//            @Override
-//            public void onCheckedChanged(RadioGroup group, int checkedId) {
-//                RadioButton rb = (RadioButton) group.findViewById(checkedId);
-//                if (rb != null) {
-//                    situationSelected = rb.getText().toString();
-//                }
-//
-//            }
-//        });
-
         checkCustomDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -349,27 +331,25 @@ public class EventFragment extends DialogFragment  {
             }
         });
 
-
         uploadPhotoButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                openGallery();
+
             }
         });
-
 
         removePhotoButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                selectedImage = null;
-                previewImage.setImageURI(selectedImage);
+//                selectedImage = null;
+//                previewImage.setImageURI(selectedImage);
                 previewImage.setVisibility(View.GONE);
                 removePhotoButton.setVisibility(View.INVISIBLE);
             }
         });
 
 
-        // Temporary code to support the date/time spinners
+        // Temporary code to support the time spinners
         Spinner hour_spinner = (Spinner) view.findViewById(R.id.hour_spinner);
         Spinner minute_spinner = (Spinner) view.findViewById(R.id.minute_spinner);
 
@@ -416,87 +396,21 @@ public class EventFragment extends DialogFragment  {
                     public void onClick(View view) {
 
                         boolean incompleteData = false;
-//                        String[] moods = new String[]{"Happy", "Sad", "Angry", "Disgusted", "Surprised", "Scared"};
-//                        List<String> validMoods = Arrays.asList(moods);
 
-//                        String[] situations = new String[]{"alone", "Alone", "with 1", "with 2", "With 1", "With 2", "crowd", "Crowd"};
-
-//                        List<String> validSituations = Arrays.asList(situations);
-
+                        // Checks to ensure that bad data aren't added to the database
                         if (moodSelected.equals("")) {
                             incompleteData = true;
-//                            moodType.setError("Select a mood!");
                             Toast.makeText(getContext(), "Please select a mood!", Toast.LENGTH_SHORT).show();
                         }
 
-//                        if (moodDate.getText().toString().length() == 0) {
-//                            flag = true;
-//                            moodDate.setError("Enter a date!");
-//                        }
-//                        if (!isValidFormat("yyyy-MM-dd", moodDate.getText().toString())) {
-//                            flag = true;
-//                            moodDate.setError("Enter a valid date (yyyy-MM-dd)!");
-//                        }
-
-//                        if (moodTime.getText().toString().length() == 0) {
-//                            flag = true;
-//                            moodTime.setError("Enter a time!");
-//                        }
-//                        if (!isValidFormat("HH:mm", moodTime.getText().toString())) {
-//                            flag = true;
-//                            moodTime.setError("Enter a valid time (HH:mm)!");
-//                        }
-
                         if (!incompleteData) {
-//                            System.out.println(moodDate+" "+ moodTime);
+                            Date dateTime = Calendar.getInstance().getTime();
 
-//                            Toast.makeText(getContext(), Calendar.getInstance().getTime().toString(), Toast.LENGTH_SHORT).show();
-
-                            Date dateTime = Calendar.getInstance().getTime(); //null;
-
-                            // This adapter is unnecessary can be deleted
-                            // Adapter to Feed in Current Date/Time
-//                            String dateTimeString = Calendar.getInstance().getTime().toString();
-//                            String[] dateTimeStringSplit = dateTimeString.split(" ");
-//
-//                            String dateTimeYear = dateTimeStringSplit[5];
-//
-//                            String dateTimeMonth = dateTimeStringSplit[1];
-//                            switch(dateTimeMonth) {
-//                                case "Jan": dateTimeMonth = "1"; break;
-//                                case "Feb": dateTimeMonth = "2"; break;
-//                                case "Mar": dateTimeMonth = "3"; break;
-//                                case "Apr": dateTimeMonth = "4"; break;
-//                                case "May": dateTimeMonth = "5"; break;
-//                                case "Jun": dateTimeMonth = "6"; break;
-//                                case "Jul": dateTimeMonth = "7"; break;
-//                                case "Aug": dateTimeMonth = "8"; break;
-//                                case "Sep": dateTimeMonth = "9"; break;
-//                                case "Oct": dateTimeMonth = "10"; break;
-//                                case "Nov": dateTimeMonth = "11"; break;
-//                                case "Dec": dateTimeMonth = "12"; break;
-//                            }
-//
-//                            String dateTimeDay = dateTimeStringSplit[2];
-//
-//                            String dateTimeTime = dateTimeStringSplit[3];
-//
-//                            String[] dateTimeTimeSplit = dateTimeTime.split(":");
-//                            String dateTimeTimeHour = dateTimeTimeSplit[0];
-//                            String dateTimeTimeMinute = dateTimeTimeSplit[1];
-//
-//                            String inputDate = dateTimeYear + "-" + dateTimeMonth + "-" + dateTimeDay;
-//                            String inputTime = dateTimeTimeHour + ":" + dateTimeTimeMinute;
-//
-//                            try {
-//                                dateTime = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse( inputDate + " " + inputTime);
-//                            } catch (ParseException e) {
-//                                e.printStackTrace();
-//                            }
                             String situation = situation_spinner.getSelectedItem().toString();
                             String newMood = moodSelected;
                             String reason = moodReason.getText().toString();
                             String moodId = newMood + dateTime.toString();
+                            String username = "Unknown"; // username is added to the mood in the "onEventEdited" or "onEventAdded" methods
 
                             GeoPoint location = null;
                             boolean checked = false;
@@ -505,7 +419,7 @@ public class EventFragment extends DialogFragment  {
                                 checked = true;
                             }
 
-                            Mood mood = new Mood(moodId,"" ,dateTime, newMood, reason, situation, location);
+                            Mood mood = new Mood(moodId, username, dateTime, newMood, reason, situation, location);
 
 
                             if (currentMood != null) {
@@ -520,35 +434,6 @@ public class EventFragment extends DialogFragment  {
             }
         });
         return builder;
-    }
-
-
-    private void openGallery()  {
-        // Create an Intent with action as ACTION_PICK
-        Intent intent=new Intent(Intent.ACTION_PICK);
-        // Sets the type as image/*. This ensures only components of type image are selected
-        intent.setType("image/*");
-        // We pass an extra array with the accepted mime types. This will ensure only components with these MIME types as targeted.
-        String[] mimeTypes = {"image/jpeg", "image/png"};
-        intent.putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes);
-        // Launching the Intent
-        startActivityForResult(intent, PICK_IMAGE);
-
-    }
-
-
-    public void onActivityResult(int requestCode,int resultCode,Intent data){
-        // Result code is RESULT_OK only if the user selects an Image
-        if (resultCode == Activity.RESULT_OK)
-            switch(requestCode) {
-                case PICK_IMAGE:
-                    //data.getData returns the content URI for the selected Image
-                    selectedImage = data.getData();
-                    previewImage.setImageURI(selectedImage);
-                    previewImage.setVisibility(View.VISIBLE);
-                    removePhotoButton.setVisibility(View.VISIBLE);
-                    break;
-            }
     }
 
 
