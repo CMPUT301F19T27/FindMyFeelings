@@ -12,21 +12,28 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 
 import android.view.MenuItem;
 import android.view.View;
 
+import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 
+import android.webkit.MimeTypeMap;
 import android.widget.Button;
+import android.widget.Toast;
+
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -42,25 +49,37 @@ import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.StorageTask;
+import com.google.firebase.storage.UploadTask;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 
+import io.grpc.Compressor;
+import io.grpc.Context;
+
 /**
  * This class keeps track of events happening on the homepage
  *
  */
 
-public class HomePageActivity extends AppCompatActivity implements EventFragment.OnFragmentInteractionListener, MoodCustomList.RecyclerViewListener, FilterFragment.OnFragmentInteractionListener {
+public class HomePageActivity extends AppCompatActivity implements EventFragment.OnFragmentInteractionListener, MoodCustomList.RecyclerViewListener, FilterFragment.OnFragmentInteractionListener, Serializable {
     private String currentUserEmail;
     private ArrayList<Mood> myMoodDataList;
     private ArrayList<String> followingDataList;
     private ArrayList<Mood> followingMoodDataList;
     private FirebaseFirestore db;
     private FirebaseAuth firebaseAuth;
+    private StorageReference storageReference;
     private RecyclerView moodList;
     private RecyclerView.Adapter moodAdapter;
     private RecyclerView.LayoutManager moodLayoutManager;
@@ -72,8 +91,11 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
     private ArrayList<Mood> filteredMyMoodDataList;
     private ArrayList<Mood> filteredFollowingMoodDataList;
     private boolean onMyMoodList;
+
     private String username = "Unknown";
     BottomNavigationView bottomNavigationView;
+
+    private StorageTask storageTask;
     private GPSTracker mGPS = new GPSTracker(this);
   
     @Override
@@ -97,6 +119,7 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
         bottomNavigationView.setSelectedItemId(R.id.ic_feed);   // sets default selected item on opening
         bottomNavigationView.setItemIconTintList(null);         // disables icon tint
 
+        storageReference = FirebaseStorage.getInstance().getReference();
         firebaseAuth = FirebaseAuth.getInstance();
         currentUserEmail = firebaseAuth.getCurrentUser().getEmail();
 
@@ -113,7 +136,8 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
                         intent1.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         //intent1.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(intent1);
-                        finish();
+                        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+                        //finish();
                         break;
 
                     case R.id.ic_profile:
@@ -122,6 +146,8 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
                         intent2.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         //intent2.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(intent2);
+                        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+
                         finish();
                         break;
                 }
@@ -190,8 +216,9 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
                             String reason = doc.getData().get("reason").toString();
                             String situation = doc.getData().get("situation").toString();
                             GeoPoint location = (GeoPoint) doc.getData().get("location");
+                            String imageURL = (String) doc.getData().get("imageURL");
 
-                            Mood rMood = new Mood(moodId, username, dateTime, mood, reason, situation, location);
+                            Mood rMood = new Mood(moodId, username, dateTime, mood, reason, situation, location, imageURL);
 
                             System.out.println("*************************************** TEST 2*********************");
                             myMoodDataList.add(rMood);
@@ -200,7 +227,7 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
                         // UPDATE RECENT MOOD
                         if(myMoodDataList.size() != 0) {
                             HashMap<String, Object> data = moodToMap(myMoodDataList.get(0));
-
+                            data.put("imageURL", myMoodDataList.get(0).getImageURL());
                             HashMap<String, Object> recentMoodMap = new HashMap<>();
                             recentMoodMap.put("recent_mood", data);
 
@@ -256,6 +283,7 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
                                 String reason = "";
                                 String situation = "Alone";
                                 GeoPoint location = new GeoPoint(0,0);
+                                String imageURL = null;
 
                                 if(recentMoodMap.get("moodId") != null) {
                                     Timestamp timestamp = (Timestamp) recentMoodMap.get("dateTime");
@@ -266,9 +294,11 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
                                     reason = recentMoodMap.get("reason").toString();
                                     situation = recentMoodMap.get("situation").toString();
                                     location = (GeoPoint) recentMoodMap.get("location");
+                                    imageURL = (String) recentMoodMap.get("imageURL");
+
                                 }
 
-                                Mood rMood = new Mood(moodId, uName, dateTime, mood, reason, situation, location);
+                                Mood rMood = new Mood(moodId, uName, dateTime, mood, reason, situation, location, imageURL);
 
                                 followingMoodDataList.add(rMood);
                             }
@@ -344,12 +374,17 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
         db = FirebaseFirestore.getInstance();
         final DocumentReference docRef = db.collection("Users").document(currentUserEmail);
 
+        newMood.setMoodId(username + newMood.getMoodId());
         newMood.setUsername(username);
+
 
         if (checked) {
             mGPS.getLocation();
             GeoPoint currentLoc = new GeoPoint(mGPS.getLatitude(), mGPS.getLongitude());
             newMood.setLocation(currentLoc);
+        }
+        else {
+            newMood.setLocation(null);
         }
 
         HashMap<String, Object> moodData = moodToMap(newMood);
@@ -371,10 +406,11 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
                     }
                 });
 
+
         myMoodDataList.add(newMood);
         moodAdapter.notifyDataSetChanged();
-
     }
+
 
     /**
      * This method edits a Mood from MoodCustomList
@@ -389,12 +425,16 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
         db = FirebaseFirestore.getInstance();
         final DocumentReference docRef = db.collection("Users").document(currentUserEmail);
 
+        editedMood.setMoodId(username + editedMood.getMoodId());
         editedMood.setUsername(username);
 
         if (checked) {
             mGPS.getLocation();
             GeoPoint currentLoc = new GeoPoint(mGPS.getLatitude(), mGPS.getLongitude());
             editedMood.setLocation(currentLoc);
+        }
+        else {
+            editedMood.setLocation(null);
         }
 
         HashMap<String, Object> moodData = moodToMap(editedMood);
@@ -411,13 +451,13 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        Log.d("Sample", "Data edited successfully");
+                        Log.d("Sample", "Data addition successfull");
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Log.d("Sample", "Data editing failed");
+                        Log.d("Sample", "Data addition failed");
                     }
                 });
 
@@ -425,10 +465,37 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
         moodAdapter.notifyDataSetChanged();
     }
 
+//    /**
+//     * this function adds mood data to the database
+//     * @param mood
+//     * @param moodData
+//     */
+//    public void addData (Mood mood, HashMap<String, Object> moodData) {
+//        final DocumentReference docRef = db.collection("Users").document(currentUserEmail);
+//
+//        docRef
+//                .collection("My Moods")
+//                .document(mood.getMoodId())
+//                .set(moodData)
+//                .addOnSuccessListener(new OnSuccessListener<Void>() {
+//                    @Override
+//                    public void onSuccess(Void aVoid) {
+//                        Log.d("Sample", "Data addition successfull");
+//                    }
+//                })
+//                .addOnFailureListener(new OnFailureListener() {
+//                    @Override
+//                    public void onFailure(@NonNull Exception e) {
+//                        Log.d("Sample", "Data addition failed");
+//                    }
+//                });
+//
+//    }
+
     /**
      * This method deletes a Mood from MoodCustomList
      * @param deletedMood
-     * =
+     *
      */
 
     // DOES NOT UPDATE RECENT MOOD
@@ -456,9 +523,23 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
 
         myMoodDataList.remove(deletedMood);
         moodAdapter.notifyDataSetChanged();
+
+        if (myMoodDataList.isEmpty()) {
+            Mood mood = new Mood(null, null, null, null, null, null, null, null);
+
+            HashMap<String, Object> recentMoodMap = moodToMap(mood);
+
+            docRef
+                    .update("recent_mood", recentMoodMap);
+        }
     }
 
-      public HashMap<String, Object> moodToMap(Mood mood) {
+    /**
+     * this function converts the mood data into a Hashmap object
+     * @param mood
+     * @return
+     */
+    public HashMap<String, Object> moodToMap(Mood mood) {
         HashMap<String, Object> moodMap = new HashMap<>();
 
 //        mood.setUsername(username);
@@ -470,6 +551,7 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
         moodMap.put("reason", mood.getReason());
         moodMap.put("situation", mood.getSituation());
         moodMap.put("location", mood.getLocation());
+        moodMap.put("imageURL", mood.getImageURL());
 
         return moodMap;
     }
@@ -531,4 +613,88 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
             FollowingEventFragment.newInstance(selectedMood, position).show(getSupportFragmentManager(), "VIEW_EVENT");
         }
     }
+    private String getFileExtension(Uri uri) {
+        ContentResolver cR = getContentResolver();
+        MimeTypeMap mime = MimeTypeMap.getSingleton();
+        return mime.getExtensionFromMimeType(cR.getType(uri));
+    }
 }
+
+//        if (image != null) {
+//            StorageReference fileReference = storageReference.child(username).child(System.currentTimeMillis()+"."+getFileExtension(image));
+//
+//            storageTask = fileReference.putFile(image)
+//                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+//                        @Override
+//                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+//                            fileReference.getDownloadUrl()
+//                                    .addOnSuccessListener(new OnSuccessListener<Uri>() {
+//                                        @Override
+//                                        public void onSuccess(Uri uri) {
+//                                            String url = null;
+//                                            url = uri.toString();
+//
+//                                            System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!             " +url);
+//
+//                                            moodData.put("imageURL", url);
+//
+//                                            addData(editedMood, moodData);
+//                                        }
+//                                    });
+//                        }
+//                    });
+//
+//        }
+//        else {
+//            System.out.println("image is NULLLLLLLLLLLLLLLLLLL");
+//            moodData.put("imageURL", null);
+//            addData(editedMood, moodData);
+//        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//        if (image != null) {
+//            StorageReference fileReference = storageReference.child(username).child(System.currentTimeMillis()+"."+getFileExtension(image));
+//
+//            storageTask =  fileReference.putFile(image)
+//                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+//                        @Override
+//                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+//
+//                            fileReference.getDownloadUrl()
+//                                    .addOnSuccessListener(new OnSuccessListener<Uri>() {
+//                                        @Override
+//                                        public void onSuccess(Uri uri) {
+//                                            String url = uri.toString();
+//                                            moodData.put("imageURL", url);
+//
+//                                            addData(newMood, moodData);
+//                                        }
+//                                    });
+//                        }
+//                    })
+//                    .addOnFailureListener(new OnFailureListener() {
+//                        @Override
+//                        public void onFailure(@NonNull Exception e) {
+//                            Toast.makeText(HomePageActivity.this, "Image Upload failed", Toast.LENGTH_SHORT).show();
+//
+//                        }
+//                    });
+//        }
+//        else {
+//            moodData.put("imageURL", null);
+//            addData(newMood, moodData);
+//
+//        }

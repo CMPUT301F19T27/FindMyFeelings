@@ -113,6 +113,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
                         intent1.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         // intent1.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(intent1);
+                        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                         finish();
                         break;
 
@@ -122,6 +123,8 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
                         intent2.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         //intent2.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(intent2);
+
+                        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                         finish();
                         break;
                 }
@@ -249,8 +252,10 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
                                 String reason = doc.getData().get("reason").toString();
                                 String situation = doc.getData().get("situation").toString();
                                 GeoPoint location = (GeoPoint) doc.getData().get("location");
+                                String imageURL = (String) doc.getData().get("imageURL");
 
-                                Mood rMood = new Mood(moodId, username, dateTime, mood, reason, situation, location);
+
+                                Mood rMood = new Mood(moodId, username, dateTime, mood, reason, situation, location, imageURL);
 
                                 myMoodDataList.add(rMood);
                             }
@@ -360,8 +365,10 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
                                     String reason = data.get("reason").toString();
                                     String situation = data.get("situation").toString();
                                     GeoPoint location = (GeoPoint) data.get("location");
+                                    String imageURL = (String) data.get("imageURL");
 
-                                    Mood rMood = new Mood(moodId, follower, dateTime, mood, reason, situation, location);
+
+                                    Mood rMood = new Mood(moodId, follower, dateTime, mood, reason, situation, location, imageURL);
                                     myMoodDataList.add(rMood);
 
                                 }

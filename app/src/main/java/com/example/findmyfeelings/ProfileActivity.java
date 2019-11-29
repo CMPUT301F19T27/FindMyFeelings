@@ -101,6 +101,8 @@ public class ProfileActivity extends AppCompatActivity implements FollowNewUserF
                         intent1.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         //intent1.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(intent1);
+                        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+
                         finish();
                         break;
 
@@ -110,6 +112,8 @@ public class ProfileActivity extends AppCompatActivity implements FollowNewUserF
                         intent2.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         //intent2.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(intent2);
+                        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+
                         finish();
                         break;
                 }

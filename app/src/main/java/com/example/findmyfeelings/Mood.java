@@ -19,13 +19,17 @@ public class Mood implements Serializable {
     private String reason;
 
     private String situation;
+
+
+    private String imageURL;
+
     private GeoPoint location; // Not serializable, causes app to crash when adding a photo to an existing mood (try adding a photo to a non-location mood)
 
     public Mood() {
 
     }
 
-    public Mood(String moodId, String username, Date dateTime, String mood, String reason, String situation, GeoPoint location) {
+    public Mood(String moodId, String username, Date dateTime, String mood, String reason, String situation, GeoPoint location, String imageURL) {
         this.moodId = moodId;
         this.username = username;
         this.dateTime = dateTime;
@@ -33,6 +37,7 @@ public class Mood implements Serializable {
         this.reason = reason;
         this.situation = situation;
         this.location = location;
+        this.imageURL = imageURL;
     }
 
 
@@ -90,5 +95,10 @@ public class Mood implements Serializable {
 
     public void setMoodId(String moodId) {
         this.moodId = moodId;
+    }
+
+
+    public String getImageURL() {
+        return imageURL;
     }
 }
