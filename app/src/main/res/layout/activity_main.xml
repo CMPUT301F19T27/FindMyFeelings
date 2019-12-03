@@ -30,7 +30,7 @@
         android:background="@drawable/input_field"
         android:ems="10"
         android:fontFamily="@font/regular"
-        android:hint="username"
+        android:hint="email"
         android:inputType="textEmailAddress"
         android:textSize="23dp"
         app:layout_constraintEnd_toEndOf="parent"

@@ -159,7 +159,9 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
                 .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                     @Override
                     public void onSuccess(DocumentSnapshot document) {
-                        username = (String) document.getData().get("username");
+                        if(document.getData() != null) {
+                            username = (String) document.getData().get("username");
+                        }
                     }
                 });
       
@@ -590,13 +592,24 @@ public class HomePageActivity extends AppCompatActivity implements EventFragment
 
     @Override
     public void onRecyclerViewClickListener(int position) {
-        if (onMyMoodList) {
-            Mood selectedMood = myMoodDataList.get(position);
-            EventFragment.newInstance(selectedMood, position).show(getSupportFragmentManager(), "EDIT_EVENT");
-        }
-        else {
-            Mood selectedMood = followingMoodDataList.get(position);
-            FollowingEventFragment.newInstance(selectedMood, position).show(getSupportFragmentManager(), "VIEW_EVENT");
+        if(!filter.equals("")) {
+            if (onMyMoodList) {
+                Mood selectedMood = filteredMyMoodDataList.get(position);
+                EventFragment.newInstance(selectedMood, position).show(getSupportFragmentManager(), "EDIT_EVENT");
+            }
+            else {
+                Mood selectedMood = filteredMyMoodDataList.get(position);
+                FollowingEventFragment.newInstance(selectedMood, position).show(getSupportFragmentManager(), "VIEW_EVENT");
+            }
+        } else {
+            if (onMyMoodList) {
+                Mood selectedMood = myMoodDataList.get(position);
+                EventFragment.newInstance(selectedMood, position).show(getSupportFragmentManager(), "EDIT_EVENT");
+            }
+            else {
+                Mood selectedMood = followingMoodDataList.get(position);
+                FollowingEventFragment.newInstance(selectedMood, position).show(getSupportFragmentManager(), "VIEW_EVENT");
+            }
         }
     }
 
